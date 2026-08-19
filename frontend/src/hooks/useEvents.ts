@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { api } from '../lib/api';
+import { getCached, getOrFetch } from '../lib/dataCache';
 import type { EventItem } from '../types';
+
+const TTL_MS = 60000;
 
 export interface EventFilters {
   scope: 'upcoming' | 'past' | 'all';
@@ -25,53 +28,64 @@ function buildQuery(filters: EventFilters): string {
 }
 
 export function useEvents(filters: EventFilters) {
-  const [events, setEvents] = useState<EventItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const key = buildQuery(filters);
+  const [events, setEvents] = useState<EventItem[]>(() => getCached<EventItem[]>(`events?${key}`) ?? []);
+  const [loading, setLoading] = useState(() => !getCached<EventItem[]>(`events?${key}`));
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
-    api
-      .get<EventItem[]>(`/events?${key}`)
+    const cacheKey = `events?${key}`;
+    const cached = getCached<EventItem[]>(cacheKey);
+    if (cached) {
+      setEvents(cached);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+    getOrFetch<EventItem[]>(cacheKey, () => api.get<EventItem[]>(`/events?${key}`), TTL_MS)
       .then((data) => {
-        if (!cancelled) setEvents(data);
+        if (!cancelled) {
+          setEvents(data);
+          setLoading(false);
+        }
       })
       .catch(() => {
-        if (!cancelled) setEvents([]);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled && !cached) {
+          setEvents([]);
+          setLoading(false);
+        }
       });
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
   return { events, loading };
 }
 
 export function useEvent(id: string | null) {
-  const [event, setEvent] = useState<EventItem | null>(null);
+  const cacheKey = id ? `event/${id}` : null;
+  const [event, setEvent] = useState<EventItem | null>(() => (cacheKey ? getCached<EventItem>(cacheKey) : null));
 
   useEffect(() => {
-    if (!id) {
+    if (!id || !cacheKey) {
       setEvent(null);
       return;
     }
     let cancelled = false;
-    api
-      .get<EventItem>(`/events/${id}`)
+    const cached = getCached<EventItem>(cacheKey);
+    if (cached) setEvent(cached);
+    getOrFetch<EventItem>(cacheKey, () => api.get<EventItem>(`/events/${id}`), TTL_MS)
       .then((data) => {
         if (!cancelled) setEvent(data);
       })
       .catch(() => {
-        if (!cancelled) setEvent(null);
+        if (!cancelled && !cached) setEvent(null);
       });
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return event;
