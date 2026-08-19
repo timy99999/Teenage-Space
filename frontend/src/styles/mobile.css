@@ -251,7 +251,7 @@
     position: sticky;
     top: 0;
     z-index: 30;
-    background: var(--ts-blue);
+    background: var(--ts-grid-header-bg, var(--ts-blue));
   }
   .ts-mobile-pageheader {
     display: flex;

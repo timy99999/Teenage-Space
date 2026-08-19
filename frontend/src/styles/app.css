@@ -483,7 +483,7 @@
   align-items: center;
   gap: 24px;
   padding: 16px 28px 14px 34px;
-  background: var(--ts-blue);
+  background: var(--ts-grid-header-bg, var(--ts-blue));
 }
 .ts-grid-title-wrap {
   flex: 0 0 auto;
