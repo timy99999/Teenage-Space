@@ -467,13 +467,16 @@
   animation: tsIn 0.25s ease;
 }
 .ts-grid-header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 30;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 24px;
   padding: 24px 0 0;
   min-height: 118px;
+  background: var(--ts-bg);
 }
 .ts-grid-title-wrap {
   padding-left: 34px;
@@ -504,21 +507,23 @@
 .ts-filters {
   flex: 1 1 620px;
   max-width: 100%;
+  min-width: min-content;
   align-self: stretch;
   margin-top: -24px;
   background: var(--ts-grey);
   clip-path: polygon(96px 0, 100% 0, 100% 100%, 0 100%);
   padding: 14px 22px 18px 112px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   gap: 14px 0;
   align-items: flex-start;
   font-family: 'Open Sans', sans-serif;
   color: var(--ts-grey-fg);
 }
 .ts-filter-group {
+  flex: 0 0 auto;
   padding-right: 18px;
-  max-width: 290px;
 }
 .ts-filter-group + .ts-filter-group {
   padding: 0 18px;
@@ -532,14 +537,15 @@
   font-size: 19px;
   font-weight: 600;
   margin-bottom: 7px;
+  white-space: nowrap;
 }
 .ts-filter-chips {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 7px;
 }
 .ts-filter-chips.col {
-  flex-direction: column;
+  flex-direction: row;
 }
 .ts-age-row {
   display: flex;

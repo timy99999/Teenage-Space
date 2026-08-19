@@ -98,6 +98,9 @@ export function GridPage({ mode }: { mode: GridMode }) {
                   className="ts-age-input"
                   value={ageInput}
                   onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') setAgeApplied(ageInput);
+                  }}
                   placeholder="15 или 12-15"
                 />
                 <button className="ts-age-apply" onClick={() => setAgeApplied(ageInput)}>

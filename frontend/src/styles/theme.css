@@ -12,11 +12,11 @@
   --ts-blue: #2412c8;
   --ts-violet: #8b5cf6;
   --ts-cyan: #a9e6f5;
-  --ts-grey: #9a9a9a;
-  --ts-grey-fg: #111111;
-  --ts-grey-fg-dim: #2b2b2b;
-  --ts-grey-line: rgba(0, 0, 0, 0.42);
-  --ts-grey-on: #111111;
+  --ts-grey: var(--ts-blue);
+  --ts-grey-fg: #ffffff;
+  --ts-grey-fg-dim: rgba(255, 255, 255, 0.75);
+  --ts-grey-line: rgba(255, 255, 255, 0.4);
+  --ts-grey-on: #ffffff;
   --ts-card: 300px;
 }
 
@@ -32,11 +32,11 @@
   --ts-side-fg: #ffffff;
   --ts-side-dim: #a0a0a0;
   --ts-blue: #9a8cff;
-  --ts-grey: #3a3a3a;
-  --ts-grey-fg: #f2f2f2;
-  --ts-grey-fg-dim: #cfcfcf;
+  --ts-grey: var(--ts-blue);
+  --ts-grey-fg: #ffffff;
+  --ts-grey-fg-dim: rgba(255, 255, 255, 0.75);
   --ts-grey-line: rgba(255, 255, 255, 0.4);
-  --ts-grey-on: #f4f4f4;
+  --ts-grey-on: #ffffff;
 }
 
 html,
