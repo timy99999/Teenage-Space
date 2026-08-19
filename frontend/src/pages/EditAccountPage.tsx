@@ -92,50 +92,52 @@ export function EditAccountPage() {
 
   return (
     <div className="ts-page">
-      <h1 className="ts-page-title">Редактирование аккаунта</h1>
+      <div className="ts-edit-account-body">
+        <h1 className="ts-page-title">Редактирование аккаунта</h1>
 
-      <div className="ts-edit-avatar-row">
-        <button className="ts-edit-avatar" onClick={() => fileInput.current?.click()} disabled={uploading}>
-          {profile?.avatarUrl ? (
-            <img src={profile.avatarUrl} alt={profile.username} />
-          ) : (
-            <span>{(profile?.username ?? '?').slice(0, 1).toUpperCase()}</span>
-          )}
-          <span className="ts-edit-avatar-overlay">{uploading ? '...' : 'Изменить'}</span>
+        <div className="ts-edit-avatar-row">
+          <button className="ts-edit-avatar" onClick={() => fileInput.current?.click()} disabled={uploading}>
+            {profile?.avatarUrl ? (
+              <img src={profile.avatarUrl} alt={profile.username} />
+            ) : (
+              <span>{(profile?.username ?? '?').slice(0, 1).toUpperCase()}</span>
+            )}
+            <span className="ts-edit-avatar-overlay">{uploading ? '...' : 'Изменить'}</span>
+          </button>
+          <input ref={fileInput} type="file" accept="image/*" hidden onChange={onAvatarPick} />
+        </div>
+
+        <div className="ts-form-stack" style={{ maxWidth: 420, width: '100%' }}>
+          <label className="ts-field-label">Фамилия</label>
+          <input className="ts-input" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+
+          <label className="ts-field-label">Имя</label>
+          <input className="ts-input" value={name} onChange={(e) => setName(e.target.value)} disabled={!!nameHint} />
+          {nameHint && <div className="ts-hint">{nameHint}</div>}
+
+          <label className="ts-field-label">Дата рождения</label>
+          <input className="ts-input" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+
+          <label className="ts-field-label">Username</label>
+          <input className="ts-input" value={username} onChange={(e) => setUsername(e.target.value)} disabled={!!usernameHint} />
+          {usernameHint && <div className="ts-hint">{usernameHint}</div>}
+          <div className="ts-hint">Имя и username можно менять не чаще одного раза в неделю</div>
+
+          <label className="ts-field-label">Email</label>
+          <input className="ts-input" value={profile?.email ?? ''} disabled />
+        </div>
+
+        <button className="ts-btn-outline" style={{ marginTop: 26 }} onClick={onSave} disabled={saving}>
+          Сохранить
         </button>
-        <input ref={fileInput} type="file" accept="image/*" hidden onChange={onAvatarPick} />
-      </div>
 
-      <div className="ts-form-stack" style={{ maxWidth: 420 }}>
-        <label className="ts-field-label">Фамилия</label>
-        <input className="ts-input" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-
-        <label className="ts-field-label">Имя</label>
-        <input className="ts-input" value={name} onChange={(e) => setName(e.target.value)} disabled={!!nameHint} />
-        {nameHint && <div className="ts-hint">{nameHint}</div>}
-
-        <label className="ts-field-label">Дата рождения</label>
-        <input className="ts-input" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
-
-        <label className="ts-field-label">Username</label>
-        <input className="ts-input" value={username} onChange={(e) => setUsername(e.target.value)} disabled={!!usernameHint} />
-        {usernameHint && <div className="ts-hint">{usernameHint}</div>}
-        <div className="ts-hint">Имя и username можно менять не чаще одного раза в неделю</div>
-
-        <label className="ts-field-label">Email</label>
-        <input className="ts-input" value={profile?.email ?? ''} disabled />
-      </div>
-
-      <button className="ts-btn-outline" style={{ marginTop: 26 }} onClick={onSave} disabled={saving}>
-        Сохранить
-      </button>
-
-      <div className="ts-danger-zone">
-        <h2 className="ts-block-title">Удаление аккаунта</h2>
-        <p className="ts-hint">Аккаунт и все данные будут удалены без возможности восстановления.</p>
-        <button className="ts-btn-outline small danger" onClick={() => setConfirmDelete(true)}>
-          Удалить аккаунт
-        </button>
+        <div className="ts-danger-zone">
+          <h2 className="ts-block-title">Удаление аккаунта</h2>
+          <p className="ts-hint">Аккаунт и все данные будут удалены без возможности восстановления.</p>
+          <button className="ts-btn-outline small danger" onClick={() => setConfirmDelete(true)}>
+            Удалить аккаунт
+          </button>
+        </div>
       </div>
 
       {confirmDelete && (
