@@ -894,27 +894,40 @@
 .ts-publish-title {
   font-size: 38px;
 }
+.ts-account-section {
+  margin-top: 30px;
+  padding: 34px 40px 40px;
+  border: 1px solid var(--ts-line);
+  border-radius: 24px;
+  background: var(--ts-surface);
+}
+.ts-account-section:first-of-type {
+  margin-top: 30px;
+}
+.ts-account-section-title {
+  margin: 0 0 10px;
+  font-family: 'Bryndan Write', 'Comfortaa', sans-serif;
+  font-weight: 700;
+  font-size: 30px;
+  color: var(--ts-blue);
+}
 .ts-profile-head {
-  margin-top: 26px;
   display: flex;
   flex-wrap: wrap;
-  gap: 26px;
+  gap: 32px;
   align-items: center;
-  max-width: 820px;
-  padding-bottom: 28px;
-  border-bottom: 1px solid var(--ts-line);
 }
 .ts-profile-avatar {
-  width: 104px;
-  height: 104px;
-  flex: 0 0 104px;
+  width: 132px;
+  height: 132px;
+  flex: 0 0 132px;
   border-radius: 50%;
   background: var(--ts-ph);
   display: grid;
   place-items: center;
   overflow: hidden;
   font-family: 'Comfortaa', sans-serif;
-  font-size: 34px;
+  font-size: 42px;
   color: #1a1a1a;
 }
 .ts-profile-avatar img {
@@ -925,33 +938,37 @@
 .ts-profile-info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   font-family: 'Open Sans', sans-serif;
 }
 .ts-profile-name-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 .ts-profile-name {
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 700;
 }
 .ts-profile-username,
 .ts-profile-birth {
-  font-size: 15px;
+  font-size: 18px;
   color: var(--ts-muted);
 }
 .ts-edit-pencil {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: none;
   background: transparent;
   color: var(--ts-muted);
   cursor: pointer;
+}
+.ts-edit-pencil svg {
+  width: 20px;
+  height: 20px;
 }
 .ts-edit-pencil:hover {
   color: var(--ts-violet);
@@ -959,7 +976,7 @@
 .ts-profile-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
   flex-wrap: wrap;
 }
@@ -968,8 +985,9 @@
   border: none;
   cursor: pointer;
   font-family: 'Open Sans', sans-serif;
-  font-size: 14.5px;
+  font-size: 15px;
   color: var(--ts-muted);
+  margin-left: auto;
 }
 .ts-logout-link:hover {
   color: var(--ts-violet);
@@ -978,16 +996,17 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 20px;
-  max-width: 820px;
-  margin-top: 24px;
+  gap: 24px;
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--ts-line);
 }
 .ts-profile-details {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
   font-family: 'Open Sans', sans-serif;
-  font-size: 17px;
+  font-size: 19px;
 }
 .ts-profile-details .label {
   font-weight: 600;
@@ -996,7 +1015,7 @@
 .ts-profile-quicklinks {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   align-items: flex-end;
 }
 .ts-profile-quicklinks button {
@@ -1005,7 +1024,7 @@
   cursor: pointer;
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 16.5px;
   color: var(--ts-fg);
 }
 .ts-profile-quicklinks button:hover {
@@ -1196,22 +1215,22 @@
   left: 26px;
 }
 
-.ts-requests-block {
-  margin-top: 44px;
-  max-width: 820px;
-}
 .ts-request-row {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 0;
+  padding: 18px 0;
   border-top: 1px solid var(--ts-line);
   font-family: 'Open Sans', sans-serif;
+}
+.ts-request-row:first-of-type {
+  border-top: none;
+  padding-top: 4px;
 }
 .ts-request-title {
   flex: 1;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 17px;
 }
 .ts-badge {
   padding: 5px 12px;

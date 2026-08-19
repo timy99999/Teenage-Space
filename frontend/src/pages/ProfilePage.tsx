@@ -67,47 +67,51 @@ export function ProfilePage() {
         </button>
       </div>
 
-      <div className="ts-profile-head">
-        <div className="ts-profile-avatar">
-          {profile?.avatarUrl ? (
-            <img src={profile.avatarUrl} alt={profile.username} />
-          ) : (
-            (profile?.username ?? '?').slice(0, 1).toUpperCase()
-          )}
+      <section className="ts-account-section ts-account-card">
+        <div className="ts-profile-head">
+          <div className="ts-profile-avatar">
+            {profile?.avatarUrl ? (
+              <img src={profile.avatarUrl} alt={profile.username} />
+            ) : (
+              (profile?.username ?? '?').slice(0, 1).toUpperCase()
+            )}
+          </div>
+          <div className="ts-profile-info">
+            <div className="ts-profile-name-row">
+              <div className="ts-profile-name">{profile?.username ?? ''}</div>
+              <button className="ts-edit-pencil" aria-label="Редактировать аккаунт" onClick={() => navigate('/profile/edit')}>
+                <PencilIcon />
+              </button>
+            </div>
+            <div className="ts-profile-username">{profile?.email ?? ''}</div>
+          </div>
         </div>
-        <div className="ts-profile-info">
-          <div className="ts-profile-name-row">
-            <div className="ts-profile-name">{profile?.username ?? ''}</div>
-            <button className="ts-edit-pencil" aria-label="Редактировать аккаунт" onClick={() => navigate('/profile/edit')}>
-              <PencilIcon />
+
+        <div className="ts-profile-details-row">
+          <div className="ts-profile-details">
+            <div>
+              <span className="label">Фамилия:</span> {profile?.lastName || '—'}
+            </div>
+            <div>
+              <span className="label">Имя:</span> {profile?.name || '—'}
+            </div>
+            <div>
+              <span className="label">Дата Рождения:</span> {profile?.birthDate ?? '—'}
+            </div>
+          </div>
+          <div className="ts-profile-quicklinks">
+            <button onClick={() => document.getElementById('settings-section')?.scrollIntoView({ behavior: 'smooth' })}>
+              Настройки
+            </button>
+            <button onClick={() => document.getElementById('publications')?.scrollIntoView({ behavior: 'smooth' })}>
+              Публикации
             </button>
           </div>
-          <div className="ts-profile-username">{profile?.email ?? ''}</div>
         </div>
-      </div>
+      </section>
 
-      <div className="ts-profile-details-row">
-        <div className="ts-profile-details">
-          <div>
-            <span className="label">Фамилия:</span> {profile?.lastName || '—'}
-          </div>
-          <div>
-            <span className="label">Имя:</span> {profile?.name || '—'}
-          </div>
-          <div>
-            <span className="label">Дата Рождения:</span> {profile?.birthDate ?? '—'}
-          </div>
-        </div>
-        <div className="ts-profile-quicklinks">
-          <button onClick={() => navigate('/settings')}>Настройки</button>
-          <button onClick={() => document.getElementById('publications')?.scrollIntoView({ behavior: 'smooth' })}>
-            Публикации
-          </button>
-        </div>
-      </div>
-
-      <div className="ts-settings-block">
-        <h2 className="ts-block-title">Настройки</h2>
+      <section className="ts-account-section" id="settings-section">
+        <h2 className="ts-account-section-title">Настройки</h2>
         <div className="ts-settings-row">
           <span className="label">Тема</span>
           <div className="ts-theme-btns">
@@ -129,10 +133,10 @@ export function ProfilePage() {
           <span className="label">Политика конфиденциальности</span>
           <span className="open-link">открыть →</span>
         </div>
-      </div>
+      </section>
 
-      <div className="ts-requests-block" id="publications">
-        <h2 className="ts-block-title">Публикации</h2>
+      <section className="ts-account-section" id="publications">
+        <h2 className="ts-account-section-title">Публикации</h2>
         {submissions.map((r) => (
           <div className="ts-request-row" key={r.id}>
             <span className="ts-request-title">{r.title}</span>
@@ -140,7 +144,7 @@ export function ProfilePage() {
           </div>
         ))}
         {submissions.length === 0 && <div className="ts-center-note">Ничего нет</div>}
-      </div>
+      </section>
 
       {confirmLogout && (
         <ConfirmDialog

@@ -148,6 +148,23 @@
   .ts-article-title {
     font-size: 28px;
   }
+  .ts-profile-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .ts-logout-link {
+    margin-left: 0;
+    text-align: right;
+  }
+  .ts-account-section {
+    margin-top: 18px;
+    padding: 20px 18px 24px;
+    border-radius: 16px;
+  }
+  .ts-account-section-title {
+    font-size: 22px;
+  }
   .ts-profile-head {
     gap: 16px;
   }
@@ -155,6 +172,28 @@
     width: 76px;
     height: 76px;
     font-size: 26px;
+  }
+  .ts-profile-name {
+    font-size: 21px;
+  }
+  .ts-profile-username,
+  .ts-profile-birth {
+    font-size: 14px;
+  }
+  .ts-profile-details-row {
+    margin-top: 20px;
+    padding-top: 18px;
+    gap: 16px;
+  }
+  .ts-profile-details {
+    font-size: 15px;
+    gap: 10px;
+  }
+  .ts-profile-quicklinks button {
+    font-size: 14px;
+  }
+  .ts-request-title {
+    font-size: 15px;
   }
   .ts-profile-actions {
     margin-left: 0;
