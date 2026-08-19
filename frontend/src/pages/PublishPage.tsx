@@ -228,7 +228,7 @@ export function PublishPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            <div style={{ marginTop: 6, fontFamily: "'Vintii','Open Sans',sans-serif", fontSize: 16 }}>Дополнительные ссылки</div>
+            <div style={{ marginTop: 6, fontFamily: "'Open Sans',sans-serif", fontSize: 16 }}>Дополнительные ссылки</div>
             <input
               className="ts-input"
               placeholder="Ссылка на регистрацию"
