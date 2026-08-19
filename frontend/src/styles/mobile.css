@@ -154,9 +154,43 @@
     margin-left: 0;
     width: 100%;
   }
+  /* ---- publish form ---- */
   .ts-publish-grid {
     margin-top: 18px;
+    grid-template-columns: 1fr;
     gap: 18px;
+  }
+  .ts-card-panel {
+    padding: 16px 16px 20px;
+    border-radius: 14px;
+  }
+  .ts-card-panel h2 {
+    font-size: 19px;
+  }
+  .ts-field-group {
+    margin-top: 16px;
+    gap: 18px;
+  }
+  .ts-field-label {
+    font-size: 14.5px;
+  }
+  .ts-date-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .ts-date-field {
+    min-width: 0;
+  }
+  .ts-link-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ts-publish-photo {
+    max-width: 220px;
+  }
+  .ts-btn-outline.block {
+    padding: 15px;
+    font-size: 16px;
   }
 
   /* ---- grid pages: replace the desktop diagonal header with a plain top bar ---- */

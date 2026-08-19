@@ -95,9 +95,7 @@ export function PublishPage() {
 
   return (
     <div className="ts-page">
-      <h1 className="ts-page-title" style={{ fontSize: 38 }}>
-        Публикация поста
-      </h1>
+      <h1 className="ts-page-title ts-publish-title">Публикация поста</h1>
       <div className="ts-publish-grid">
         <div className="ts-publish-col">
           <section className="ts-card-panel">

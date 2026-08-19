@@ -536,13 +536,16 @@
 }
 .ts-filter-chips {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 7px;
 }
-.ts-filter-chips.col {
+.ts-filters .ts-filter-chips {
+  flex-wrap: nowrap;
+}
+.ts-filters .ts-filter-chips.col {
   flex-direction: row;
 }
-.ts-filter-chips.grid-2 {
+.ts-filters .ts-filter-chips.grid-2 {
   display: grid;
   grid-template-rows: repeat(2, auto);
   grid-auto-flow: column;
@@ -882,6 +885,9 @@
   font-weight: 700;
   font-size: 42px;
   color: var(--ts-blue);
+}
+.ts-publish-title {
+  font-size: 38px;
 }
 .ts-profile-head {
   margin-top: 26px;
