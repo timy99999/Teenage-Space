@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useEvents } from '../hooks/useEvents';
 import { useNews } from '../hooks/useNews';
 import { useFavorites } from '../hooks/useFavorites';
@@ -13,6 +13,7 @@ import { CardSizeSlider } from '../components/CardSizeSlider';
 export type GridMode = 'opps' | 'fav' | 'vote' | 'news';
 
 export function GridPage({ mode }: { mode: GridMode }) {
+  const navigate = useNavigate();
   const { category } = useParams();
   const [, setParams] = useSearchParams();
   const [fThemes, setFThemes] = useState<string[]>([]);
@@ -21,6 +22,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const [fLevel, setFLevel] = useState<'local' | 'intl' | null>(null);
   const [ageInput, setAgeInput] = useState('');
   const [ageApplied, setAgeApplied] = useState('');
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const isOpps = mode === 'opps';
   const isFav = mode === 'fav';
@@ -60,6 +62,15 @@ export function GridPage({ mode }: { mode: GridMode }) {
 
   const subLabel = isOpps && category ? CATS.find((c) => c.key === category)?.label ?? '' : '';
   const pageTitle = isOpps ? TITLES.opps : TITLES[mode];
+
+  const activeFilterCount = fThemes.length + (fPrice ? 1 : 0) + (fLevel ? 1 : 0) + (ageApplied ? 1 : 0);
+  const resetFilters = () => {
+    setFThemes([]);
+    setFPrice(null);
+    setFLevel(null);
+    setAgeInput('');
+    setAgeApplied('');
+  };
 
   return (
     <div className="ts-grid-page">
@@ -148,6 +159,129 @@ export function GridPage({ mode }: { mode: GridMode }) {
           </div>
         )}
       </header>
+
+      <div className="ts-mobile-topbar">
+        <header className="ts-mobile-pageheader">
+          <div className="ts-mobile-pagetitle-wrap">
+            <div className="ts-mobile-pagetitle">{pageTitle}</div>
+            {subLabel && <div className="ts-mobile-pagesubtitle">{subLabel}</div>}
+          </div>
+          {(isOpps || isVote) && (
+            <button className="ts-mobile-hamburger" aria-label="Фильтры" onClick={() => setMobileFiltersOpen(true)}>
+              <svg width="20" height="16" viewBox="0 0 20 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="0" y1="1" x2="20" y2="1" />
+                <line x1="0" y1="8" x2="20" y2="8" />
+                <line x1="0" y1="15" x2="20" y2="15" />
+              </svg>
+              {activeFilterCount > 0 && <span className="ts-mobile-hamburger-badge">{activeFilterCount}</span>}
+            </button>
+          )}
+        </header>
+
+        {isOpps && (
+          <div className="ts-mobile-subtabs">
+            <button className={`ts-mobile-subtab${!category ? ' active' : ''}`} onClick={() => navigate('/opportunities')}>
+              Все
+            </button>
+            {CATS.map((c) => (
+              <button
+                key={c.key}
+                className={`ts-mobile-subtab${category === c.key ? ' active' : ''}`}
+                onClick={() => navigate(`/opportunities/${c.key}`)}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {(isOpps || isVote) && mobileFiltersOpen && (
+        <div className="ts-mobile-filter-overlay" onClick={() => setMobileFiltersOpen(false)}>
+          <div className="ts-mobile-filter-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="ts-mobile-filter-handle" />
+            <div className="ts-mobile-filter-title">Фильтры</div>
+
+            <div className="ts-mobile-filter-group">
+              <div className="ts-mobile-filter-group-label">Тема</div>
+              <div className="ts-mobile-filter-chips">
+                {THEMES.map((t) => (
+                  <Chip
+                    key={t.key}
+                    label={t.label}
+                    active={fThemes.includes(t.key)}
+                    onClick={() =>
+                      setFThemes((prev) => (prev.includes(t.key) ? prev.filter((x) => x !== t.key) : [...prev, t.key]))
+                    }
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="ts-mobile-filter-group">
+              <div className="ts-mobile-filter-group-label">Возраст</div>
+              <div className="ts-mobile-filter-age-row">
+                <input
+                  className="ts-mobile-age-input"
+                  value={ageInput}
+                  onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') setAgeApplied(ageInput);
+                  }}
+                  placeholder="15 или 12-15"
+                />
+                <button className="ts-mobile-age-apply" onClick={() => setAgeApplied(ageInput)}>
+                  Применить
+                </button>
+              </div>
+              <div className="ts-mobile-filter-hint">{ageApplied ? `фильтр: ${ageApplied}` : 'например 15 или 12-15'}</div>
+            </div>
+
+            <div className="ts-mobile-filter-group">
+              <div className="ts-mobile-filter-group-label">Цена</div>
+              <div className="ts-mobile-filter-chips">
+                {[
+                  { k: 'paid' as const, l: 'Платно' },
+                  { k: 'free' as const, l: 'Бесплатно' }
+                ].map((p) => (
+                  <Chip
+                    key={p.k}
+                    label={p.l}
+                    active={fPrice === p.k}
+                    onClick={() => setFPrice((prev) => (prev === p.k ? null : p.k))}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="ts-mobile-filter-group">
+              <div className="ts-mobile-filter-group-label">Уровень</div>
+              <div className="ts-mobile-filter-chips">
+                {[
+                  { k: 'local' as const, l: 'Локальные' },
+                  { k: 'intl' as const, l: 'Международные' }
+                ].map((p) => (
+                  <Chip
+                    key={p.k}
+                    label={p.l}
+                    active={fLevel === p.k}
+                    onClick={() => setFLevel((prev) => (prev === p.k ? null : p.k))}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="ts-mobile-filter-actions">
+              <button className="ts-mobile-filter-reset" onClick={resetFilters}>
+                Сбросить
+              </button>
+              <button className="ts-mobile-filter-apply" onClick={() => setMobileFiltersOpen(false)}>
+                Показать
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isVote && (
         <div className="ts-cat-chip-row">

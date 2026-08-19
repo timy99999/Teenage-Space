@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
+import { BottomNav } from './components/BottomNav';
 import { Loader } from './components/Loader';
 import { Toast } from './components/Toast';
 import { EventModal } from './components/EventModal';
+import { useIsMobile } from './hooks/useIsMobile';
 import { HomePage } from './pages/HomePage';
 import { GridPage } from './pages/GridPage';
 import { EducationPage } from './pages/EducationPage';
@@ -32,8 +34,15 @@ function AppLayout() {
       </main>
       <EventModal />
       <Toast />
+      <BottomNav />
     </div>
   );
+}
+
+function HomeGate() {
+  const isMobile = useIsMobile();
+  if (isMobile) return <Navigate to="/opportunities" replace />;
+  return <HomePage />;
 }
 
 export default function App() {
@@ -50,7 +59,7 @@ export default function App() {
     <Routes>
       <Route path="/auth" element={<AuthShell />} />
       <Route path="/" element={<AppLayout />}>
-        <Route index element={<HomePage />} />
+        <Route index element={<HomeGate />} />
         <Route path="news" element={<GridPage mode="news" />} />
         <Route path="opportunities" element={<GridPage mode="opps" />} />
         <Route path="opportunities/:category" element={<GridPage mode="opps" />} />

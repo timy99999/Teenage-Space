@@ -1,0 +1,385 @@
+/* ==========================================================================
+   Mobile app adaptation. Everything below is either invisible on desktop
+   by default (new mobile-only pieces) or only takes effect inside the
+   max-width media query (overrides of the desktop layout).
+   ========================================================================== */
+
+.ts-bottomnav,
+.ts-mobile-topbar,
+.ts-mobile-filter-overlay,
+.ts-account-links {
+  display: none;
+}
+
+@keyframes tsSheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 680px) {
+  /* ---- shell: sidebar out, bottom tab bar in ---- */
+  .ts-sidebar {
+    display: none;
+  }
+  .ts-back-btn {
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+  }
+  .ts-footer {
+    display: none;
+  }
+  .ts-sizer {
+    display: none;
+  }
+  .ts-toast {
+    bottom: calc(62px + env(safe-area-inset-bottom, 0px) + 14px);
+    z-index: 600;
+  }
+  .ts-modal-overlay {
+    z-index: 700;
+    padding: 0;
+    align-items: flex-end;
+  }
+  .ts-modal {
+    max-width: none;
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+
+  .ts-bottomnav {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 500;
+    height: 62px;
+    padding: 0 6px env(safe-area-inset-bottom, 0px);
+    background: var(--ts-side);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    align-items: center;
+    justify-content: space-around;
+  }
+  .ts-bottomnav-btn {
+    flex: 1;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ts-side-dim);
+  }
+  .ts-bottomnav-btn.active {
+    color: #fff;
+  }
+  .ts-bottomnav-avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #8f8f8f;
+    color: #1a1a1a;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1.5px solid transparent;
+  }
+  .ts-bottomnav-btn.account.active .ts-bottomnav-avatar {
+    border-color: var(--ts-violet);
+  }
+
+  /* ---- account page: quick links to sections missing from the tab bar ---- */
+  .ts-account-links {
+    display: flex;
+    flex-direction: column;
+    margin: 14px 0 22px;
+    border: 1px solid var(--ts-line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .ts-account-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--ts-surface);
+    border: none;
+    border-bottom: 1px solid var(--ts-line);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ts-fg);
+    text-align: left;
+    cursor: pointer;
+  }
+  .ts-account-link:last-child {
+    border-bottom: none;
+  }
+  .ts-account-link .arrow {
+    color: var(--ts-violet);
+  }
+
+  /* ---- generic page paddings ---- */
+  .ts-page,
+  .ts-edu-page {
+    padding: 18px 18px calc(40px + 62px + env(safe-area-inset-bottom, 0px));
+  }
+  .ts-article-page {
+    padding: 60px 18px calc(60px + 62px + env(safe-area-inset-bottom, 0px));
+  }
+  .ts-page-title {
+    font-size: 30px;
+  }
+  .ts-edu-title,
+  .ts-article-title {
+    font-size: 28px;
+  }
+  .ts-profile-head {
+    gap: 16px;
+  }
+  .ts-profile-avatar {
+    width: 76px;
+    height: 76px;
+    font-size: 26px;
+  }
+  .ts-profile-actions {
+    margin-left: 0;
+    width: 100%;
+  }
+  .ts-publish-grid {
+    margin-top: 18px;
+    gap: 18px;
+  }
+
+  /* ---- grid pages: replace the desktop diagonal header with a plain top bar ---- */
+  .ts-grid-header {
+    display: none;
+  }
+
+  .ts-mobile-topbar {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--ts-blue);
+  }
+  .ts-mobile-pageheader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .ts-mobile-pagetitle-wrap {
+    min-width: 0;
+  }
+  .ts-mobile-pagetitle {
+    font-family: 'Bryndan Write', 'Comfortaa', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.1;
+    color: #fff;
+  }
+  .ts-mobile-pagesubtitle {
+    margin-top: 2px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+  }
+  .ts-mobile-hamburger {
+    position: relative;
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.14);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+  }
+  .ts-mobile-hamburger-badge {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--ts-violet);
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+  }
+
+  .ts-mobile-subtabs {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .ts-mobile-subtabs::-webkit-scrollbar {
+    display: none;
+  }
+  .ts-mobile-subtab {
+    flex: 0 0 auto;
+    padding: 7px 15px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255, 255, 255, 0.35);
+    background: transparent;
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13.5px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .ts-mobile-subtab.active {
+    background: #fff;
+    border-color: #fff;
+    color: var(--ts-blue);
+    font-weight: 600;
+  }
+
+  .ts-cat-chip-row {
+    padding: 14px 16px 0;
+  }
+
+  .ts-card-grid {
+    padding: 16px 14px calc(90px + 62px + env(safe-area-inset-bottom, 0px));
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .ts-empty {
+    padding: 60px 20px calc(60px + 62px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* ---- mobile filter sheet ---- */
+  .ts-mobile-filter-overlay {
+    display: flex;
+    align-items: flex-end;
+    position: fixed;
+    inset: 0;
+    z-index: 550;
+    background: rgba(0, 0, 0, 0.5);
+    animation: tsIn 0.18s ease;
+  }
+  .ts-mobile-filter-sheet {
+    width: 100%;
+    max-height: 82vh;
+    overflow-y: auto;
+    background: var(--ts-surface);
+    border-radius: 20px 20px 0 0;
+    padding: 10px 20px calc(18px + env(safe-area-inset-bottom, 0px));
+    animation: tsSheetUp 0.24s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .ts-mobile-filter-handle {
+    width: 38px;
+    height: 4px;
+    margin: 6px auto 14px;
+    border-radius: 2px;
+    background: var(--ts-line);
+  }
+  .ts-mobile-filter-title {
+    font-family: 'Bryndan Write', 'Comfortaa', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--ts-blue);
+    margin-bottom: 16px;
+  }
+  .ts-mobile-filter-group {
+    padding: 16px 0;
+    border-top: 1px solid var(--ts-line);
+  }
+  .ts-mobile-filter-title + .ts-mobile-filter-group {
+    border-top: none;
+    padding-top: 0;
+  }
+  .ts-mobile-filter-group-label {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  .ts-mobile-filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ts-mobile-filter-age-row {
+    display: flex;
+    gap: 8px;
+  }
+  .ts-mobile-age-input {
+    flex: 1;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--ts-line);
+    background: var(--ts-surface2);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ts-fg);
+  }
+  .ts-mobile-age-apply {
+    padding: 0 18px;
+    border-radius: 12px;
+    border: none;
+    background: var(--ts-violet);
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .ts-mobile-filter-hint {
+    margin-top: 8px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    color: var(--ts-muted);
+  }
+  .ts-mobile-filter-actions {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 14px;
+    background: var(--ts-surface);
+    border-top: 1px solid var(--ts-line);
+  }
+  .ts-mobile-filter-reset {
+    flex: 1;
+    padding: 13px;
+    border-radius: 999px;
+    border: 1px solid var(--ts-line);
+    background: transparent;
+    color: var(--ts-fg);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14.5px;
+    cursor: pointer;
+  }
+  .ts-mobile-filter-apply {
+    flex: 2;
+    padding: 13px;
+    border-radius: 999px;
+    border: none;
+    background: var(--ts-violet);
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    cursor: pointer;
+  }
+}

@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { useSubmissions } from '../hooks/useSubmissions';
@@ -12,6 +12,7 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export function ProfilePage() {
+  const navigate = useNavigate();
   const { session, profile, refreshProfile } = useAuth();
   const { theme, setTheme, flash } = useUI();
   const { submissions } = useSubmissions();
@@ -33,6 +34,22 @@ export function ProfilePage() {
   return (
     <div className="ts-page">
       <h1 className="ts-page-title">Профиль</h1>
+
+      <div className="ts-account-links">
+        <button className="ts-account-link" onClick={() => navigate('/favorites')}>
+          <span>Избранное</span>
+          <span className="arrow">→</span>
+        </button>
+        <button className="ts-account-link" onClick={() => navigate('/vote')}>
+          <span>Голосование</span>
+          <span className="arrow">→</span>
+        </button>
+        <button className="ts-account-link" onClick={() => navigate('/settings')}>
+          <span>Настройки</span>
+          <span className="arrow">→</span>
+        </button>
+      </div>
+
       <div className="ts-profile-head">
         <div className="ts-profile-avatar">{(profile?.username ?? '?').slice(0, 1).toUpperCase()}</div>
         <div className="ts-profile-info">
