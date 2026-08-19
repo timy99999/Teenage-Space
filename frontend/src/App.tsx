@@ -11,6 +11,7 @@ import { GridPage } from './pages/GridPage';
 import { EducationPage } from './pages/EducationPage';
 import { ArticlePage } from './pages/ArticlePage';
 import { ProfilePage } from './pages/ProfilePage';
+import { EditAccountPage } from './pages/EditAccountPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { PublishPage } from './pages/PublishPage';
 import { AuthPage } from './pages/AuthPage';
@@ -69,6 +70,7 @@ export default function App() {
         <Route path="education/abroad" element={<EducationPage track="edu-abroad" />} />
         <Route path="article/:id" element={<ArticlePage />} />
         <Route path="profile" element={<ProfilePage />} />
+        <Route path="profile/edit" element={<EditAccountPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="publish" element={<PublishPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -32,7 +32,9 @@ export function Sidebar() {
   return (
     <aside className="ts-sidebar">
       <button className="ts-account" onClick={() => navigate(session ? '/profile' : '/auth')}>
-        <span className="ts-avatar">{avatarLetter}</span>
+        <span className="ts-avatar">
+          {profile?.avatarUrl ? <img src={profile.avatarUrl} alt={profile.username} /> : avatarLetter}
+        </span>
         <span className="ts-account-label">{accountLabel}</span>
       </button>
 

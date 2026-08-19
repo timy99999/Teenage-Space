@@ -1,8 +1,19 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import type { User } from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase/supabase.service';
 import { ProfileRow, mapProfile } from '../common/mappers';
 import { UpdateProfileDto } from './update-profile.dto';
+
+const NAME_CHANGE_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
+
+function assertCooldownElapsed(fieldLabel: string, changedAt: string | null) {
+  if (!changedAt) return;
+  const nextAllowed = new Date(changedAt).getTime() + NAME_CHANGE_COOLDOWN_MS;
+  if (Date.now() < nextAllowed) {
+    const date = new Date(nextAllowed).toLocaleDateString('ru-RU');
+    throw new BadRequestException(`${fieldLabel} можно менять раз в неделю. Следующее изменение будет доступно ${date}`);
+  }
+}
 
 @Injectable()
 export class ProfileService {
@@ -31,14 +42,25 @@ export class ProfileService {
   }
 
   async update(user: User, dto: UpdateProfileDto) {
+    const current = await this.getOrCreate(user);
+    const now = new Date();
     const patch: Record<string, unknown> = {};
-    if (dto.username !== undefined) patch.username = dto.username;
-    if (dto.name !== undefined) patch.name = dto.name;
-    if (dto.birthDate !== undefined) patch.birth_date = dto.birthDate;
+
+    if (dto.name !== undefined && dto.name !== current.name) {
+      assertCooldownElapsed('Имя', current.nameChangedAt);
+      patch.name = dto.name;
+      patch.name_changed_at = now.toISOString();
+    }
+    if (dto.username !== undefined && dto.username !== current.username) {
+      assertCooldownElapsed('Username', current.usernameChangedAt);
+      patch.username = dto.username;
+      patch.username_changed_at = now.toISOString();
+    }
+    if (dto.lastName !== undefined) patch.last_name = dto.lastName;
+    if (dto.avatarUrl !== undefined) patch.avatar_url = dto.avatarUrl;
+    if (dto.birthDate !== undefined) patch.birth_date = dto.birthDate || null;
     if (dto.theme !== undefined) patch.theme = dto.theme;
     if (dto.notifOptIn !== undefined) patch.notif_opt_in = dto.notifOptIn;
-
-    await this.getOrCreate(user);
 
     const { data, error } = await this.supabase.client
       .from('profiles')
@@ -51,5 +73,10 @@ export class ProfileService {
       throw error;
     }
     return mapProfile(data as ProfileRow);
+  }
+
+  async remove(user: User) {
+    const { error } = await this.supabase.client.auth.admin.deleteUser(user.id);
+    if (error) throw error;
   }
 }

@@ -76,7 +76,9 @@ export function BottomNav() {
         aria-label="Аккаунт"
         onClick={() => navigate(session ? '/profile' : '/auth')}
       >
-        <span className="ts-bottomnav-avatar">{avatarLetter}</span>
+        <span className="ts-bottomnav-avatar">
+          {profile?.avatarUrl ? <img src={profile.avatarUrl} alt={profile.username} /> : avatarLetter}
+        </span>
       </button>
     </nav>
   );

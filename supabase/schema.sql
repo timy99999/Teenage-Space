@@ -10,10 +10,14 @@ create table if not exists profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   username text unique not null,
   name text not null default '',
+  last_name text not null default '',
   birth_date date,
   email text,
+  avatar_url text,
   theme text not null default 'light' check (theme in ('light', 'dark')),
   notif_opt_in boolean not null default false,
+  name_changed_at timestamptz,
+  username_changed_at timestamptz,
   created_at timestamptz not null default now()
 );
 
@@ -145,6 +149,25 @@ create table if not exists submissions (
 alter table submissions enable row level security;
 create policy "submissions are owner-only" on submissions
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- ---------------------------------------------------------------------------
+-- avatars: public storage bucket for profile pictures, one folder per user
+-- ---------------------------------------------------------------------------
+insert into storage.buckets (id, name, public)
+values ('avatars', 'avatars', true)
+on conflict (id) do nothing;
+
+create policy "Avatar images are publicly accessible" on storage.objects
+  for select using (bucket_id = 'avatars');
+create policy "Users can upload their own avatar" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "Users can update their own avatar" on storage.objects
+  for update to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+create policy "Users can delete their own avatar" on storage.objects
+  for delete to authenticated
+  using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
 
 -- Backend calls always use the service_role key, which bypasses RLS -
 -- the policies above only protect direct client (anon/authenticated) access,

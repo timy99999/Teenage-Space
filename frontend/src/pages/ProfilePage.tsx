@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { useSubmissions } from '../hooks/useSubmissions';
 import { api } from '../lib/api';
+import { ConfirmDialog } from '../components/ConfirmDialog';
 import type { Profile } from '../types';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -11,11 +13,21 @@ const STATUS_LABEL: Record<string, string> = {
   rejected: 'Отклонено'
 };
 
+function PencilIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </svg>
+  );
+}
+
 export function ProfilePage() {
   const navigate = useNavigate();
-  const { session, profile, refreshProfile } = useAuth();
-  const { theme, setTheme, flash } = useUI();
+  const { session, profile, refreshProfile, signOut } = useAuth();
+  const { theme, setTheme } = useUI();
   const { submissions } = useSubmissions();
+  const [confirmLogout, setConfirmLogout] = useState(false);
 
   if (!session) return <Navigate to="/auth" replace />;
 
@@ -29,47 +41,70 @@ export function ProfilePage() {
     await api.patch<Profile>('/profile', { notifOptIn: !profile.notifOptIn }).then(refreshProfile).catch(() => {});
   }
 
+  async function onLogout() {
+    setConfirmLogout(false);
+    await signOut();
+    navigate('/auth');
+  }
+
   const notifOn = !!profile?.notifOptIn;
 
   return (
     <div className="ts-page">
-      <h1 className="ts-page-title">Профиль</h1>
-
-      <div className="ts-account-links">
-        <button className="ts-account-link" onClick={() => navigate('/favorites')}>
-          <span>Избранное</span>
-          <span className="arrow">→</span>
-        </button>
-        <button className="ts-account-link" onClick={() => navigate('/vote')}>
-          <span>Голосование</span>
-          <span className="arrow">→</span>
-        </button>
-        <button className="ts-account-link" onClick={() => navigate('/settings')}>
-          <span>Настройки</span>
-          <span className="arrow">→</span>
+      <div className="ts-profile-top">
+        <div className="ts-account-links">
+          <button className="ts-account-link" onClick={() => navigate('/favorites')}>
+            <span>Избранное</span>
+            <span className="arrow">→</span>
+          </button>
+          <button className="ts-account-link" onClick={() => navigate('/vote')}>
+            <span>Голосование</span>
+            <span className="arrow">→</span>
+          </button>
+        </div>
+        <button className="ts-logout-link" onClick={() => setConfirmLogout(true)}>
+          Выйти из аккаунта
         </button>
       </div>
 
       <div className="ts-profile-head">
-        <div className="ts-profile-avatar">{(profile?.username ?? '?').slice(0, 1).toUpperCase()}</div>
-        <div className="ts-profile-info">
-          <div className="ts-profile-name">{profile?.name ?? ''}</div>
-          <div className="ts-profile-username">@{profile?.username ?? ''}</div>
-          <div className="ts-profile-birth">Дата рождения: {profile?.birthDate ?? '—'}</div>
+        <div className="ts-profile-avatar">
+          {profile?.avatarUrl ? (
+            <img src={profile.avatarUrl} alt={profile.username} />
+          ) : (
+            (profile?.username ?? '?').slice(0, 1).toUpperCase()
+          )}
         </div>
-        <div className="ts-profile-actions">
-          <button className="ts-btn-ghost" onClick={() => flash('Изменение аватара появится в следующей версии')}>
-            Изменить аватар
-          </button>
-          <button className="ts-btn-ghost" onClick={() => flash('Изменение имени появится в следующей версии')}>
-            Изменить имя
-          </button>
-          <button className="ts-btn-ghost" onClick={() => flash('Username можно изменить через 7 дней')}>
-            Изменить username
+        <div className="ts-profile-info">
+          <div className="ts-profile-name-row">
+            <div className="ts-profile-name">{profile?.username ?? ''}</div>
+            <button className="ts-edit-pencil" aria-label="Редактировать аккаунт" onClick={() => navigate('/profile/edit')}>
+              <PencilIcon />
+            </button>
+          </div>
+          <div className="ts-profile-username">{profile?.email ?? ''}</div>
+        </div>
+      </div>
+
+      <div className="ts-profile-details-row">
+        <div className="ts-profile-details">
+          <div>
+            <span className="label">Фамилия:</span> {profile?.lastName || '—'}
+          </div>
+          <div>
+            <span className="label">Имя:</span> {profile?.name || '—'}
+          </div>
+          <div>
+            <span className="label">Дата Рождения:</span> {profile?.birthDate ?? '—'}
+          </div>
+        </div>
+        <div className="ts-profile-quicklinks">
+          <button onClick={() => navigate('/settings')}>Настройки</button>
+          <button onClick={() => document.getElementById('publications')?.scrollIntoView({ behavior: 'smooth' })}>
+            Публикации
           </button>
         </div>
       </div>
-      <div className="ts-hint">Username можно менять не чаще одного раза в 7 дней</div>
 
       <div className="ts-settings-block">
         <h2 className="ts-block-title">Настройки</h2>
@@ -96,8 +131,8 @@ export function ProfilePage() {
         </div>
       </div>
 
-      <div className="ts-requests-block">
-        <h2 className="ts-block-title">Мои заявки</h2>
+      <div className="ts-requests-block" id="publications">
+        <h2 className="ts-block-title">Публикации</h2>
         {submissions.map((r) => (
           <div className="ts-request-row" key={r.id}>
             <span className="ts-request-title">{r.title}</span>
@@ -106,6 +141,16 @@ export function ProfilePage() {
         ))}
         {submissions.length === 0 && <div className="ts-center-note">Ничего нет</div>}
       </div>
+
+      {confirmLogout && (
+        <ConfirmDialog
+          title="Выйти из аккаунта?"
+          message="Вы сможете снова войти в любое время."
+          confirmLabel="Выйти"
+          onConfirm={onLogout}
+          onCancel={() => setConfirmLogout(false)}
+        />
+      )}
     </div>
   );
 }

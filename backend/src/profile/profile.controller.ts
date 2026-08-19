@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Patch, UseGuards } from '@nestjs/common';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 import { CurrentUser } from '../auth/supabase-user.decorator';
 import type { User } from '@supabase/supabase-js';
@@ -18,5 +18,11 @@ export class ProfileController {
   @Patch()
   update(@CurrentUser() user: User, @Body() dto: UpdateProfileDto) {
     return this.profile.update(user, dto);
+  }
+
+  @Delete()
+  @HttpCode(204)
+  remove(@CurrentUser() user: User) {
+    return this.profile.remove(user);
   }
 }

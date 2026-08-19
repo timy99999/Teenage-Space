@@ -86,9 +86,14 @@ export interface ProfileRow {
   id: string;
   username: string;
   name: string;
+  last_name: string;
   birth_date: string | null;
+  email: string | null;
+  avatar_url: string | null;
   theme: 'light' | 'dark';
   notif_opt_in: boolean;
+  name_changed_at: string | null;
+  username_changed_at: string | null;
 }
 
 export function mapProfile(row: ProfileRow) {
@@ -96,9 +101,14 @@ export function mapProfile(row: ProfileRow) {
     id: row.id,
     username: row.username,
     name: row.name,
+    lastName: row.last_name,
     birthDate: row.birth_date,
+    email: row.email,
+    avatarUrl: row.avatar_url,
     theme: row.theme,
-    notifOptIn: row.notif_opt_in
+    notifOptIn: row.notif_opt_in,
+    nameChangedAt: row.name_changed_at,
+    usernameChangedAt: row.username_changed_at
   };
 }
 

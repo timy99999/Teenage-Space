@@ -50,9 +50,14 @@ export interface Profile {
   id: string;
   username: string;
   name: string;
+  lastName: string;
   birthDate: string | null;
+  email: string | null;
+  avatarUrl: string | null;
   theme: 'light' | 'dark';
   notifOptIn: boolean;
+  nameChangedAt: string | null;
+  usernameChangedAt: string | null;
 }
 
 export type SubmissionStatus = 'pending' | 'approved' | 'rejected';

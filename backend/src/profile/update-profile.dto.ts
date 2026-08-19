@@ -11,7 +11,15 @@ export class UpdateProfileDto {
 
   @IsOptional()
   @IsString()
+  lastName?: string;
+
+  @IsOptional()
+  @IsString()
   birthDate?: string;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string;
 
   @IsOptional()
   @IsIn(['light', 'dark'])
