@@ -76,7 +76,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
           <div className="ts-filters">
             <div className="ts-filter-group">
               <div className="ts-filter-label">Тема</div>
-              <div className="ts-filter-chips">
+              <div className="ts-filter-chips grid-2">
                 {THEMES.map((t) => (
                   <Chip
                     key={t.key}
