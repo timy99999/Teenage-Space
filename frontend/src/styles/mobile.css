@@ -242,6 +242,9 @@
   .ts-grid-header {
     display: none;
   }
+  .ts-grid-page-compact {
+    zoom: 1;
+  }
 
   .ts-mobile-topbar {
     display: block;

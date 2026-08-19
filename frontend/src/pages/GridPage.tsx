@@ -73,7 +73,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
   };
 
   return (
-    <div className="ts-grid-page">
+    <div className={`ts-grid-page${isOpps || isVote ? ' ts-grid-page-compact' : ''}`}>
       <header className="ts-grid-header">
         <div className="ts-grid-title-wrap">
           <h1 className="ts-grid-title">{pageTitle}</h1>

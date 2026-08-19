@@ -471,6 +471,9 @@
   flex: 1;
   animation: tsIn 0.25s ease;
 }
+.ts-grid-page-compact {
+  zoom: 0.9;
+}
 .ts-grid-header {
   position: sticky;
   top: 0;
