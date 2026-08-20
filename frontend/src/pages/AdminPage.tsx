@@ -70,7 +70,7 @@ export function AdminPage() {
   return (
     <div className="ts-page">
       <h1 className="ts-page-title">Админ-панель</h1>
-      <div className="ts-theme-btns" style={{ marginTop: 18, marginBottom: 8, flexWrap: 'wrap' }}>
+      <div className="ts-theme-btns ts-admin-tabs" style={{ marginTop: 18, marginBottom: 8 }}>
         {TABS.map((t) => (
           <button key={t.key} className={`ts-theme-btn${tab === t.key ? ' on' : ''}`} onClick={() => setTab(t.key)}>
             {t.label}
@@ -288,14 +288,12 @@ function PublishEventTab() {
   }
 
   return (
-    <div className="ts-publish-grid" style={{ marginTop: 20 }}>
-      <div className="ts-publish-col">
-        <section className="ts-card-panel">
-          <h2>Информация для сайта</h2>
-          <div className="desc">Определяет категорию, фильтры и расположение мероприятия</div>
-          <PostSiteInfo value={form} onChange={setForm} />
-        </section>
-      </div>
+    <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 24 }}>
+      <section className="ts-card-panel">
+        <h2>Информация для сайта</h2>
+        <div className="desc">Определяет категорию, фильтры и расположение мероприятия</div>
+        <PostSiteInfo value={form} onChange={setForm} />
+      </section>
 
       <section className="ts-card-panel">
         <h2>Информация для карточки</h2>
@@ -362,7 +360,7 @@ function PublishNewsTab() {
   }
 
   return (
-    <section className="ts-card-panel" style={{ marginTop: 20, maxWidth: 520 }}>
+    <section className="ts-card-panel" style={{ marginTop: 20 }}>
       <h2>Новая новость</h2>
       <div className="desc">Фото и текст, без категорий и фильтров</div>
       <div className="ts-field-group">

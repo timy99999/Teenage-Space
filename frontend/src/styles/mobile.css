@@ -464,4 +464,33 @@
     font-size: 14.5px;
     cursor: pointer;
   }
+
+  /* ---- admin panel ---- */
+  .ts-admin-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    margin-left: -18px;
+    margin-right: -18px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .ts-admin-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .ts-admin-tabs .ts-theme-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .ts-admin-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .ts-admin-stat-value {
+    font-size: 26px;
+  }
+  .ts-settings-row {
+    gap: 10px;
+  }
 }

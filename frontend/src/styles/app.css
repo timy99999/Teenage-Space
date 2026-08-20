@@ -1193,6 +1193,9 @@
   display: flex;
   gap: 8px;
 }
+.ts-admin-tabs {
+  flex-wrap: wrap;
+}
 .ts-theme-btn {
   padding: 8px 16px;
   border-radius: 999px;
