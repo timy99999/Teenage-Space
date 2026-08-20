@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
 import { AdminService } from './admin.service';
@@ -28,6 +28,12 @@ export class AdminController {
   @Post('submissions/:id/reject')
   rejectSubmission(@Param('id') id: string) {
     return this.admin.rejectSubmission(id);
+  }
+
+  @Delete('events/:id')
+  @HttpCode(204)
+  deleteEvent(@Param('id') id: string) {
+    return this.admin.deleteEvent(id);
   }
 
   @Get('users')

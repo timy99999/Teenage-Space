@@ -104,6 +104,12 @@ export class AdminService {
     return mapEvent(event as EventRow);
   }
 
+  async deleteEvent(id: string) {
+    await this.supabase.client.from('submissions').update({ published_event_id: null }).eq('published_event_id', id);
+    const { error } = await this.supabase.client.from('events').delete().eq('id', id);
+    if (error) throw error;
+  }
+
   async rejectSubmission(id: string) {
     const { data, error } = await this.supabase.client
       .from('submissions')

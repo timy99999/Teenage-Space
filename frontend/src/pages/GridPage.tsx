@@ -4,11 +4,16 @@ import { useEvents } from '../hooks/useEvents';
 import { useNews } from '../hooks/useNews';
 import { useFavorites } from '../hooks/useFavorites';
 import { useRatings } from '../hooks/useRatings';
+import { useAuth } from '../contexts/AuthContext';
+import { useUI } from '../contexts/UIContext';
+import { api } from '../lib/api';
 import { CATS, THEMES, TITLES, plural } from '../data/constants';
 import { EventCard } from '../components/EventCard';
 import { NewsCard } from '../components/NewsCard';
 import { Chip } from '../components/Chip';
 import { CardSizeSlider } from '../components/CardSizeSlider';
+import { ConfirmDialog } from '../components/ConfirmDialog';
+import type { EventItem } from '../types';
 
 export type GridMode = 'opps' | 'fav' | 'vote' | 'news';
 
@@ -23,6 +28,10 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const [ageInput, setAgeInput] = useState('');
   const [ageApplied, setAgeApplied] = useState('');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
+  const [deleteTarget, setDeleteTarget] = useState<EventItem | null>(null);
+  const { isAdmin } = useAuth();
+  const { flash } = useUI();
 
   const isOpps = mode === 'opps';
   const isFav = mode === 'fav';
@@ -31,7 +40,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
 
   const scope = isVote ? 'past' : isFav ? 'all' : 'upcoming';
 
-  const { events } = useEvents({
+  const { events: fetchedEvents } = useEvents({
     scope,
     category: isOpps ? category : undefined,
     categories: isVote ? fCats : undefined,
@@ -40,11 +49,25 @@ export function GridPage({ mode }: { mode: GridMode }) {
     level: fLevel,
     age: ageApplied
   });
+  const events = fetchedEvents.filter((e) => !removedIds.has(e.id));
   const { news } = useNews();
   const { favorites, toggle } = useFavorites();
   const { ratings, rate } = useRatings();
 
   const openEvent = (id: string) => setParams({ event: id });
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
+    setDeleteTarget(null);
+    try {
+      await api.del(`/admin/events/${id}`);
+      setRemovedIds((prev) => new Set(prev).add(id));
+      flash('Пост удалён');
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось удалить пост');
+    }
+  }
 
   let count = 0;
   let isEmpty = false;
@@ -325,9 +348,22 @@ export function GridPage({ mode }: { mode: GridMode }) {
               onToggleFav={() => toggle(e.id)}
               rating={ratings[e.id] ?? 0}
               onRate={(n) => rate(e.id, n)}
+              canDelete={isAdmin}
+              onDelete={() => setDeleteTarget(e)}
             />
           ))}
         </div>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Удалить пост?"
+          message={`«${deleteTarget.title}» будет удалён без возможности восстановления.`}
+          confirmLabel="Удалить"
+          danger
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
       )}
 
       <CardSizeSlider />

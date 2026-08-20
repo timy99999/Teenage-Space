@@ -779,6 +779,10 @@
   border-color: #c13584;
   color: #c13584;
 }
+.ts-icon-link.danger:hover {
+  border-color: #d64545;
+  color: #d64545;
+}
 
 /* ---- education / articles ---- */
 .ts-edu-page {
