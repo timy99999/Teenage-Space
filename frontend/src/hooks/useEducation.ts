@@ -20,6 +20,15 @@ export function useEducation(track: string) {
   const [intro, setIntro] = useState(() => seed?.intro ?? '');
   const [loading, setLoading] = useState(() => !seed);
 
+  const reload = useCallback(async () => {
+    const data = await api.get<EducationData>(`/education/${track}`).catch(() => null);
+    if (data) {
+      setTitle(data.title);
+      setIntro(data.intro);
+      setItems(data.items);
+    }
+  }, [track]);
+
   useEffect(() => {
     let cancelled = false;
     const cached = getCached<EducationData>(cacheKey);
@@ -54,7 +63,7 @@ export function useEducation(track: string) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [track]);
 
-  return { title, intro, items, loading };
+  return { title, intro, items, loading, reload };
 }
 
 export function useEducationTracks() {

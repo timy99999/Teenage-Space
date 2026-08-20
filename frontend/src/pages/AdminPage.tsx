@@ -7,7 +7,7 @@ import { useAdminUsers } from '../hooks/useAdminUsers';
 import { useAdminAnalytics } from '../hooks/useAdminAnalytics';
 import { useAdminArchivedEvents } from '../hooks/useAdminArchivedEvents';
 import { useNews } from '../hooks/useNews';
-import { useEducationTracks } from '../hooks/useEducation';
+import { useEducation, useEducationTracks } from '../hooks/useEducation';
 import { api } from '../lib/api';
 import { Chip } from '../components/Chip';
 import { CATS } from '../data/constants';
@@ -16,7 +16,7 @@ import { ImageUploadField } from '../components/ImageUploadField';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { TrashIcon } from '../components/TrashIcon';
 import { EditEventModal } from '../components/EditEventModal';
-import type { AdminSubmission, AdminUser, EducationTrack, EventItem, NewsItem, PostFormValue, SubmissionStatus } from '../types';
+import type { AdminSubmission, AdminUser, EducationTrack, EventItem, MaterialItem, NewsItem, PostFormValue, SubmissionStatus } from '../types';
 
 const TABS = [
   { key: 'moderation', label: 'Модерация' },
@@ -496,6 +496,7 @@ function EducationTab() {
   const [newIntro, setNewIntro] = useState('');
   const [creating, setCreating] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<EducationTrack | null>(null);
 
   async function create() {
@@ -535,23 +536,29 @@ function EducationTab() {
       <div className="desc" style={{ marginBottom: 10 }}>
         Разделы отображаются как подстраницы «Образование» в меню сайта.
       </div>
-      {tracks.map((t) =>
-        editId === t.id ? (
-          <EducationTrackEditRow key={t.id} track={t} onDone={() => setEditId(null)} onSaved={reload} flash={flash} />
-        ) : (
-          <div className="ts-request-row" key={t.id}>
-            <span className="ts-request-title">{t.title}</span>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button className="ts-btn-outline small" onClick={() => setEditId(t.id)}>
-                Переименовать
-              </button>
-              <button className="ts-btn-outline small danger" onClick={() => setDeleteTarget(t)}>
-                Удалить
-              </button>
+      {tracks.map((t) => (
+        <div key={t.id}>
+          {editId === t.id ? (
+            <EducationTrackEditRow track={t} onDone={() => setEditId(null)} onSaved={reload} flash={flash} />
+          ) : (
+            <div className="ts-request-row">
+              <span className="ts-request-title">{t.title}</span>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button className="ts-btn-outline small" onClick={() => setOpenId(openId === t.id ? null : t.id)}>
+                  {openId === t.id ? 'Скрыть статьи' : 'Статьи'}
+                </button>
+                <button className="ts-btn-outline small" onClick={() => setEditId(t.id)}>
+                  Переименовать
+                </button>
+                <button className="ts-btn-outline small danger" onClick={() => setDeleteTarget(t)}>
+                  Удалить
+                </button>
+              </div>
             </div>
-          </div>
-        )
-      )}
+          )}
+          {openId === t.id && <TrackMaterials trackId={t.id} flash={flash} />}
+        </div>
+      ))}
       {tracks.length === 0 && <div className="ts-center-note">Разделов нет</div>}
 
       <div style={{ marginTop: 30 }}>
@@ -622,6 +629,161 @@ function EducationTrackEditRow({
       <div className="ts-form-stack" style={{ maxWidth: 420 }}>
         <input className="ts-input" placeholder="Название" value={title} onChange={(e) => setTitle(e.target.value)} />
         <input className="ts-input" placeholder="Краткое описание" value={intro} onChange={(e) => setIntro(e.target.value)} />
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="ts-btn-outline small" onClick={save} disabled={saving}>
+            Сохранить
+          </button>
+          <button className="ts-btn-outline small" onClick={onDone}>
+            Отмена
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function bodyToText(body: string[]): string {
+  return body.join('\n\n');
+}
+
+function textToBody(text: string): string[] {
+  return text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
+function TrackMaterials({ trackId, flash }: { trackId: string; flash: (text: string) => void }) {
+  const { items, loading, reload } = useEducation(trackId);
+  const [creating, setCreating] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<MaterialItem | null>(null);
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
+    setDeleteTarget(null);
+    try {
+      await api.del(`/admin/materials/${id}`);
+      flash('Статья удалена');
+      reload();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось удалить статью');
+    }
+  }
+
+  return (
+    <div style={{ margin: '10px 0 20px 20px', paddingLeft: 16, borderLeft: '2px solid var(--ts-line)' }}>
+      {loading && <div className="ts-center-note">Загрузка...</div>}
+      {!loading &&
+        items.map((m) =>
+          editId === m.id ? (
+            <MaterialFormRow
+              key={m.id}
+              trackId={trackId}
+              material={m}
+              onDone={() => setEditId(null)}
+              onSaved={reload}
+              flash={flash}
+            />
+          ) : (
+            <div className="ts-request-row" key={m.id}>
+              <span className="ts-request-title">{m.title}</span>
+              <span className="desc">{m.meta}</span>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button className="ts-btn-outline small" onClick={() => setEditId(m.id)}>
+                  Редактировать
+                </button>
+                <button className="ts-btn-outline small danger" onClick={() => setDeleteTarget(m)}>
+                  Удалить
+                </button>
+              </div>
+            </div>
+          )
+        )}
+      {!loading && items.length === 0 && <div className="ts-center-note">Статей нет</div>}
+
+      {creating ? (
+        <MaterialFormRow
+          trackId={trackId}
+          onDone={() => setCreating(false)}
+          onSaved={reload}
+          flash={flash}
+        />
+      ) : (
+        <button className="ts-btn-outline small" style={{ marginTop: 14 }} onClick={() => setCreating(true)}>
+          Добавить статью
+        </button>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Удалить статью?"
+          message={`«${deleteTarget.title}» будет удалена без возможности восстановления.`}
+          confirmLabel="Удалить"
+          danger
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function MaterialFormRow({
+  trackId,
+  material,
+  onDone,
+  onSaved,
+  flash
+}: {
+  trackId: string;
+  material?: MaterialItem;
+  onDone: () => void;
+  onSaved: () => void;
+  flash: (text: string) => void;
+}) {
+  const [title, setTitle] = useState(material?.title ?? '');
+  const [meta, setMeta] = useState(material?.meta ?? '');
+  const [bodyText, setBodyText] = useState(material ? bodyToText(material.body) : '');
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    const body = textToBody(bodyText);
+    if (!title.trim() || !meta.trim() || body.length === 0) {
+      flash('Заполните название, метку и текст статьи');
+      return;
+    }
+    setSaving(true);
+    try {
+      if (material) {
+        await api.patch(`/admin/materials/${material.id}`, { title, meta, body });
+        flash('Статья обновлена');
+      } else {
+        await api.post('/admin/materials', { track: trackId, title, meta, body });
+        flash('Статья добавлена');
+      }
+      onSaved();
+      onDone();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось сохранить');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="ts-request-row" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
+      <div className="ts-form-stack" style={{ maxWidth: 520 }}>
+        <input className="ts-input" placeholder="Название статьи" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input className="ts-input" placeholder="Метка (например «разбор · 8 мин»)" value={meta} onChange={(e) => setMeta(e.target.value)} />
+        <textarea
+          className="ts-textarea"
+          rows={6}
+          placeholder="Текст статьи. Разделяйте абзацы пустой строкой."
+          value={bodyText}
+          onChange={(e) => setBodyText(e.target.value)}
+        />
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="ts-btn-outline small" onClick={save} disabled={saving}>
             Сохранить

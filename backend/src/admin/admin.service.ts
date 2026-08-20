@@ -8,9 +8,11 @@ import {
   EventRow,
   mapEducationTrack,
   mapEvent,
+  mapMaterial,
   mapNews,
   mapProfile,
   mapSubmissionAdmin,
+  MaterialRow,
   NewsRow,
   ProfileRow,
   SubmissionAdminRow
@@ -21,6 +23,8 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { CreateEducationTrackDto } from './dto/create-education-track.dto';
 import { UpdateEducationTrackDto } from './dto/update-education-track.dto';
+import { CreateMaterialDto } from './dto/create-material.dto';
+import { UpdateMaterialDto } from './dto/update-material.dto';
 
 function deriveAgeLabel(min: number, max: number): string {
   if (min <= 0 && max >= 99) return 'Любой';
@@ -242,6 +246,44 @@ export class AdminService {
   async deleteEducationTrack(id: string) {
     await this.supabase.client.from('materials').delete().eq('track', id);
     const { error } = await this.supabase.client.from('education_tracks').delete().eq('id', id);
+    if (error) throw error;
+    await this.cache.clear();
+  }
+
+  async createMaterial(dto: CreateMaterialDto) {
+    const { data, error } = await this.supabase.client
+      .from('materials')
+      .insert({
+        id: randomUUID(),
+        track: dto.track,
+        title: dto.title,
+        meta: dto.meta,
+        body: dto.body,
+        sort_order: dto.sortOrder ?? 0
+      })
+      .select('*')
+      .single();
+    if (error) throw error;
+    await this.cache.clear();
+    return mapMaterial(data as MaterialRow);
+  }
+
+  async updateMaterial(id: string, dto: UpdateMaterialDto) {
+    const patch: Record<string, unknown> = {};
+    if (dto.track !== undefined) patch.track = dto.track;
+    if (dto.title !== undefined) patch.title = dto.title;
+    if (dto.meta !== undefined) patch.meta = dto.meta;
+    if (dto.body !== undefined) patch.body = dto.body;
+    if (dto.sortOrder !== undefined) patch.sort_order = dto.sortOrder;
+
+    const { data, error } = await this.supabase.client.from('materials').update(patch).eq('id', id).select('*').single();
+    if (error) throw error;
+    await this.cache.clear();
+    return mapMaterial(data as MaterialRow);
+  }
+
+  async deleteMaterial(id: string) {
+    const { error } = await this.supabase.client.from('materials').delete().eq('id', id);
     if (error) throw error;
     await this.cache.clear();
   }

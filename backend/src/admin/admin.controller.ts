@@ -8,6 +8,8 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { CreateEducationTrackDto } from './dto/create-education-track.dto';
 import { UpdateEducationTrackDto } from './dto/update-education-track.dto';
+import { CreateMaterialDto } from './dto/create-material.dto';
+import { UpdateMaterialDto } from './dto/update-material.dto';
 
 @Controller('admin')
 @UseGuards(SupabaseAuthGuard, AdminGuard)
@@ -98,6 +100,22 @@ export class AdminController {
   @HttpCode(204)
   deleteEducationTrack(@Param('id') id: string) {
     return this.admin.deleteEducationTrack(id);
+  }
+
+  @Post('materials')
+  createMaterial(@Body() dto: CreateMaterialDto) {
+    return this.admin.createMaterial(dto);
+  }
+
+  @Patch('materials/:id')
+  updateMaterial(@Param('id') id: string, @Body() dto: UpdateMaterialDto) {
+    return this.admin.updateMaterial(id, dto);
+  }
+
+  @Delete('materials/:id')
+  @HttpCode(204)
+  deleteMaterial(@Param('id') id: string) {
+    return this.admin.deleteMaterial(id);
   }
 
   @Get('users')
