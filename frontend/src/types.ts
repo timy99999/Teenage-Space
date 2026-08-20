@@ -30,6 +30,14 @@ export interface NewsItem {
   title: string;
   date: string;
   short: string;
+  imageUrl: string | null;
+}
+
+export interface CreateNewsInput {
+  title: string;
+  shortDesc: string;
+  eventDate: string;
+  imageUrl: string | null;
 }
 
 export interface MaterialItem {

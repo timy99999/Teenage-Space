@@ -51,6 +51,7 @@ export interface NewsRow {
   title: string;
   event_date: string;
   short_desc: string;
+  image_url: string | null;
 }
 
 export function mapNews(row: NewsRow) {
@@ -58,7 +59,8 @@ export function mapNews(row: NewsRow) {
     id: row.id,
     title: row.title,
     date: row.event_date,
-    short: row.short_desc
+    short: row.short_desc,
+    imageUrl: row.image_url
   };
 }
 

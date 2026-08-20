@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { getCached, getOrFetch } from '../lib/dataCache';
 import type { NewsItem } from '../types';
@@ -9,6 +9,11 @@ const CACHE_KEY = 'news';
 export function useNews() {
   const [news, setNews] = useState<NewsItem[]>(() => getCached<NewsItem[]>(CACHE_KEY) ?? []);
   const [loading, setLoading] = useState(() => !getCached<NewsItem[]>(CACHE_KEY));
+
+  const reload = useCallback(async () => {
+    const data = await api.get<NewsItem[]>('/news').catch(() => []);
+    setNews(data);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -37,5 +42,5 @@ export function useNews() {
     };
   }, []);
 
-  return { news, loading };
+  return { news, loading, reload };
 }

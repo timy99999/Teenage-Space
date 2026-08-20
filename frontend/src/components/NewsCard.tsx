@@ -10,7 +10,7 @@ export function NewsCard({ item }: { item: NewsItem }) {
   return (
     <article className="ts-card">
       <button className="ts-card-img" onClick={open}>
-        <EventPhoto src={null} alt={item.title} />
+        <EventPhoto src={item.imageUrl} alt={item.title} />
         <span className="ts-card-cat-badge">Новость</span>
       </button>
       <button className="ts-card-body" onClick={open}>

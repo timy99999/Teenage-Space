@@ -5,13 +5,18 @@ import { useUI } from '../contexts/UIContext';
 import { useAdminSubmissions } from '../hooks/useAdminSubmissions';
 import { useAdminUsers } from '../hooks/useAdminUsers';
 import { useAdminAnalytics } from '../hooks/useAdminAnalytics';
+import { useNews } from '../hooks/useNews';
 import { api } from '../lib/api';
 import { Chip } from '../components/Chip';
-import { CATS } from '../data/constants';
-import type { AdminSubmission, AdminUser, CreateEventInput, SubmissionStatus } from '../types';
+import { EventForm } from '../components/EventForm';
+import { ImageUploadField } from '../components/ImageUploadField';
+import { ConfirmDialog } from '../components/ConfirmDialog';
+import { TrashIcon } from '../components/TrashIcon';
+import type { AdminSubmission, AdminUser, CreateEventInput, NewsItem, SubmissionStatus } from '../types';
 
 const TABS = [
   { key: 'moderation', label: 'Модерация' },
+  { key: 'publish', label: 'Публикация' },
   { key: 'users', label: 'Пользователи' },
   { key: 'analytics', label: 'Аналитика' }
 ] as const;
@@ -24,15 +29,28 @@ const STATUS_LABEL: Record<SubmissionStatus, string> = {
   rejected: 'Отклонено'
 };
 
-const FORMATS = ['Личное', 'Командное'];
-const PRICES = [
-  { k: 'free' as const, l: 'Бесплатно' },
-  { k: 'paid' as const, l: 'Платно' }
-];
-const LEVELS = [
-  { k: 'local' as const, l: 'Локальное' },
-  { k: 'intl' as const, l: 'Международное' }
-];
+function emptyEventForm(): CreateEventInput {
+  return {
+    title: '',
+    category: '',
+    themes: [],
+    ageMin: 0,
+    ageMax: 0,
+    ageLabel: '',
+    price: 'free',
+    cost: null,
+    level: 'local',
+    format: '',
+    eventDate: '',
+    deadlineDate: null,
+    place: '',
+    shortDesc: '',
+    description: '',
+    instagram: false,
+    registrationUrl: null,
+    imageUrl: null
+  };
+}
 
 export function AdminPage() {
   const { profile, isAdmin } = useAuth();
@@ -56,6 +74,7 @@ export function AdminPage() {
         ))}
       </div>
       {tab === 'moderation' && <ModerationTab />}
+      {tab === 'publish' && <PublishTab />}
       {tab === 'users' && <UsersTab />}
       {tab === 'analytics' && <AnalyticsTab />}
     </div>
@@ -233,126 +252,7 @@ function SubmissionRow({
 
           <div>
             <div className="ts-field-label">Оформить как мероприятие для публикации</div>
-            <div className="ts-field-group">
-              <div>
-                <div className="ts-field-label">Категория</div>
-                <div className="ts-filter-chips">
-                  {CATS.map((c) => (
-                    <Chip
-                      key={c.key}
-                      label={c.label}
-                      active={form.category === c.key}
-                      onClick={() => setForm((v) => ({ ...v, category: c.key }))}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="ts-field-label">Участие</div>
-                <div className="ts-filter-chips">
-                  {FORMATS.map((f) => (
-                    <Chip key={f} label={f} active={form.format === f} onClick={() => setForm((v) => ({ ...v, format: f }))} />
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="ts-field-label">Цена</div>
-                <div className="ts-filter-chips">
-                  {PRICES.map((p) => (
-                    <Chip key={p.k} label={p.l} active={form.price === p.k} onClick={() => setForm((v) => ({ ...v, price: p.k }))} />
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="ts-field-label">Уровень</div>
-                <div className="ts-filter-chips">
-                  {LEVELS.map((l) => (
-                    <Chip key={l.k} label={l.l} active={form.level === l.k} onClick={() => setForm((v) => ({ ...v, level: l.k }))} />
-                  ))}
-                </div>
-              </div>
-              <div className="ts-date-row">
-                <label className="ts-date-field">
-                  Возраст от
-                  <input
-                    className="ts-input"
-                    type="number"
-                    value={form.ageMin}
-                    onChange={(e) => setForm((v) => ({ ...v, ageMin: Number(e.target.value) }))}
-                  />
-                </label>
-                <label className="ts-date-field">
-                  Возраст до
-                  <input
-                    className="ts-input"
-                    type="number"
-                    value={form.ageMax}
-                    onChange={(e) => setForm((v) => ({ ...v, ageMax: Number(e.target.value) }))}
-                  />
-                </label>
-                <label className="ts-date-field">
-                  Подпись возраста
-                  <input
-                    className="ts-input"
-                    value={form.ageLabel}
-                    onChange={(e) => setForm((v) => ({ ...v, ageLabel: e.target.value }))}
-                  />
-                </label>
-              </div>
-              <div className="ts-date-row">
-                <label className="ts-date-field">
-                  Дата мероприятия
-                  <input
-                    type="date"
-                    className="ts-input"
-                    value={form.eventDate}
-                    onChange={(e) => setForm((v) => ({ ...v, eventDate: e.target.value }))}
-                  />
-                </label>
-                <label className="ts-date-field">
-                  Дедлайн регистрации
-                  <input
-                    type="date"
-                    className="ts-input"
-                    value={form.deadlineDate ?? ''}
-                    onChange={(e) => setForm((v) => ({ ...v, deadlineDate: e.target.value || null }))}
-                  />
-                </label>
-              </div>
-              <input
-                className="ts-input"
-                placeholder="Место проведения"
-                value={form.place}
-                onChange={(e) => setForm((v) => ({ ...v, place: e.target.value }))}
-              />
-              <input
-                className="ts-input"
-                placeholder="Краткое описание для карточки"
-                value={form.shortDesc}
-                onChange={(e) => setForm((v) => ({ ...v, shortDesc: e.target.value }))}
-              />
-              <textarea
-                className="ts-textarea"
-                rows={4}
-                placeholder="Полное описание"
-                value={form.description}
-                onChange={(e) => setForm((v) => ({ ...v, description: e.target.value }))}
-              />
-              <input
-                className="ts-input"
-                placeholder="Ссылка на регистрацию"
-                value={form.registrationUrl ?? ''}
-                onChange={(e) => setForm((v) => ({ ...v, registrationUrl: e.target.value || null }))}
-              />
-              <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Open Sans', sans-serif", fontSize: 14 }}>
-                <input
-                  type="checkbox"
-                  checked={form.instagram}
-                  onChange={(e) => setForm((v) => ({ ...v, instagram: e.target.checked }))}
-                />
-                Анонс был в Instagram
-              </label>
-            </div>
+            <EventForm value={form} onChange={setForm} />
           </div>
 
           <div style={{ display: 'flex', gap: 12 }}>
@@ -366,6 +266,140 @@ function SubmissionRow({
         </div>
       )}
     </div>
+  );
+}
+
+function PublishTab() {
+  return (
+    <div className="ts-publish-grid" style={{ marginTop: 20 }}>
+      <CreateEventPanel />
+      <CreateNewsPanel />
+    </div>
+  );
+}
+
+function CreateEventPanel() {
+  const { flash } = useUI();
+  const [form, setForm] = useState<CreateEventInput>(emptyEventForm);
+  const [busy, setBusy] = useState(false);
+
+  async function publish() {
+    if (!form.title || !form.category || !form.eventDate || !form.place || !form.shortDesc) {
+      flash('Заполните название, категорию, дату, место и краткое описание');
+      return;
+    }
+    setBusy(true);
+    try {
+      await api.post('/admin/events', form);
+      flash('Мероприятие опубликовано');
+      setForm(emptyEventForm());
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось опубликовать');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section className="ts-card-panel">
+      <h2>Новое мероприятие</h2>
+      <div className="desc">Публикуется в «Возможности» сразу, без заявки от пользователя</div>
+      <EventForm value={form} onChange={setForm} />
+      <button className="ts-btn-outline block" style={{ marginTop: 22 }} onClick={publish} disabled={busy}>
+        Опубликовать
+      </button>
+    </section>
+  );
+}
+
+function CreateNewsPanel() {
+  const { flash } = useUI();
+  const { news, reload } = useNews();
+  const [title, setTitle] = useState('');
+  const [shortDesc, setShortDesc] = useState('');
+  const [eventDate, setEventDate] = useState('');
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<NewsItem | null>(null);
+
+  async function publish() {
+    if (!title || !shortDesc || !eventDate) {
+      flash('Заполните заголовок, текст и дату');
+      return;
+    }
+    setBusy(true);
+    try {
+      await api.post('/admin/news', { title, shortDesc, eventDate, imageUrl });
+      flash('Новость опубликована');
+      setTitle('');
+      setShortDesc('');
+      setEventDate('');
+      setImageUrl(null);
+      reload();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось опубликовать');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
+    setDeleteTarget(null);
+    try {
+      await api.del(`/admin/news/${id}`);
+      flash('Новость удалена');
+      reload();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось удалить новость');
+    }
+  }
+
+  return (
+    <section className="ts-card-panel">
+      <h2>Новая новость</h2>
+      <div className="desc">Фото и текст, без категорий и фильтров</div>
+      <div className="ts-field-group">
+        <ImageUploadField value={imageUrl} onChange={setImageUrl} />
+        <input className="ts-input" placeholder="Заголовок" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input type="date" className="ts-input" value={eventDate} onChange={(e) => setEventDate(e.target.value)} />
+        <textarea
+          className="ts-textarea"
+          rows={4}
+          placeholder="Текст новости"
+          value={shortDesc}
+          onChange={(e) => setShortDesc(e.target.value)}
+        />
+      </div>
+      <button className="ts-btn-outline block" style={{ marginTop: 22 }} onClick={publish} disabled={busy}>
+        Опубликовать
+      </button>
+
+      <div style={{ marginTop: 30 }}>
+        <div className="ts-field-label">Существующие новости</div>
+        {news.map((n) => (
+          <div className="ts-request-row" key={n.id}>
+            <span className="ts-request-title">{n.title}</span>
+            <button className="ts-icon-link danger" title="Удалить новость" onClick={() => setDeleteTarget(n)}>
+              <TrashIcon />
+            </button>
+          </div>
+        ))}
+        {news.length === 0 && <div className="ts-center-note">Новостей нет</div>}
+      </div>
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Удалить новость?"
+          message={`«${deleteTarget.title}» будет удалена без возможности восстановления.`}
+          confirmLabel="Удалить"
+          danger
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+    </section>
   );
 }
 

@@ -4,6 +4,7 @@ import { AdminGuard } from '../auth/admin.guard';
 import { AdminService } from './admin.service';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { CreateEventDto } from './dto/create-event.dto';
+import { CreateNewsDto } from './dto/create-news.dto';
 
 @Controller('admin')
 @UseGuards(SupabaseAuthGuard, AdminGuard)
@@ -30,10 +31,26 @@ export class AdminController {
     return this.admin.rejectSubmission(id);
   }
 
+  @Post('events')
+  createEvent(@Body() dto: CreateEventDto) {
+    return this.admin.createEvent(dto);
+  }
+
   @Delete('events/:id')
   @HttpCode(204)
   deleteEvent(@Param('id') id: string) {
     return this.admin.deleteEvent(id);
+  }
+
+  @Post('news')
+  createNews(@Body() dto: CreateNewsDto) {
+    return this.admin.createNews(dto);
+  }
+
+  @Delete('news/:id')
+  @HttpCode(204)
+  deleteNews(@Param('id') id: string) {
+    return this.admin.deleteNews(id);
   }
 
   @Get('users')

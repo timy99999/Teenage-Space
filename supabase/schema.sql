@@ -68,7 +68,8 @@ create table if not exists news (
   id text primary key,
   title text not null,
   event_date date not null,
-  short_desc text not null
+  short_desc text not null,
+  image_url text
 );
 
 alter table news enable row level security;
@@ -171,6 +172,25 @@ create policy "Users can update their own avatar" on storage.objects
 create policy "Users can delete their own avatar" on storage.objects
   for delete to authenticated
   using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- ---------------------------------------------------------------------------
+-- posts: public storage bucket for event/news photos, admin-only writes
+-- ---------------------------------------------------------------------------
+insert into storage.buckets (id, name, public)
+values ('posts', 'posts', true)
+on conflict (id) do nothing;
+
+create policy "Post images are publicly accessible" on storage.objects
+  for select using (bucket_id = 'posts');
+create policy "Admins can upload post images" on storage.objects
+  for insert to authenticated
+  with check (bucket_id = 'posts' and exists (select 1 from profiles p where p.id = auth.uid() and p.role = 'admin'));
+create policy "Admins can update post images" on storage.objects
+  for update to authenticated
+  using (bucket_id = 'posts' and exists (select 1 from profiles p where p.id = auth.uid() and p.role = 'admin'));
+create policy "Admins can delete post images" on storage.objects
+  for delete to authenticated
+  using (bucket_id = 'posts' and exists (select 1 from profiles p where p.id = auth.uid() and p.role = 'admin'));
 
 -- Backend calls always use the service_role key, which bypasses RLS -
 -- the policies above only protect direct client (anon/authenticated) access,

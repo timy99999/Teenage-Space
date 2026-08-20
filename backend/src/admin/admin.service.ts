@@ -1,20 +1,28 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 import { randomUUID } from 'crypto';
 import { SupabaseService } from '../supabase/supabase.service';
 import {
   EventRow,
   mapEvent,
+  mapNews,
   mapProfile,
   mapSubmissionAdmin,
+  NewsRow,
   ProfileRow,
   SubmissionAdminRow
 } from '../common/mappers';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { CreateEventDto } from './dto/create-event.dto';
+import { CreateNewsDto } from './dto/create-news.dto';
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly supabase: SupabaseService) {}
+  constructor(
+    private readonly supabase: SupabaseService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache
+  ) {}
 
   async listSubmissions(status?: string) {
     let query = this.supabase.client.from('submissions').select('*').order('created_at', { ascending: false });
@@ -66,11 +74,26 @@ export class AdminService {
     if (subError) throw subError;
     if (!submission) throw new NotFoundException('Заявка не найдена');
 
-    const eventId = randomUUID();
+    const event = await this.insertEvent(dto);
+
+    const { error: updateError } = await this.supabase.client
+      .from('submissions')
+      .update({ status: 'approved', published_event_id: event.id })
+      .eq('id', id);
+    if (updateError) throw updateError;
+
+    return event;
+  }
+
+  async createEvent(dto: CreateEventDto) {
+    return this.insertEvent(dto);
+  }
+
+  private async insertEvent(dto: CreateEventDto) {
     const { data: event, error: eventError } = await this.supabase.client
       .from('events')
       .insert({
-        id: eventId,
+        id: randomUUID(),
         title: dto.title,
         category: dto.category,
         themes: dto.themes ?? [],
@@ -94,13 +117,7 @@ export class AdminService {
       .select('*')
       .single();
     if (eventError) throw eventError;
-
-    const { error: updateError } = await this.supabase.client
-      .from('submissions')
-      .update({ status: 'approved', published_event_id: eventId })
-      .eq('id', id);
-    if (updateError) throw updateError;
-
+    await this.cache.clear();
     return mapEvent(event as EventRow);
   }
 
@@ -108,6 +125,30 @@ export class AdminService {
     await this.supabase.client.from('submissions').update({ published_event_id: null }).eq('published_event_id', id);
     const { error } = await this.supabase.client.from('events').delete().eq('id', id);
     if (error) throw error;
+    await this.cache.clear();
+  }
+
+  async createNews(dto: CreateNewsDto) {
+    const { data, error } = await this.supabase.client
+      .from('news')
+      .insert({
+        id: randomUUID(),
+        title: dto.title,
+        event_date: dto.eventDate,
+        short_desc: dto.shortDesc,
+        image_url: dto.imageUrl ?? null
+      })
+      .select('*')
+      .single();
+    if (error) throw error;
+    await this.cache.clear();
+    return mapNews(data as NewsRow);
+  }
+
+  async deleteNews(id: string) {
+    const { error } = await this.supabase.client.from('news').delete().eq('id', id);
+    if (error) throw error;
+    await this.cache.clear();
   }
 
   async rejectSubmission(id: string) {
