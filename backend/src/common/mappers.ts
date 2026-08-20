@@ -68,6 +68,22 @@ export function mapNews(row: NewsRow) {
   };
 }
 
+export interface EducationTrackRow {
+  id: string;
+  title: string;
+  intro: string;
+  sort_order: number;
+}
+
+export function mapEducationTrack(row: EducationTrackRow) {
+  return {
+    id: row.id,
+    title: row.title,
+    intro: row.intro,
+    sortOrder: row.sort_order
+  };
+}
+
 export interface MaterialRow {
   id: string;
   track: string;

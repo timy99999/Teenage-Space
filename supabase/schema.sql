@@ -78,7 +78,20 @@ alter table news enable row level security;
 create policy "news is public" on news for select using (true);
 
 -- ---------------------------------------------------------------------------
--- materials: education articles, grouped by track (edu-nct / edu-abroad)
+-- education_tracks: admin-managed sub-pages under "Образование"
+-- ---------------------------------------------------------------------------
+create table if not exists education_tracks (
+  id text primary key,
+  title text not null,
+  intro text not null default '',
+  sort_order int not null default 0
+);
+
+alter table education_tracks enable row level security;
+create policy "education tracks are public" on education_tracks for select using (true);
+
+-- ---------------------------------------------------------------------------
+-- materials: education articles, grouped by track (education_tracks.id)
 -- ---------------------------------------------------------------------------
 create table if not exists materials (
   id text primary key,

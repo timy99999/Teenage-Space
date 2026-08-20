@@ -1,25 +1,35 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { SupabaseService } from '../supabase/supabase.service';
-import { MaterialRow, mapMaterial } from '../common/mappers';
-
-const TRACK_INTRO: Record<string, string> = {
-  'edu-nct': 'Материалы, разборы и расписание бесплатных занятий по НЦТ/ОРТ',
-  'edu-abroad': 'Как поступать за границу: сроки, документы, стипендии'
-};
+import { EducationTrackRow, mapEducationTrack, MaterialRow, mapMaterial } from '../common/mappers';
 
 @Injectable()
 export class EducationService {
   constructor(private readonly supabase: SupabaseService) {}
 
+  async listTracks() {
+    const { data, error } = await this.supabase.client.from('education_tracks').select('*').order('sort_order');
+    if (error) throw error;
+    return (data as EducationTrackRow[]).map(mapEducationTrack);
+  }
+
   async byTrack(track: string) {
+    const { data: trackRow, error: trackError } = await this.supabase.client
+      .from('education_tracks')
+      .select('*')
+      .eq('id', track)
+      .maybeSingle();
+    if (trackError) throw trackError;
+    if (!trackRow) throw new NotFoundException('Track not found');
+
     const { data, error } = await this.supabase.client
       .from('materials')
       .select('*')
       .eq('track', track)
       .order('sort_order', { ascending: true });
     if (error) throw error;
+
     return {
-      intro: TRACK_INTRO[track] ?? '',
+      ...mapEducationTrack(trackRow as EducationTrackRow),
       items: (data as MaterialRow[]).map(mapMaterial)
     };
   }

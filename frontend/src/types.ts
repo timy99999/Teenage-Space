@@ -51,6 +51,13 @@ export interface MaterialItem {
   sortOrder: number;
 }
 
+export interface EducationTrack {
+  id: string;
+  title: string;
+  intro: string;
+  sortOrder: number;
+}
+
 export interface CategoryDef {
   key: string;
   label: string;

@@ -10,6 +10,12 @@ const CACHE_CONTROL = 'public, max-age=60, stale-while-revalidate=300';
 export class EducationController {
   constructor(private readonly education: EducationService) {}
 
+  @Get('education/tracks')
+  @Header('Cache-Control', CACHE_CONTROL)
+  listTracks() {
+    return this.education.listTracks();
+  }
+
   @Get('education/:track')
   @Header('Cache-Control', CACHE_CONTROL)
   byTrack(@Param('track') track: string) {

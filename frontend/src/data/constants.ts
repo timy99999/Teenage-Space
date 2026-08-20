@@ -45,15 +45,8 @@ export const TITLES: Record<string, string> = {
   settings: 'Настройки',
   profile: 'Профиль',
   publish: 'Публикация поста',
-  auth: 'Вход',
-  'edu-nct': 'Подготовка к НЦТ/ОРТ',
-  'edu-abroad': 'Подготовка к поступлению за границу'
+  auth: 'Вход'
 };
-
-export const EDU_TRACKS = [
-  { key: 'edu-nct', label: 'Подготовка к НЦТ/ОРТ' },
-  { key: 'edu-abroad', label: 'Подготовка к поступлению за границу' }
-];
 
 export function plural(n: number, one: string, few: string, many: string): string {
   const m10 = n % 10;

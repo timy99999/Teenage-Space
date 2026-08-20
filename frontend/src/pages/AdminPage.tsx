@@ -7,6 +7,7 @@ import { useAdminUsers } from '../hooks/useAdminUsers';
 import { useAdminAnalytics } from '../hooks/useAdminAnalytics';
 import { useAdminArchivedEvents } from '../hooks/useAdminArchivedEvents';
 import { useNews } from '../hooks/useNews';
+import { useEducationTracks } from '../hooks/useEducation';
 import { api } from '../lib/api';
 import { Chip } from '../components/Chip';
 import { CATS } from '../data/constants';
@@ -15,13 +16,14 @@ import { ImageUploadField } from '../components/ImageUploadField';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { TrashIcon } from '../components/TrashIcon';
 import { EditEventModal } from '../components/EditEventModal';
-import type { AdminSubmission, AdminUser, EventItem, NewsItem, PostFormValue, SubmissionStatus } from '../types';
+import type { AdminSubmission, AdminUser, EducationTrack, EventItem, NewsItem, PostFormValue, SubmissionStatus } from '../types';
 
 const TABS = [
   { key: 'moderation', label: 'Модерация' },
   { key: 'publish-event', label: 'Опубликовать в Возможности' },
   { key: 'publish-news', label: 'Опубликовать новость' },
   { key: 'archive', label: 'Архив' },
+  { key: 'education', label: 'Образование' },
   { key: 'users', label: 'Пользователи' },
   { key: 'analytics', label: 'Аналитика' }
 ] as const;
@@ -85,6 +87,7 @@ export function AdminPage() {
       {tab === 'publish-event' && <PublishEventTab />}
       {tab === 'publish-news' && <PublishNewsTab />}
       {tab === 'archive' && <ArchiveTab />}
+      {tab === 'education' && <EducationTab />}
       {tab === 'users' && <UsersTab />}
       {tab === 'analytics' && <AnalyticsTab />}
     </div>
@@ -483,6 +486,152 @@ function ArchiveTab() {
         />
       )}
     </section>
+  );
+}
+
+function EducationTab() {
+  const { flash } = useUI();
+  const { tracks, reload } = useEducationTracks();
+  const [newTitle, setNewTitle] = useState('');
+  const [newIntro, setNewIntro] = useState('');
+  const [creating, setCreating] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<EducationTrack | null>(null);
+
+  async function create() {
+    if (!newTitle.trim()) {
+      flash('Укажите название раздела');
+      return;
+    }
+    setCreating(true);
+    try {
+      await api.post('/admin/education-tracks', { title: newTitle, intro: newIntro });
+      flash('Раздел создан');
+      setNewTitle('');
+      setNewIntro('');
+      reload();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось создать раздел');
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
+    setDeleteTarget(null);
+    try {
+      await api.del(`/admin/education-tracks/${id}`);
+      flash('Раздел удалён');
+      reload();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось удалить раздел');
+    }
+  }
+
+  return (
+    <section className="ts-account-section">
+      <div className="desc" style={{ marginBottom: 10 }}>
+        Разделы отображаются как подстраницы «Образование» в меню сайта.
+      </div>
+      {tracks.map((t) =>
+        editId === t.id ? (
+          <EducationTrackEditRow key={t.id} track={t} onDone={() => setEditId(null)} onSaved={reload} flash={flash} />
+        ) : (
+          <div className="ts-request-row" key={t.id}>
+            <span className="ts-request-title">{t.title}</span>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button className="ts-btn-outline small" onClick={() => setEditId(t.id)}>
+                Переименовать
+              </button>
+              <button className="ts-btn-outline small danger" onClick={() => setDeleteTarget(t)}>
+                Удалить
+              </button>
+            </div>
+          </div>
+        )
+      )}
+      {tracks.length === 0 && <div className="ts-center-note">Разделов нет</div>}
+
+      <div style={{ marginTop: 30 }}>
+        <div className="ts-field-label">Новый раздел</div>
+        <div className="ts-form-stack" style={{ maxWidth: 420 }}>
+          <input className="ts-input" placeholder="Название" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
+          <input
+            className="ts-input"
+            placeholder="Краткое описание (необязательно)"
+            value={newIntro}
+            onChange={(e) => setNewIntro(e.target.value)}
+          />
+          <button className="ts-btn-outline small" onClick={create} disabled={creating} style={{ alignSelf: 'flex-start' }}>
+            Создать
+          </button>
+        </div>
+      </div>
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Удалить раздел?"
+          message={`«${deleteTarget.title}» и все материалы внутри будут удалены без возможности восстановления.`}
+          confirmLabel="Удалить"
+          danger
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+    </section>
+  );
+}
+
+function EducationTrackEditRow({
+  track,
+  onDone,
+  onSaved,
+  flash
+}: {
+  track: EducationTrack;
+  onDone: () => void;
+  onSaved: () => void;
+  flash: (text: string) => void;
+}) {
+  const [title, setTitle] = useState(track.title);
+  const [intro, setIntro] = useState(track.intro);
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    if (!title.trim()) {
+      flash('Укажите название раздела');
+      return;
+    }
+    setSaving(true);
+    try {
+      await api.patch(`/admin/education-tracks/${track.id}`, { title, intro });
+      flash('Раздел обновлён');
+      onSaved();
+      onDone();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось сохранить');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="ts-request-row" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
+      <div className="ts-form-stack" style={{ maxWidth: 420 }}>
+        <input className="ts-input" placeholder="Название" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input className="ts-input" placeholder="Краткое описание" value={intro} onChange={(e) => setIntro(e.target.value)} />
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="ts-btn-outline small" onClick={save} disabled={saving}>
+            Сохранить
+          </button>
+          <button className="ts-btn-outline small" onClick={onDone}>
+            Отмена
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

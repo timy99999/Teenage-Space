@@ -6,6 +6,7 @@ import { Loader } from './components/Loader';
 import { Toast } from './components/Toast';
 import { EventModal } from './components/EventModal';
 import { useIsMobile } from './hooks/useIsMobile';
+import { useEducationTracks } from './hooks/useEducation';
 import { HomePage } from './pages/HomePage';
 import { GridPage } from './pages/GridPage';
 import { EducationPage } from './pages/EducationPage';
@@ -47,6 +48,12 @@ function HomeGate() {
   return <HomePage />;
 }
 
+function EducationIndex() {
+  const { tracks } = useEducationTracks();
+  if (tracks.length === 0) return null;
+  return <Navigate to={`/education/${tracks[0].id}`} replace />;
+}
+
 export default function App() {
   const [loading, setLoading] = useState(true);
 
@@ -67,8 +74,8 @@ export default function App() {
         <Route path="opportunities/:category" element={<GridPage mode="opps" />} />
         <Route path="favorites" element={<GridPage mode="fav" />} />
         <Route path="vote" element={<GridPage mode="vote" />} />
-        <Route path="education/nct" element={<EducationPage track="edu-nct" />} />
-        <Route path="education/abroad" element={<EducationPage track="edu-abroad" />} />
+        <Route path="education" element={<EducationIndex />} />
+        <Route path="education/:trackId" element={<EducationPage />} />
         <Route path="article/:id" element={<ArticlePage />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="profile/edit" element={<EditAccountPage />} />

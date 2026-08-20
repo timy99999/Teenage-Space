@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { CATS, EDU_TRACKS } from '../data/constants';
+import { useEducationTracks } from '../hooks/useEducation';
+import { CATS } from '../data/constants';
 
 export function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
   const { session, profile, isAdmin } = useAuth();
+  const { tracks } = useEducationTracks();
 
   const path = location.pathname;
   const isHome = path === '/';
@@ -91,13 +93,13 @@ export function Sidebar() {
         </button>
         {eduOpen && (
           <div className="ts-nav-sub-wrap">
-            {EDU_TRACKS.map((t) => (
+            {tracks.map((t) => (
               <button
-                key={t.key}
-                className={`ts-nav-sub${path === `/education/${t.key.replace('edu-', '')}` ? ' active' : ''}`}
-                onClick={() => navigate(`/education/${t.key.replace('edu-', '')}`)}
+                key={t.id}
+                className={`ts-nav-sub${path === `/education/${t.id}` ? ' active' : ''}`}
+                onClick={() => navigate(`/education/${t.id}`)}
               >
-                {t.label}
+                {t.title}
               </button>
             ))}
           </div>

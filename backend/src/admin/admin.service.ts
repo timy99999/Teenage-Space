@@ -4,7 +4,9 @@ import type { Cache } from 'cache-manager';
 import { randomUUID } from 'crypto';
 import { SupabaseService } from '../supabase/supabase.service';
 import {
+  EducationTrackRow,
   EventRow,
+  mapEducationTrack,
   mapEvent,
   mapNews,
   mapProfile,
@@ -17,6 +19,8 @@ import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { CreateNewsDto } from './dto/create-news.dto';
+import { CreateEducationTrackDto } from './dto/create-education-track.dto';
+import { UpdateEducationTrackDto } from './dto/update-education-track.dto';
 
 function deriveAgeLabel(min: number, max: number): string {
   if (min <= 0 && max >= 99) return 'Любой';
@@ -204,6 +208,40 @@ export class AdminService {
   async deleteEvent(id: string) {
     await this.supabase.client.from('submissions').update({ published_event_id: null }).eq('published_event_id', id);
     const { error } = await this.supabase.client.from('events').delete().eq('id', id);
+    if (error) throw error;
+    await this.cache.clear();
+  }
+
+  async createEducationTrack(dto: CreateEducationTrackDto) {
+    const { data, error } = await this.supabase.client
+      .from('education_tracks')
+      .insert({ id: randomUUID(), title: dto.title, intro: dto.intro ?? '' })
+      .select('*')
+      .single();
+    if (error) throw error;
+    await this.cache.clear();
+    return mapEducationTrack(data as EducationTrackRow);
+  }
+
+  async updateEducationTrack(id: string, dto: UpdateEducationTrackDto) {
+    const patch: Record<string, unknown> = {};
+    if (dto.title !== undefined) patch.title = dto.title;
+    if (dto.intro !== undefined) patch.intro = dto.intro;
+
+    const { data, error } = await this.supabase.client
+      .from('education_tracks')
+      .update(patch)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (error) throw error;
+    await this.cache.clear();
+    return mapEducationTrack(data as EducationTrackRow);
+  }
+
+  async deleteEducationTrack(id: string) {
+    await this.supabase.client.from('materials').delete().eq('track', id);
+    const { error } = await this.supabase.client.from('education_tracks').delete().eq('id', id);
     if (error) throw error;
     await this.cache.clear();
   }

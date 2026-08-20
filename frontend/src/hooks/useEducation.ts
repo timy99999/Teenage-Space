@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { getCached, getOrFetch } from '../lib/dataCache';
-import type { MaterialItem } from '../types';
+import type { EducationTrack, MaterialItem } from '../types';
 
 const TTL_MS = 60000;
 
 interface EducationData {
+  id: string;
+  title: string;
   intro: string;
   items: MaterialItem[];
 }
@@ -13,6 +15,7 @@ interface EducationData {
 export function useEducation(track: string) {
   const cacheKey = `education/${track}`;
   const seed = getCached<EducationData>(cacheKey);
+  const [title, setTitle] = useState(() => seed?.title ?? '');
   const [items, setItems] = useState<MaterialItem[]>(() => seed?.items ?? []);
   const [intro, setIntro] = useState(() => seed?.intro ?? '');
   const [loading, setLoading] = useState(() => !seed);
@@ -21,6 +24,7 @@ export function useEducation(track: string) {
     let cancelled = false;
     const cached = getCached<EducationData>(cacheKey);
     if (cached) {
+      setTitle(cached.title);
       setIntro(cached.intro);
       setItems(cached.items);
       setLoading(false);
@@ -30,6 +34,7 @@ export function useEducation(track: string) {
     getOrFetch<EducationData>(cacheKey, () => api.get<EducationData>(`/education/${track}`), TTL_MS)
       .then((data) => {
         if (!cancelled) {
+          setTitle(data.title);
           setIntro(data.intro);
           setItems(data.items);
           setLoading(false);
@@ -37,6 +42,7 @@ export function useEducation(track: string) {
       })
       .catch(() => {
         if (!cancelled && !cached) {
+          setTitle('');
           setIntro('');
           setItems([]);
           setLoading(false);
@@ -48,7 +54,29 @@ export function useEducation(track: string) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [track]);
 
-  return { intro, items, loading };
+  return { title, intro, items, loading };
+}
+
+export function useEducationTracks() {
+  const cacheKey = 'education/tracks';
+  const [tracks, setTracks] = useState<EducationTrack[]>(() => getCached<EducationTrack[]>(cacheKey) ?? []);
+
+  const reload = useCallback(async () => {
+    const data = await api.get<EducationTrack[]>('/education/tracks').catch(() => []);
+    setTracks(data);
+  }, []);
+
+  useEffect(() => {
+    const cached = getCached<EducationTrack[]>(cacheKey);
+    if (cached) setTracks(cached);
+    getOrFetch<EducationTrack[]>(cacheKey, () => api.get<EducationTrack[]>('/education/tracks'), TTL_MS)
+      .then(setTracks)
+      .catch(() => {
+        if (!cached) setTracks([]);
+      });
+  }, []);
+
+  return { tracks, reload };
 }
 
 export function useArticle(id: string | undefined) {

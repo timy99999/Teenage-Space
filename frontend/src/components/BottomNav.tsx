@@ -42,7 +42,7 @@ function PublishIcon() {
 
 const NAV_ITEMS = [
   { key: 'opps', label: 'Возможности', to: '/opportunities', match: (p: string) => p.startsWith('/opportunities'), Icon: SearchIcon },
-  { key: 'edu', label: 'Образование', to: '/education/nct', match: (p: string) => p.startsWith('/education') || p.startsWith('/article'), Icon: BookIcon },
+  { key: 'edu', label: 'Образование', to: '/education', match: (p: string) => p.startsWith('/education') || p.startsWith('/article'), Icon: BookIcon },
   { key: 'news', label: 'Новости', to: '/news', match: (p: string) => p === '/news', Icon: NewsIcon },
   { key: 'publish', label: 'Опубликовать', to: '/publish', match: (p: string) => p === '/publish', Icon: PublishIcon }
 ];
