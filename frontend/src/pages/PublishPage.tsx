@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CATS, THEMES, AGES } from '../data/constants';
 import { Chip } from '../components/Chip';
+import { ImageUploadField } from '../components/ImageUploadField';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { useSubmissions } from '../hooks/useSubmissions';
@@ -44,6 +45,7 @@ export function PublishPage() {
   const [extraLinkUrl, setExtraLinkUrl] = useState('');
   const [instagram, setInstagram] = useState('');
   const [telegram, setTelegram] = useState('');
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [published, setPublished] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -60,10 +62,15 @@ export function PublishPage() {
       flash('Укажите название мероприятия');
       return;
     }
+    if (!imageUrl) {
+      flash('Загрузите фото мероприятия');
+      return;
+    }
     setSubmitting(true);
     try {
       await api.post<Submission>('/submissions', {
         title,
+        imageUrl,
         categories: cats,
         themes,
         ages,
@@ -198,22 +205,7 @@ export function PublishPage() {
 
         <section className="ts-card-panel">
           <h2>Информация для карточки</h2>
-          <div className="ts-publish-photo">
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                display: 'grid',
-                placeItems: 'center',
-                fontFamily: "'Open Sans', sans-serif",
-                fontSize: 12,
-                color: 'var(--ts-fg)',
-                opacity: 0.45
-              }}
-            >
-              Фото 3:4
-            </div>
-          </div>
+          <ImageUploadField value={imageUrl} onChange={setImageUrl} />
           <div className="ts-hint">Фото обязательно. Другой формат можно кадрировать под 3:4</div>
           <div className="ts-form-stack">
             <input className="ts-input" placeholder="Название" value={title} onChange={(e) => setTitle(e.target.value)} />

@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateNewsDto {
   @IsString()
@@ -10,7 +10,6 @@ export class CreateNewsDto {
   @IsString()
   eventDate!: string;
 
-  @IsOptional()
   @IsString()
-  imageUrl?: string | null;
+  imageUrl!: string;
 }

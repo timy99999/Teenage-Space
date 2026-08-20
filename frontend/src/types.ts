@@ -107,6 +107,7 @@ export interface AdminSubmission {
   status: SubmissionStatus;
   createdAt: string;
   publishedEventId: string | null;
+  imageUrl: string | null;
 }
 
 export interface AdminUser {

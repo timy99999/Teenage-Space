@@ -57,7 +57,6 @@ export class CreateEventDto {
   @IsString()
   registrationUrl?: string | null;
 
-  @IsOptional()
   @IsString()
-  imageUrl?: string | null;
+  imageUrl!: string;
 }

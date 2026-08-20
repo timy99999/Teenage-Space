@@ -4,6 +4,9 @@ export class CreateSubmissionDto {
   @IsString()
   title!: string;
 
+  @IsString()
+  imageUrl!: string;
+
   @IsOptional()
   @IsArray()
   categories?: string[];

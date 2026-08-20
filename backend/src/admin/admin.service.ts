@@ -35,6 +35,7 @@ export class AdminService {
   async updateSubmission(id: string, dto: UpdateSubmissionDto) {
     const patch: Record<string, unknown> = {};
     if (dto.title !== undefined) patch.title = dto.title;
+    if (dto.imageUrl !== undefined) patch.image_url = dto.imageUrl;
     if (dto.categories !== undefined) patch.categories = dto.categories;
     if (dto.themes !== undefined) patch.themes = dto.themes;
     if (dto.ages !== undefined) patch.ages = dto.ages;

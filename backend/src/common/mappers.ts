@@ -156,6 +156,7 @@ export interface SubmissionAdminRow extends SubmissionRow {
   telegram: string | null;
   whatsapp: string | null;
   published_event_id: string | null;
+  image_url: string | null;
 }
 
 export function mapSubmissionAdmin(row: SubmissionAdminRow) {
@@ -184,6 +185,7 @@ export function mapSubmissionAdmin(row: SubmissionAdminRow) {
     whatsapp: row.whatsapp,
     status: row.status,
     createdAt: row.created_at,
-    publishedEventId: row.published_event_id
+    publishedEventId: row.published_event_id,
+    imageUrl: row.image_url
   };
 }

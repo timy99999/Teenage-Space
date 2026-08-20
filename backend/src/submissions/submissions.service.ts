@@ -24,6 +24,7 @@ export class SubmissionsService {
       .insert({
         user_id: user.id,
         title: dto.title,
+        image_url: dto.imageUrl,
         categories: dto.categories ?? [],
         themes: dto.themes ?? [],
         ages: dto.ages ?? [],

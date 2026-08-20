@@ -100,7 +100,7 @@ function buildInitialEventForm(s: AdminSubmission): CreateEventInput {
     description: s.description ?? '',
     instagram: false,
     registrationUrl: s.registrationUrl,
-    imageUrl: null
+    imageUrl: s.imageUrl
   };
 }
 
@@ -170,6 +170,10 @@ function SubmissionRow({
   async function publish() {
     if (!form.category || !form.eventDate || !form.place || !form.shortDesc) {
       flash('Заполните категорию, дату, место и краткое описание');
+      return;
+    }
+    if (!form.imageUrl) {
+      flash('Загрузите фото мероприятия');
       return;
     }
     setBusy(true);
@@ -288,6 +292,10 @@ function CreateEventPanel() {
       flash('Заполните название, категорию, дату, место и краткое описание');
       return;
     }
+    if (!form.imageUrl) {
+      flash('Загрузите фото мероприятия');
+      return;
+    }
     setBusy(true);
     try {
       await api.post('/admin/events', form);
@@ -325,6 +333,10 @@ function CreateNewsPanel() {
   async function publish() {
     if (!title || !shortDesc || !eventDate) {
       flash('Заполните заголовок, текст и дату');
+      return;
+    }
+    if (!imageUrl) {
+      flash('Загрузите фото новости');
       return;
     }
     setBusy(true);

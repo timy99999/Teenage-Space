@@ -6,6 +6,10 @@ export class UpdateSubmissionDto {
   title?: string;
 
   @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @IsOptional()
   @IsArray()
   categories?: string[];
 

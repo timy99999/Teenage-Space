@@ -147,7 +147,8 @@ create table if not exists submissions (
   whatsapp text,
   status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
   created_at timestamptz not null default now(),
-  published_event_id text references events (id)
+  published_event_id text references events (id),
+  image_url text
 );
 
 alter table submissions enable row level security;
@@ -182,9 +183,9 @@ on conflict (id) do nothing;
 
 create policy "Post images are publicly accessible" on storage.objects
   for select using (bucket_id = 'posts');
-create policy "Admins can upload post images" on storage.objects
+create policy "Authenticated users can upload post images" on storage.objects
   for insert to authenticated
-  with check (bucket_id = 'posts' and exists (select 1 from profiles p where p.id = auth.uid() and p.role = 'admin'));
+  with check (bucket_id = 'posts');
 create policy "Admins can update post images" on storage.objects
   for update to authenticated
   using (bucket_id = 'posts' and exists (select 1 from profiles p where p.id = auth.uid() and p.role = 'admin'));
