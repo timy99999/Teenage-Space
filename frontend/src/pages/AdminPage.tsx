@@ -1,0 +1,442 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useUI } from '../contexts/UIContext';
+import { useAdminSubmissions } from '../hooks/useAdminSubmissions';
+import { useAdminUsers } from '../hooks/useAdminUsers';
+import { useAdminAnalytics } from '../hooks/useAdminAnalytics';
+import { api } from '../lib/api';
+import { Chip } from '../components/Chip';
+import { CATS } from '../data/constants';
+import type { AdminSubmission, AdminUser, CreateEventInput, SubmissionStatus } from '../types';
+
+const TABS = [
+  { key: 'moderation', label: 'Модерация' },
+  { key: 'users', label: 'Пользователи' },
+  { key: 'analytics', label: 'Аналитика' }
+] as const;
+
+type TabKey = (typeof TABS)[number]['key'];
+
+const STATUS_LABEL: Record<SubmissionStatus, string> = {
+  pending: 'На проверке',
+  approved: 'Опубликовано',
+  rejected: 'Отклонено'
+};
+
+const FORMATS = ['Личное', 'Командное'];
+const PRICES = [
+  { k: 'free' as const, l: 'Бесплатно' },
+  { k: 'paid' as const, l: 'Платно' }
+];
+const LEVELS = [
+  { k: 'local' as const, l: 'Локальное' },
+  { k: 'intl' as const, l: 'Международное' }
+];
+
+export function AdminPage() {
+  const { profile, isAdmin } = useAuth();
+  const navigate = useNavigate();
+  const [tab, setTab] = useState<TabKey>('moderation');
+
+  useEffect(() => {
+    if (profile && !isAdmin) navigate('/');
+  }, [profile, isAdmin, navigate]);
+
+  if (profile && !isAdmin) return null;
+
+  return (
+    <div className="ts-page">
+      <h1 className="ts-page-title">Админ-панель</h1>
+      <div className="ts-theme-btns" style={{ marginTop: 18, marginBottom: 8 }}>
+        {TABS.map((t) => (
+          <button key={t.key} className={`ts-theme-btn${tab === t.key ? ' on' : ''}`} onClick={() => setTab(t.key)}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+      {tab === 'moderation' && <ModerationTab />}
+      {tab === 'users' && <UsersTab />}
+      {tab === 'analytics' && <AnalyticsTab />}
+    </div>
+  );
+}
+
+function buildInitialEventForm(s: AdminSubmission): CreateEventInput {
+  return {
+    title: s.title,
+    category: s.categories[0] ?? '',
+    themes: s.themes,
+    ageMin: 0,
+    ageMax: 0,
+    ageLabel: s.ages.join(', '),
+    price: s.price ?? 'free',
+    cost: s.cost,
+    level: s.level ?? 'local',
+    format: s.format[0] ?? '',
+    eventDate: s.eventDate ?? '',
+    deadlineDate: s.deadlineDate,
+    place: s.address ?? '',
+    shortDesc: '',
+    description: s.description ?? '',
+    instagram: false,
+    registrationUrl: s.registrationUrl,
+    imageUrl: null
+  };
+}
+
+function ModerationTab() {
+  const { flash } = useUI();
+  const [status, setStatus] = useState<SubmissionStatus>('pending');
+  const { submissions, reload } = useAdminSubmissions(status);
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  return (
+    <section className="ts-account-section">
+      <div className="ts-filter-chips" style={{ marginBottom: 10 }}>
+        {(Object.keys(STATUS_LABEL) as SubmissionStatus[]).map((s) => (
+          <Chip key={s} label={STATUS_LABEL[s]} active={status === s} onClick={() => setStatus(s)} />
+        ))}
+      </div>
+      {submissions.map((s) => (
+        <SubmissionRow
+          key={s.id}
+          submission={s}
+          open={openId === s.id}
+          onToggle={() => setOpenId(openId === s.id ? null : s.id)}
+          onChanged={reload}
+          flash={flash}
+        />
+      ))}
+      {submissions.length === 0 && <div className="ts-center-note">Заявок нет</div>}
+    </section>
+  );
+}
+
+function SubmissionRow({
+  submission: s,
+  open,
+  onToggle,
+  onChanged,
+  flash
+}: {
+  submission: AdminSubmission;
+  open: boolean;
+  onToggle: () => void;
+  onChanged: () => void;
+  flash: (text: string) => void;
+}) {
+  const [edit, setEdit] = useState({
+    title: s.title,
+    description: s.description ?? '',
+    address: s.address ?? '',
+    audience: s.audience ?? ''
+  });
+  const [form, setForm] = useState<CreateEventInput>(() => buildInitialEventForm(s));
+  const [busy, setBusy] = useState(false);
+
+  async function saveEdit() {
+    setBusy(true);
+    try {
+      await api.patch(`/admin/submissions/${s.id}`, edit);
+      flash('Исправления сохранены');
+      onChanged();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось сохранить');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function publish() {
+    if (!form.category || !form.eventDate || !form.place || !form.shortDesc) {
+      flash('Заполните категорию, дату, место и краткое описание');
+      return;
+    }
+    setBusy(true);
+    try {
+      await api.post(`/admin/submissions/${s.id}/publish`, form);
+      flash('Мероприятие опубликовано');
+      onChanged();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось опубликовать');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function reject() {
+    setBusy(true);
+    try {
+      await api.post(`/admin/submissions/${s.id}/reject`);
+      flash('Заявка отклонена');
+      onChanged();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось отклонить');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="ts-request-row" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, width: '100%' }}>
+        <span className="ts-request-title">{s.title}</span>
+        <span className={`ts-badge ${s.status}`}>{STATUS_LABEL[s.status]}</span>
+        <button className="ts-btn-outline small" onClick={onToggle}>
+          {open ? 'Свернуть' : 'Открыть'}
+        </button>
+      </div>
+
+      {open && (
+        <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', gap: 26 }}>
+          <div>
+            <div className="ts-field-label">Контакты автора (видно только админам)</div>
+            <div className="desc">
+              WhatsApp: {s.whatsapp || '—'} · Telegram: {s.telegram || '—'} · Instagram: {s.instagram || '—'}
+            </div>
+          </div>
+
+          <div>
+            <div className="ts-field-label">Исправить заявку</div>
+            <div className="ts-form-stack">
+              <input
+                className="ts-input"
+                placeholder="Название"
+                value={edit.title}
+                onChange={(e) => setEdit((v) => ({ ...v, title: e.target.value }))}
+              />
+              <input
+                className="ts-input"
+                placeholder="Адрес"
+                value={edit.address}
+                onChange={(e) => setEdit((v) => ({ ...v, address: e.target.value }))}
+              />
+              <input
+                className="ts-input"
+                placeholder="Для кого"
+                value={edit.audience}
+                onChange={(e) => setEdit((v) => ({ ...v, audience: e.target.value }))}
+              />
+              <textarea
+                className="ts-textarea"
+                rows={3}
+                placeholder="Описание"
+                value={edit.description}
+                onChange={(e) => setEdit((v) => ({ ...v, description: e.target.value }))}
+              />
+              <button className="ts-btn-outline small" onClick={saveEdit} disabled={busy} style={{ alignSelf: 'flex-start' }}>
+                Сохранить исправления
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <div className="ts-field-label">Оформить как мероприятие для публикации</div>
+            <div className="ts-field-group">
+              <div>
+                <div className="ts-field-label">Категория</div>
+                <div className="ts-filter-chips">
+                  {CATS.map((c) => (
+                    <Chip
+                      key={c.key}
+                      label={c.label}
+                      active={form.category === c.key}
+                      onClick={() => setForm((v) => ({ ...v, category: c.key }))}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="ts-field-label">Участие</div>
+                <div className="ts-filter-chips">
+                  {FORMATS.map((f) => (
+                    <Chip key={f} label={f} active={form.format === f} onClick={() => setForm((v) => ({ ...v, format: f }))} />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="ts-field-label">Цена</div>
+                <div className="ts-filter-chips">
+                  {PRICES.map((p) => (
+                    <Chip key={p.k} label={p.l} active={form.price === p.k} onClick={() => setForm((v) => ({ ...v, price: p.k }))} />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="ts-field-label">Уровень</div>
+                <div className="ts-filter-chips">
+                  {LEVELS.map((l) => (
+                    <Chip key={l.k} label={l.l} active={form.level === l.k} onClick={() => setForm((v) => ({ ...v, level: l.k }))} />
+                  ))}
+                </div>
+              </div>
+              <div className="ts-date-row">
+                <label className="ts-date-field">
+                  Возраст от
+                  <input
+                    className="ts-input"
+                    type="number"
+                    value={form.ageMin}
+                    onChange={(e) => setForm((v) => ({ ...v, ageMin: Number(e.target.value) }))}
+                  />
+                </label>
+                <label className="ts-date-field">
+                  Возраст до
+                  <input
+                    className="ts-input"
+                    type="number"
+                    value={form.ageMax}
+                    onChange={(e) => setForm((v) => ({ ...v, ageMax: Number(e.target.value) }))}
+                  />
+                </label>
+                <label className="ts-date-field">
+                  Подпись возраста
+                  <input
+                    className="ts-input"
+                    value={form.ageLabel}
+                    onChange={(e) => setForm((v) => ({ ...v, ageLabel: e.target.value }))}
+                  />
+                </label>
+              </div>
+              <div className="ts-date-row">
+                <label className="ts-date-field">
+                  Дата мероприятия
+                  <input
+                    type="date"
+                    className="ts-input"
+                    value={form.eventDate}
+                    onChange={(e) => setForm((v) => ({ ...v, eventDate: e.target.value }))}
+                  />
+                </label>
+                <label className="ts-date-field">
+                  Дедлайн регистрации
+                  <input
+                    type="date"
+                    className="ts-input"
+                    value={form.deadlineDate ?? ''}
+                    onChange={(e) => setForm((v) => ({ ...v, deadlineDate: e.target.value || null }))}
+                  />
+                </label>
+              </div>
+              <input
+                className="ts-input"
+                placeholder="Место проведения"
+                value={form.place}
+                onChange={(e) => setForm((v) => ({ ...v, place: e.target.value }))}
+              />
+              <input
+                className="ts-input"
+                placeholder="Краткое описание для карточки"
+                value={form.shortDesc}
+                onChange={(e) => setForm((v) => ({ ...v, shortDesc: e.target.value }))}
+              />
+              <textarea
+                className="ts-textarea"
+                rows={4}
+                placeholder="Полное описание"
+                value={form.description}
+                onChange={(e) => setForm((v) => ({ ...v, description: e.target.value }))}
+              />
+              <input
+                className="ts-input"
+                placeholder="Ссылка на регистрацию"
+                value={form.registrationUrl ?? ''}
+                onChange={(e) => setForm((v) => ({ ...v, registrationUrl: e.target.value || null }))}
+              />
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Open Sans', sans-serif", fontSize: 14 }}>
+                <input
+                  type="checkbox"
+                  checked={form.instagram}
+                  onChange={(e) => setForm((v) => ({ ...v, instagram: e.target.checked }))}
+                />
+                Анонс был в Instagram
+              </label>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button className="ts-btn-outline" onClick={publish} disabled={busy}>
+              Опубликовать
+            </button>
+            <button className="ts-btn-outline danger" onClick={reject} disabled={busy}>
+              Отклонить
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function UsersTab() {
+  const { flash } = useUI();
+  const { profile } = useAuth();
+  const { users, reload } = useAdminUsers();
+
+  async function toggleBan(u: AdminUser) {
+    try {
+      await api.post(`/admin/users/${u.id}/${u.isBanned ? 'unban' : 'ban'}`);
+      flash(u.isBanned ? 'Пользователь разбанен' : 'Пользователь забанен');
+      reload();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось изменить статус');
+    }
+  }
+
+  return (
+    <section className="ts-account-section">
+      {users.map((u) => (
+        <div className="ts-settings-row" key={u.id}>
+          <span className="label">
+            {u.name} {u.lastName} <span style={{ opacity: 0.6 }}>@{u.username}</span>
+            {u.role === 'admin' && (
+              <span className="ts-badge approved" style={{ marginLeft: 8 }}>
+                Админ
+              </span>
+            )}
+          </span>
+          <button
+            className={`ts-switch${u.isBanned ? ' on' : ''}`}
+            onClick={() => toggleBan(u)}
+            disabled={u.id === profile?.id}
+            title={u.id === profile?.id ? 'Нельзя забанить себя' : u.isBanned ? 'Разбанить' : 'Забанить'}
+          >
+            <span className="ts-switch-knob" />
+          </button>
+        </div>
+      ))}
+      {users.length === 0 && <div className="ts-center-note">Пользователей нет</div>}
+    </section>
+  );
+}
+
+function AnalyticsTab() {
+  const { analytics } = useAdminAnalytics();
+  if (!analytics) return <div className="ts-center-note">Загрузка...</div>;
+
+  const cards = [
+    { label: 'Пользователи', value: analytics.usersTotal },
+    { label: 'Забанено', value: analytics.bannedTotal },
+    { label: 'Мероприятия всего', value: analytics.eventsTotal },
+    { label: 'Предстоящие', value: analytics.eventsUpcoming },
+    { label: 'Прошедшие', value: analytics.eventsPast },
+    { label: 'В избранном', value: analytics.favoritesTotal },
+    { label: 'Оценок оставлено', value: analytics.ratingsTotal },
+    { label: 'Средняя оценка', value: analytics.ratingsAvg !== null ? analytics.ratingsAvg.toFixed(1) : '—' },
+    { label: 'Заявки: на проверке', value: analytics.submissions.pending },
+    { label: 'Заявки: одобрено', value: analytics.submissions.approved },
+    { label: 'Заявки: отклонено', value: analytics.submissions.rejected }
+  ];
+
+  return (
+    <div className="ts-admin-stats">
+      {cards.map((c) => (
+        <div className="ts-card-panel ts-admin-stat" key={c.label}>
+          <div className="ts-admin-stat-value">{c.value}</div>
+          <div className="desc">{c.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}

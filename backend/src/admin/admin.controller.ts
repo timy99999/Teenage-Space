@@ -1,0 +1,52 @@
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
+import { AdminService } from './admin.service';
+import { UpdateSubmissionDto } from './dto/update-submission.dto';
+import { CreateEventDto } from './dto/create-event.dto';
+
+@Controller('admin')
+@UseGuards(SupabaseAuthGuard, AdminGuard)
+export class AdminController {
+  constructor(private readonly admin: AdminService) {}
+
+  @Get('submissions')
+  listSubmissions(@Query('status') status?: string) {
+    return this.admin.listSubmissions(status);
+  }
+
+  @Patch('submissions/:id')
+  updateSubmission(@Param('id') id: string, @Body() dto: UpdateSubmissionDto) {
+    return this.admin.updateSubmission(id, dto);
+  }
+
+  @Post('submissions/:id/publish')
+  publishSubmission(@Param('id') id: string, @Body() dto: CreateEventDto) {
+    return this.admin.publishSubmission(id, dto);
+  }
+
+  @Post('submissions/:id/reject')
+  rejectSubmission(@Param('id') id: string) {
+    return this.admin.rejectSubmission(id);
+  }
+
+  @Get('users')
+  listUsers() {
+    return this.admin.listUsers();
+  }
+
+  @Post('users/:id/ban')
+  banUser(@Param('id') id: string) {
+    return this.admin.setBanned(id, true);
+  }
+
+  @Post('users/:id/unban')
+  unbanUser(@Param('id') id: string) {
+    return this.admin.setBanned(id, false);
+  }
+
+  @Get('analytics')
+  analytics() {
+    return this.admin.analytics();
+  }
+}

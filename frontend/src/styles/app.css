@@ -1661,3 +1661,20 @@
   font-size: 16px;
   color: var(--ts-muted);
 }
+
+/* ---- admin ---- */
+.ts-admin-stats {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+}
+.ts-admin-stat {
+  text-align: center;
+}
+.ts-admin-stat-value {
+  font-family: 'Bryndan Write', 'Comfortaa', sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--ts-blue);
+}

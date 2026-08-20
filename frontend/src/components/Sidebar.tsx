@@ -7,13 +7,14 @@ export function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
-  const { session, profile } = useAuth();
+  const { session, profile, isAdmin } = useAuth();
 
   const path = location.pathname;
   const isHome = path === '/';
   const isNews = path === '/news';
   const isFav = path === '/favorites';
   const isVote = path === '/vote';
+  const isAdminPage = path === '/admin';
   const isOppsRoot = path.startsWith('/opportunities');
   const isEdu = path.startsWith('/education');
   const activeCategory = isOppsRoot ? params.category : undefined;
@@ -106,6 +107,12 @@ export function Sidebar() {
       <div className="ts-sidebar-spacer" />
 
       <nav className="ts-nav ts-sidebar-foot">
+        {isAdmin && (
+          <button className="ts-nav-item" onClick={() => navigate('/admin')}>
+            {isAdminPage && <span className="ts-nav-dot" />}
+            <span>Админ</span>
+          </button>
+        )}
         <button className="ts-nav-item" onClick={() => navigate('/publish')}>
           Опубликовать
         </button>

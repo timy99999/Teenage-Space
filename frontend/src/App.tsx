@@ -15,6 +15,7 @@ import { EditAccountPage } from './pages/EditAccountPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { PublishPage } from './pages/PublishPage';
 import { AuthPage } from './pages/AuthPage';
+import { AdminPage } from './pages/AdminPage';
 
 function AppLayout() {
   const location = useLocation();
@@ -73,6 +74,7 @@ export default function App() {
         <Route path="profile/edit" element={<EditAccountPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="publish" element={<PublishPage />} />
+        <Route path="admin" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

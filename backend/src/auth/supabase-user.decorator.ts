@@ -5,3 +5,8 @@ export const CurrentUser = createParamDecorator((_data: unknown, ctx: ExecutionC
   const req = ctx.switchToHttp().getRequest<AuthedRequest>();
   return req.user;
 });
+
+export const CurrentProfile = createParamDecorator((_data: unknown, ctx: ExecutionContext) => {
+  const req = ctx.switchToHttp().getRequest<AuthedRequest>();
+  return req.profile;
+});

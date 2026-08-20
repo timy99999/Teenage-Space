@@ -94,6 +94,8 @@ export interface ProfileRow {
   notif_opt_in: boolean;
   name_changed_at: string | null;
   username_changed_at: string | null;
+  role: 'user' | 'admin';
+  is_banned: boolean;
 }
 
 export function mapProfile(row: ProfileRow) {
@@ -108,7 +110,9 @@ export function mapProfile(row: ProfileRow) {
     theme: row.theme,
     notifOptIn: row.notif_opt_in,
     nameChangedAt: row.name_changed_at,
-    usernameChangedAt: row.username_changed_at
+    usernameChangedAt: row.username_changed_at,
+    role: row.role,
+    isBanned: row.is_banned
   };
 }
 
@@ -125,5 +129,59 @@ export function mapSubmission(row: SubmissionRow) {
     title: row.title,
     status: row.status,
     createdAt: row.created_at
+  };
+}
+
+export interface SubmissionAdminRow extends SubmissionRow {
+  user_id: string;
+  categories: string[];
+  themes: string[];
+  ages: string[];
+  format: string[];
+  price: 'free' | 'paid' | null;
+  cost: string | null;
+  charity: boolean;
+  level: 'local' | 'intl' | null;
+  event_date: string | null;
+  deadline_date: string | null;
+  address: string | null;
+  audience: string | null;
+  description: string | null;
+  registration_url: string | null;
+  extra_link_title: string | null;
+  extra_link_url: string | null;
+  instagram: string | null;
+  telegram: string | null;
+  whatsapp: string | null;
+  published_event_id: string | null;
+}
+
+export function mapSubmissionAdmin(row: SubmissionAdminRow) {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    title: row.title,
+    categories: row.categories ?? [],
+    themes: row.themes ?? [],
+    ages: row.ages ?? [],
+    format: row.format ?? [],
+    price: row.price,
+    cost: row.cost,
+    charity: row.charity,
+    level: row.level,
+    eventDate: row.event_date,
+    deadlineDate: row.deadline_date,
+    address: row.address,
+    audience: row.audience,
+    description: row.description,
+    registrationUrl: row.registration_url,
+    extraLinkTitle: row.extra_link_title,
+    extraLinkUrl: row.extra_link_url,
+    instagram: row.instagram,
+    telegram: row.telegram,
+    whatsapp: row.whatsapp,
+    status: row.status,
+    createdAt: row.created_at,
+    publishedEventId: row.published_event_id
   };
 }

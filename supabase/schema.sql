@@ -18,7 +18,9 @@ create table if not exists profiles (
   notif_opt_in boolean not null default false,
   name_changed_at timestamptz,
   username_changed_at timestamptz,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  role text not null default 'user' check (role in ('user', 'admin')),
+  is_banned boolean not null default false
 );
 
 alter table profiles enable row level security;
@@ -117,7 +119,7 @@ create policy "ratings are owner-only" on ratings
   for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 -- ---------------------------------------------------------------------------
--- submissions: "publish an event" requests, reviewed by an admin (future work)
+-- submissions: "publish an event" requests, reviewed by an admin
 -- ---------------------------------------------------------------------------
 create table if not exists submissions (
   id uuid primary key default gen_random_uuid(),
@@ -143,7 +145,8 @@ create table if not exists submissions (
   telegram text,
   whatsapp text,
   status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  published_event_id text references events (id)
 );
 
 alter table submissions enable row level security;

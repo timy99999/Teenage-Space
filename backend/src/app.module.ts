@@ -10,6 +10,7 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { RatingsModule } from './ratings/ratings.module';
 import { ProfileModule } from './profile/profile.module';
 import { SubmissionsModule } from './submissions/submissions.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { SubmissionsModule } from './submissions/submissions.module';
     FavoritesModule,
     RatingsModule,
     ProfileModule,
-    SubmissionsModule
+    SubmissionsModule,
+    AdminModule
   ]
 })
 export class AppModule {}
