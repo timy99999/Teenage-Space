@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { EventItem } from '../types';
-import { CATS, fmtDate } from '../data/constants';
+import { fmtDate } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
 
 export interface EventCardAdminActions {
@@ -22,7 +22,6 @@ interface EventCardProps {
 }
 
 export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, admin }: EventCardProps) {
-  const catLabel = CATS.find((c) => c.key === event.category)?.label ?? event.category;
   const priceLabel = event.price === 'free' ? 'Бесплатно' : event.cost ?? '';
 
   return (
@@ -31,7 +30,6 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
         <button className="ts-card-img" onClick={onOpen}>
           <EventPhoto src={event.imageUrl} alt={event.title} />
         </button>
-        <span className="ts-card-cat-badge">{catLabel}</span>
         {admin && <CardMenu isVoteMode={isVoteMode} {...admin} />}
       </div>
       <button className="ts-card-body" onClick={onOpen}>
