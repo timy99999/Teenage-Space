@@ -45,8 +45,9 @@ export class CreateEventDto {
   @IsString()
   deadlineDate?: string | null;
 
+  @IsOptional()
   @IsString()
-  address!: string;
+  address?: string | null;
 
   @IsString()
   description!: string;

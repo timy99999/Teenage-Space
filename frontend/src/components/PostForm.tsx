@@ -151,7 +151,12 @@ export function PostCardInfo({ value: form, onChange: setForm }: PostFormFieldsP
       <div className="ts-hint">Фото обязательно. Другой формат можно кадрировать под 3:4</div>
       <div className="ts-form-stack">
         <input className="ts-input" placeholder="Название" value={form.title} onChange={(e) => setForm((v) => ({ ...v, title: e.target.value }))} />
-        <input className="ts-input" placeholder="Адрес" value={form.address} onChange={(e) => setForm((v) => ({ ...v, address: e.target.value }))} />
+        <input
+          className="ts-input"
+          placeholder="Адрес (необязательно)"
+          value={form.address}
+          onChange={(e) => setForm((v) => ({ ...v, address: e.target.value }))}
+        />
         <input
           className="ts-input"
           placeholder="Для кого"

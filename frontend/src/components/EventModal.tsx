@@ -32,7 +32,7 @@ export function EventModal() {
     { l: 'Уровень', v: event.level === 'local' ? 'Локальное' : 'Международное' },
     ...(event.eventDate ? [{ l: 'Дата', v: fmtDate(event.eventDate) }] : []),
     { l: 'Дедлайн регистрации', v: event.deadlineDate ? fmtDate(event.deadlineDate) : '—' },
-    { l: 'Адрес', v: event.place }
+    ...(event.place ? [{ l: 'Адрес', v: event.place }] : [])
   ];
 
   return (

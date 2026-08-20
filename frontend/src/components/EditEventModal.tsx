@@ -16,8 +16,8 @@ export function EditEventModal({ event, onClose, onSaved }: EditEventModalProps)
   const [saving, setSaving] = useState(false);
 
   async function save() {
-    if (!form.title.trim() || !form.category || !form.address) {
-      flash('Заполните название, категорию и адрес');
+    if (!form.title.trim() || !form.category) {
+      flash('Заполните название и категорию');
       return;
     }
     if (!form.imageUrl) {

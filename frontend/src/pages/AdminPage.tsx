@@ -158,8 +158,8 @@ function SubmissionRow({
   }
 
   async function publish() {
-    if (!form.title.trim() || !form.category || !form.address) {
-      flash('Заполните название, категорию и адрес');
+    if (!form.title.trim() || !form.category) {
+      flash('Заполните название и категорию');
       return;
     }
     if (!form.imageUrl) {
@@ -279,8 +279,8 @@ function PublishEventTab() {
       flash('Загрузите фото мероприятия');
       return;
     }
-    if (!form.category || !form.address) {
-      flash('Заполните категорию и адрес');
+    if (!form.category) {
+      flash('Заполните категорию');
       return;
     }
     setSubmitting(true);
