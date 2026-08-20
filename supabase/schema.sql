@@ -50,6 +50,7 @@ create table if not exists events (
   event_date date,
   deadline_date date,
   place text not null,
+  audience text,
   short_desc text not null,
   description text not null,
   instagram boolean not null default false,

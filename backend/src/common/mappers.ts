@@ -13,6 +13,7 @@ export interface EventRow {
   event_date: string | null;
   deadline_date: string | null;
   place: string;
+  audience: string | null;
   short_desc: string;
   description: string;
   instagram: boolean;
@@ -40,6 +41,7 @@ export function mapEvent(row: EventRow) {
     eventDate: row.event_date,
     deadlineDate: row.deadline_date,
     place: row.place,
+    audience: row.audience,
     short: row.short_desc,
     description: row.description,
     instagram: row.instagram,

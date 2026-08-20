@@ -17,6 +17,7 @@ export interface EventItem {
   eventDate: string | null;
   deadlineDate: string | null;
   place: string;
+  audience: string | null;
   short: string;
   description: string;
   instagram: boolean;

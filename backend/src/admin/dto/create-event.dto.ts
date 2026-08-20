@@ -49,6 +49,10 @@ export class CreateEventDto {
   @IsString()
   address?: string | null;
 
+  @IsOptional()
+  @IsString()
+  audience?: string | null;
+
   @IsString()
   description!: string;
 

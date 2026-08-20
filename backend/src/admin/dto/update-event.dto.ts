@@ -59,6 +59,10 @@ export class UpdateEventDto {
 
   @IsOptional()
   @IsString()
+  audience?: string | null;
+
+  @IsOptional()
+  @IsString()
   description?: string;
 
   @IsOptional()

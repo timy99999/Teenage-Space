@@ -51,6 +51,12 @@ export function EventModal() {
             <div className="ts-modal-cat">{CATS.find((c) => c.key === event.category)?.label}</div>
             <h2 className="ts-modal-title">{event.title}</h2>
             <p className="ts-modal-desc">{event.description}</p>
+            {event.audience && (
+              <div className="ts-modal-audience">
+                <div className="ts-modal-field-label">Для кого</div>
+                <p className="ts-modal-desc">{event.audience}</p>
+              </div>
+            )}
             <div className="ts-modal-fields">
               {fields.map((f) => (
                 <div className="ts-modal-field" key={f.l}>

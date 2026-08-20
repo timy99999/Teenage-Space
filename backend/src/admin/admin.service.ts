@@ -131,6 +131,7 @@ export class AdminService {
         event_date: dto.eventDate || null,
         deadline_date: dto.deadlineDate || null,
         place: dto.address ?? '',
+        audience: dto.audience || null,
         short_desc: deriveShortDesc(dto.description),
         description: dto.description,
         instagram: Boolean(dto.instagram),
@@ -161,6 +162,7 @@ export class AdminService {
     if (dto.eventDate !== undefined) patch.event_date = dto.eventDate || null;
     if (dto.deadlineDate !== undefined) patch.deadline_date = dto.deadlineDate || null;
     if (dto.address !== undefined) patch.place = dto.address ?? '';
+    if (dto.audience !== undefined) patch.audience = dto.audience || null;
     if (dto.description !== undefined) patch.description = dto.description;
     if (dto.registrationUrl !== undefined) patch.registration_url = dto.registrationUrl || null;
     if (dto.instagram !== undefined) patch.instagram = Boolean(dto.instagram);

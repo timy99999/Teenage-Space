@@ -159,7 +159,7 @@ export function PostCardInfo({ value: form, onChange: setForm }: PostFormFieldsP
         />
         <input
           className="ts-input"
-          placeholder="Для кого"
+          placeholder="Для кого (необязательно)"
           value={form.audience}
           onChange={(e) => setForm((v) => ({ ...v, audience: e.target.value }))}
         />
@@ -260,7 +260,7 @@ export function eventToPostForm(event: EventItem): PostFormValue {
     eventDate: event.eventDate ?? '',
     deadlineDate: event.deadlineDate ?? '',
     address: event.place,
-    audience: '',
+    audience: event.audience ?? '',
     description: event.description,
     registrationUrl: event.registrationUrl ?? '',
     extraLinkTitle: '',
