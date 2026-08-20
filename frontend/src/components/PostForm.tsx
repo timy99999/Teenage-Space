@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import { Chip } from './Chip';
 import { ImageUploadField } from './ImageUploadField';
 import { CATS, THEMES } from '../data/constants';
-import type { PostFormValue } from '../types';
+import type { EventItem, PostFormValue } from '../types';
 
 const FORMATS = ['Личное', 'Командное'];
 const PRICES = [
@@ -13,6 +13,13 @@ const LEVELS = [
   { k: 'local' as const, l: 'Локальное' },
   { k: 'intl' as const, l: 'Международное' }
 ];
+
+function parseAge(raw: string): number | '' {
+  if (raw === '') return '';
+  const n = Number(raw);
+  if (Number.isNaN(n)) return '';
+  return Math.min(99, Math.max(0, Math.trunc(n)));
+}
 
 export interface PostFormFieldsProps {
   value: PostFormValue;
@@ -59,8 +66,10 @@ export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsP
           <input
             className="ts-input"
             type="number"
+            min={0}
+            max={99}
             value={form.ageMin}
-            onChange={(e) => setForm((v) => ({ ...v, ageMin: Number(e.target.value) }))}
+            onChange={(e) => setForm((v) => ({ ...v, ageMin: parseAge(e.target.value) }))}
           />
         </label>
         <label className="ts-date-field">
@@ -68,8 +77,10 @@ export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsP
           <input
             className="ts-input"
             type="number"
+            min={0}
+            max={99}
             value={form.ageMax}
-            onChange={(e) => setForm((v) => ({ ...v, ageMax: Number(e.target.value) }))}
+            onChange={(e) => setForm((v) => ({ ...v, ageMax: parseAge(e.target.value) }))}
           />
         </label>
       </div>
@@ -111,7 +122,7 @@ export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsP
       </div>
       <div className="ts-date-row">
         <label className="ts-date-field">
-          Дата мероприятия
+          Дата мероприятия (необязательно)
           <input
             type="date"
             className="ts-input"
@@ -215,5 +226,41 @@ export function emptyPostForm(): PostFormValue {
     extraLinkUrl: '',
     instagram: '',
     telegram: ''
+  };
+}
+
+/** Coerces the "empty while typing" age state to a number before sending to the API. */
+export function postFormPayload(form: PostFormValue) {
+  return {
+    ...form,
+    ageMin: form.ageMin === '' ? 0 : form.ageMin,
+    ageMax: form.ageMax === '' ? 0 : form.ageMax
+  };
+}
+
+/** Pre-fills the shared form when editing an already-published event. */
+export function eventToPostForm(event: EventItem): PostFormValue {
+  return {
+    imageUrl: event.imageUrl,
+    title: event.title,
+    category: event.category,
+    themes: event.themes,
+    ageMin: event.ageMin,
+    ageMax: event.ageMax,
+    format: event.format,
+    price: event.price,
+    cost: event.cost ?? '',
+    charity: false,
+    level: event.level,
+    eventDate: event.eventDate ?? '',
+    deadlineDate: event.deadlineDate ?? '',
+    address: event.place,
+    audience: '',
+    description: event.description,
+    registrationUrl: event.registrationUrl ?? '',
+    extraLinkTitle: '',
+    extraLinkUrl: '',
+    instagram: event.instagram ? 'instagram' : '',
+    telegram: event.telegram ?? ''
   };
 }

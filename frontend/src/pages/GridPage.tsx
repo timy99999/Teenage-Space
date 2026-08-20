@@ -13,7 +13,37 @@ import { NewsCard } from '../components/NewsCard';
 import { Chip } from '../components/Chip';
 import { CardSizeSlider } from '../components/CardSizeSlider';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { EditEventModal } from '../components/EditEventModal';
 import type { EventItem } from '../types';
+
+type ConfirmKind = 'archive' | 'voting' | 'delete';
+
+const CONFIRM_COPY: Record<ConfirmKind, { title: string; message: (title: string) => string; confirmLabel: string; endpoint: (id: string) => string; method: 'del' | 'post'; success: string }> = {
+  archive: {
+    title: 'Перенести в архив?',
+    message: (title) => `«${title}» будет скрыт с сайта и перенесён в архив.`,
+    confirmLabel: 'В архив',
+    endpoint: (id) => `/admin/events/${id}/archive`,
+    method: 'post',
+    success: 'Перенесено в архив'
+  },
+  voting: {
+    title: 'Перенести в голосование?',
+    message: (title) => `«${title}» пропадёт из «Возможности» и появится в «Голосование».`,
+    confirmLabel: 'В голосование',
+    endpoint: (id) => `/admin/events/${id}/move-to-voting`,
+    method: 'post',
+    success: 'Перенесено в голосование'
+  },
+  delete: {
+    title: 'Удалить пост?',
+    message: (title) => `«${title}» будет удалён без возможности восстановления.`,
+    confirmLabel: 'Удалить',
+    endpoint: (id) => `/admin/events/${id}`,
+    method: 'del',
+    success: 'Пост удалён'
+  }
+};
 
 export type GridMode = 'opps' | 'fav' | 'vote' | 'news';
 
@@ -29,7 +59,9 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const [ageApplied, setAgeApplied] = useState('');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [removedIds, setRemovedIds] = useState<Set<string>>(new Set());
-  const [deleteTarget, setDeleteTarget] = useState<EventItem | null>(null);
+  const [editedEvents, setEditedEvents] = useState<Record<string, EventItem>>({});
+  const [confirmTarget, setConfirmTarget] = useState<{ event: EventItem; kind: ConfirmKind } | null>(null);
+  const [editTarget, setEditTarget] = useState<EventItem | null>(null);
   const { isAdmin } = useAuth();
   const { flash } = useUI();
 
@@ -49,23 +81,25 @@ export function GridPage({ mode }: { mode: GridMode }) {
     level: fLevel,
     age: ageApplied
   });
-  const events = fetchedEvents.filter((e) => !removedIds.has(e.id));
+  const events = fetchedEvents.filter((e) => !removedIds.has(e.id)).map((e) => editedEvents[e.id] ?? e);
   const { news } = useNews();
   const { favorites, toggle } = useFavorites();
   const { ratings, rate } = useRatings();
 
   const openEvent = (id: string) => setParams({ event: id });
 
-  async function confirmDelete() {
-    if (!deleteTarget) return;
-    const id = deleteTarget.id;
-    setDeleteTarget(null);
+  async function runConfirmedAction() {
+    if (!confirmTarget) return;
+    const { event, kind } = confirmTarget;
+    const copy = CONFIRM_COPY[kind];
+    setConfirmTarget(null);
     try {
-      await api.del(`/admin/events/${id}`);
-      setRemovedIds((prev) => new Set(prev).add(id));
-      flash('Пост удалён');
+      if (copy.method === 'del') await api.del(copy.endpoint(event.id));
+      else await api.post(copy.endpoint(event.id));
+      setRemovedIds((prev) => new Set(prev).add(event.id));
+      flash(copy.success);
     } catch (e) {
-      flash(e instanceof Error ? e.message : 'Не удалось удалить пост');
+      flash(e instanceof Error ? e.message : 'Не удалось выполнить действие');
     }
   }
 
@@ -348,21 +382,37 @@ export function GridPage({ mode }: { mode: GridMode }) {
               onToggleFav={() => toggle(e.id)}
               rating={ratings[e.id] ?? 0}
               onRate={(n) => rate(e.id, n)}
-              canDelete={isAdmin}
-              onDelete={() => setDeleteTarget(e)}
+              admin={
+                isAdmin
+                  ? {
+                      onEdit: () => setEditTarget(e),
+                      onArchive: () => setConfirmTarget({ event: e, kind: 'archive' }),
+                      onMoveToVoting: () => setConfirmTarget({ event: e, kind: 'voting' }),
+                      onDelete: () => setConfirmTarget({ event: e, kind: 'delete' })
+                    }
+                  : undefined
+              }
             />
           ))}
         </div>
       )}
 
-      {deleteTarget && (
+      {confirmTarget && (
         <ConfirmDialog
-          title="Удалить пост?"
-          message={`«${deleteTarget.title}» будет удалён без возможности восстановления.`}
-          confirmLabel="Удалить"
-          danger
-          onConfirm={confirmDelete}
-          onCancel={() => setDeleteTarget(null)}
+          title={CONFIRM_COPY[confirmTarget.kind].title}
+          message={CONFIRM_COPY[confirmTarget.kind].message(confirmTarget.event.title)}
+          confirmLabel={CONFIRM_COPY[confirmTarget.kind].confirmLabel}
+          danger={confirmTarget.kind === 'delete'}
+          onConfirm={runConfirmedAction}
+          onCancel={() => setConfirmTarget(null)}
+        />
+      )}
+
+      {editTarget && (
+        <EditEventModal
+          event={editTarget}
+          onClose={() => setEditTarget(null)}
+          onSaved={(updated) => setEditedEvents((prev) => ({ ...prev, [updated.id]: updated }))}
         />
       )}
 

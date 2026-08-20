@@ -8,7 +8,7 @@ import { useAdminAnalytics } from '../hooks/useAdminAnalytics';
 import { useNews } from '../hooks/useNews';
 import { api } from '../lib/api';
 import { Chip } from '../components/Chip';
-import { PostSiteInfo, PostCardInfo, emptyPostForm } from '../components/PostForm';
+import { PostSiteInfo, PostCardInfo, emptyPostForm, postFormPayload } from '../components/PostForm';
 import { ImageUploadField } from '../components/ImageUploadField';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { TrashIcon } from '../components/TrashIcon';
@@ -150,8 +150,8 @@ function SubmissionRow({
   }
 
   async function publish() {
-    if (!form.title.trim() || !form.category || !form.eventDate || !form.address) {
-      flash('Заполните название, категорию, дату и адрес');
+    if (!form.title.trim() || !form.category || !form.address) {
+      flash('Заполните название, категорию и адрес');
       return;
     }
     if (!form.imageUrl) {
@@ -160,7 +160,7 @@ function SubmissionRow({
     }
     setBusy(true);
     try {
-      await api.post(`/admin/submissions/${s.id}/publish`, form);
+      await api.post(`/admin/submissions/${s.id}/publish`, postFormPayload(form));
       flash('Мероприятие опубликовано');
       onChanged();
     } catch (e) {
@@ -271,13 +271,13 @@ function PublishEventTab() {
       flash('Загрузите фото мероприятия');
       return;
     }
-    if (!form.category || !form.eventDate || !form.address) {
-      flash('Заполните категорию, дату и адрес');
+    if (!form.category || !form.address) {
+      flash('Заполните категорию и адрес');
       return;
     }
     setSubmitting(true);
     try {
-      await api.post('/admin/events', form);
+      await api.post('/admin/events', postFormPayload(form));
       setPublished(true);
       setForm(emptyPostForm());
     } catch (e) {

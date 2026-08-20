@@ -10,14 +10,16 @@ export interface EventRow {
   cost: string | null;
   level: 'local' | 'intl';
   format: string;
-  event_date: string;
+  event_date: string | null;
   deadline_date: string | null;
   place: string;
   short_desc: string;
   description: string;
   instagram: boolean;
   registration_url: string | null;
+  telegram: string | null;
   is_past: boolean;
+  archived: boolean;
   image_url: string | null;
 }
 
@@ -41,7 +43,9 @@ export function mapEvent(row: EventRow) {
     description: row.description,
     instagram: row.instagram,
     registrationUrl: row.registration_url,
+    telegram: row.telegram,
     isPast: row.is_past,
+    archived: row.archived,
     imageUrl: row.image_url
   };
 }

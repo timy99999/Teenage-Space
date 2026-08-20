@@ -8,7 +8,7 @@ export class EventsService {
   constructor(private readonly supabase: SupabaseService) {}
 
   async list(query: QueryEventsDto) {
-    let q = this.supabase.client.from('events').select('*');
+    let q = this.supabase.client.from('events').select('*').eq('archived', false);
 
     if (query.scope === 'upcoming') q = q.eq('is_past', false);
     else if (query.scope === 'past') q = q.eq('is_past', true);

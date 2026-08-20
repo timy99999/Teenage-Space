@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class UpdateSubmissionDto {
   @IsOptional()
@@ -19,10 +19,14 @@ export class UpdateSubmissionDto {
 
   @IsOptional()
   @IsInt()
+  @Min(0)
+  @Max(99)
   ageMin?: number | null;
 
   @IsOptional()
   @IsInt()
+  @Min(0)
+  @Max(99)
   ageMax?: number | null;
 
   @IsOptional()

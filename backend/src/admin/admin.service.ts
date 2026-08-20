@@ -15,6 +15,7 @@ import {
 } from '../common/mappers';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { CreateEventDto } from './dto/create-event.dto';
+import { UpdateEventDto } from './dto/update-event.dto';
 import { CreateNewsDto } from './dto/create-news.dto';
 
 function deriveAgeLabel(min: number, max: number): string {
@@ -119,13 +120,14 @@ export class AdminService {
         cost: dto.cost || null,
         level: dto.level,
         format: dto.format,
-        event_date: dto.eventDate,
+        event_date: dto.eventDate || null,
         deadline_date: dto.deadlineDate || null,
         place: dto.address,
         short_desc: deriveShortDesc(dto.description),
         description: dto.description,
         instagram: Boolean(dto.instagram),
         registration_url: dto.registrationUrl || null,
+        telegram: dto.telegram || null,
         is_past: false,
         image_url: dto.imageUrl
       })
@@ -134,6 +136,57 @@ export class AdminService {
     if (eventError) throw eventError;
     await this.cache.clear();
     return mapEvent(event as EventRow);
+  }
+
+  async updateEvent(id: string, dto: UpdateEventDto) {
+    const patch: Record<string, unknown> = {};
+    if (dto.imageUrl !== undefined) patch.image_url = dto.imageUrl;
+    if (dto.title !== undefined) patch.title = dto.title;
+    if (dto.category !== undefined) patch.category = dto.category;
+    if (dto.themes !== undefined) patch.themes = dto.themes;
+    if (dto.ageMin !== undefined) patch.age_min = dto.ageMin;
+    if (dto.ageMax !== undefined) patch.age_max = dto.ageMax;
+    if (dto.format !== undefined) patch.format = dto.format;
+    if (dto.price !== undefined) patch.price = dto.price;
+    if (dto.cost !== undefined) patch.cost = dto.cost || null;
+    if (dto.level !== undefined) patch.level = dto.level;
+    if (dto.eventDate !== undefined) patch.event_date = dto.eventDate || null;
+    if (dto.deadlineDate !== undefined) patch.deadline_date = dto.deadlineDate || null;
+    if (dto.address !== undefined) patch.place = dto.address;
+    if (dto.description !== undefined) patch.description = dto.description;
+    if (dto.registrationUrl !== undefined) patch.registration_url = dto.registrationUrl || null;
+    if (dto.instagram !== undefined) patch.instagram = Boolean(dto.instagram);
+    if (dto.telegram !== undefined) patch.telegram = dto.telegram || null;
+
+    if (dto.ageMin !== undefined || dto.ageMax !== undefined) {
+      const { data: current, error: currentError } = await this.supabase.client
+        .from('events')
+        .select('age_min, age_max')
+        .eq('id', id)
+        .single();
+      if (currentError) throw currentError;
+      const ageMin = dto.ageMin ?? (current as { age_min: number }).age_min;
+      const ageMax = dto.ageMax ?? (current as { age_max: number }).age_max;
+      patch.age_label = deriveAgeLabel(ageMin, ageMax);
+    }
+    if (dto.description !== undefined) patch.short_desc = deriveShortDesc(dto.description);
+
+    const { data, error } = await this.supabase.client.from('events').update(patch).eq('id', id).select('*').single();
+    if (error) throw error;
+    await this.cache.clear();
+    return mapEvent(data as EventRow);
+  }
+
+  async archiveEvent(id: string) {
+    const { error } = await this.supabase.client.from('events').update({ archived: true }).eq('id', id);
+    if (error) throw error;
+    await this.cache.clear();
+  }
+
+  async moveEventToVoting(id: string) {
+    const { error } = await this.supabase.client.from('events').update({ is_past: true, archived: false }).eq('id', id);
+    if (error) throw error;
+    await this.cache.clear();
   }
 
   async deleteEvent(id: string) {

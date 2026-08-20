@@ -1,7 +1,14 @@
+import { useEffect, useRef, useState } from 'react';
 import type { EventItem } from '../types';
 import { CATS, fmtDate } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
-import { TrashIcon } from './TrashIcon';
+
+export interface EventCardAdminActions {
+  onEdit: () => void;
+  onArchive: () => void;
+  onMoveToVoting: () => void;
+  onDelete: () => void;
+}
 
 interface EventCardProps {
   event: EventItem;
@@ -11,25 +18,27 @@ interface EventCardProps {
   onToggleFav: () => void;
   rating: number;
   onRate: (n: number) => void;
-  canDelete?: boolean;
-  onDelete?: () => void;
+  admin?: EventCardAdminActions;
 }
 
-export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, canDelete, onDelete }: EventCardProps) {
+export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, admin }: EventCardProps) {
   const catLabel = CATS.find((c) => c.key === event.category)?.label ?? event.category;
   const priceLabel = event.price === 'free' ? 'Бесплатно' : event.cost ?? '';
 
   return (
     <article className="ts-card">
-      <button className="ts-card-img" onClick={onOpen}>
-        <EventPhoto src={event.imageUrl} alt={event.title} />
+      <div className="ts-card-img-wrap">
+        <button className="ts-card-img" onClick={onOpen}>
+          <EventPhoto src={event.imageUrl} alt={event.title} />
+        </button>
         <span className="ts-card-cat-badge">{catLabel}</span>
-      </button>
+        {admin && <CardMenu isVoteMode={isVoteMode} {...admin} />}
+      </div>
       <button className="ts-card-body" onClick={onOpen}>
         <h3 className="ts-card-title">{event.title}</h3>
         <p className="ts-card-short">{event.short}</p>
         <div className="ts-card-meta">
-          <span>{fmtDate(event.eventDate)}</span>
+          {event.eventDate && <span>{fmtDate(event.eventDate)}</span>}
           <span>{event.ageLabel}</span>
           <span>{priceLabel}</span>
         </div>
@@ -82,20 +91,55 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
               Регистрация
             </button>
           )}
-          {canDelete && (
-            <button
-              className="ts-icon-link danger"
-              title="Удалить пост"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete?.();
-              }}
-            >
-              <TrashIcon />
-            </button>
-          )}
         </div>
       </div>
     </article>
+  );
+}
+
+function CardMenu({ isVoteMode, onEdit, onArchive, onMoveToVoting, onDelete }: EventCardAdminActions & { isVoteMode: boolean }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDocClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('click', onDocClick);
+    return () => document.removeEventListener('click', onDocClick);
+  }, [open]);
+
+  function pick(action: () => void) {
+    return (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setOpen(false);
+      action();
+    };
+  }
+
+  return (
+    <div className="ts-card-menu" ref={ref}>
+      <button
+        className="ts-card-menu-btn"
+        title="Действия"
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen((v) => !v);
+        }}
+      >
+        ⋮
+      </button>
+      {open && (
+        <div className="ts-card-menu-dropdown">
+          <button onClick={pick(onEdit)}>Редактировать</button>
+          <button onClick={pick(onArchive)}>Перенести в архив</button>
+          {!isVoteMode && <button onClick={pick(onMoveToVoting)}>Перенести в голосование</button>}
+          <button className="danger" onClick={pick(onDelete)}>
+            Удалить
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

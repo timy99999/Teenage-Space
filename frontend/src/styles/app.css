@@ -648,14 +648,17 @@
   border-color: var(--ts-violet);
   box-shadow: 0 8px 26px rgba(0, 0, 0, 0.08);
 }
-.ts-card-img {
+.ts-card-img-wrap {
   aspect-ratio: 3 / 4;
   background: var(--ts-ph);
   position: relative;
+}
+.ts-card-img {
   cursor: pointer;
   border: none;
   padding: 0;
   width: 100%;
+  height: 100%;
   display: block;
 }
 .ts-card-img img {
@@ -676,6 +679,58 @@
   font-size: 11.5px;
   letter-spacing: 0.02em;
   pointer-events: none;
+}
+.ts-card-menu {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+.ts-card-menu-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: none;
+  background: rgba(0, 0, 0, 0.62);
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.ts-card-menu-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+.ts-card-menu-dropdown {
+  position: absolute;
+  top: 34px;
+  right: 0;
+  min-width: 200px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--ts-surface);
+  border: 1px solid var(--ts-line);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+}
+.ts-card-menu-dropdown button {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: var(--ts-fg);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+.ts-card-menu-dropdown button:hover {
+  background: var(--ts-surface2);
+}
+.ts-card-menu-dropdown button.danger {
+  color: #d64545;
 }
 .ts-card-body {
   padding: 13px 14px 6px;

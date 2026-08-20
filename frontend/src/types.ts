@@ -14,14 +14,16 @@ export interface EventItem {
   cost: string | null;
   level: Level;
   format: Format;
-  eventDate: string;
+  eventDate: string | null;
   deadlineDate: string | null;
   place: string;
   short: string;
   description: string;
   instagram: boolean;
   registrationUrl: string | null;
+  telegram: string | null;
   isPast: boolean;
+  archived: boolean;
   imageUrl: string | null;
 }
 
@@ -135,17 +137,18 @@ export interface Analytics {
 
 /**
  * One shared shape for "create/publish an event" — used identically by the
- * public submission form (PublishPage) and the admin's direct-publish form.
- * Fields with no `events` column (audience, extraLink*, telegram, charity)
- * are simply dropped server-side when publishing straight to an event.
+ * public submission form (PublishPage) and the admin's direct-publish/edit
+ * forms. Fields with no `events` column (audience, extraLink*, charity) are
+ * simply dropped server-side when publishing straight to an event.
+ * ageMin/ageMax use '' as the "field is empty while typing" state.
  */
 export interface PostFormValue {
   imageUrl: string | null;
   title: string;
   category: string;
   themes: string[];
-  ageMin: number;
-  ageMax: number;
+  ageMin: number | '';
+  ageMax: number | '';
   format: string;
   price: PriceType | null;
   cost: string;

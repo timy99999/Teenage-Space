@@ -1,41 +1,49 @@
 import { IsArray, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
-export class CreateEventDto {
+export class UpdateEventDto {
+  @IsOptional()
   @IsString()
-  imageUrl!: string;
+  imageUrl?: string;
 
+  @IsOptional()
   @IsString()
-  title!: string;
+  title?: string;
 
+  @IsOptional()
   @IsString()
-  category!: string;
+  category?: string;
 
   @IsOptional()
   @IsArray()
   themes?: string[];
 
+  @IsOptional()
   @IsInt()
   @Min(0)
   @Max(99)
-  ageMin!: number;
+  ageMin?: number;
 
+  @IsOptional()
   @IsInt()
   @Min(0)
   @Max(99)
-  ageMax!: number;
+  ageMax?: number;
 
+  @IsOptional()
   @IsString()
-  format!: string;
+  format?: string;
 
+  @IsOptional()
   @IsIn(['free', 'paid'])
-  price!: 'free' | 'paid';
+  price?: 'free' | 'paid';
 
   @IsOptional()
   @IsString()
   cost?: string | null;
 
+  @IsOptional()
   @IsIn(['local', 'intl'])
-  level!: 'local' | 'intl';
+  level?: 'local' | 'intl';
 
   @IsOptional()
   @IsString()
@@ -45,11 +53,13 @@ export class CreateEventDto {
   @IsString()
   deadlineDate?: string | null;
 
+  @IsOptional()
   @IsString()
-  address!: string;
+  address?: string;
 
+  @IsOptional()
   @IsString()
-  description!: string;
+  description?: string;
 
   @IsOptional()
   @IsString()

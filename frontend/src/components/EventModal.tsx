@@ -4,6 +4,11 @@ import { useFavorites } from '../hooks/useFavorites';
 import { CATS, THEMES, fmtDate } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
 
+function telegramUrl(handle: string): string {
+  if (handle.startsWith('http')) return handle;
+  return `https://t.me/${handle.replace(/^@/, '')}`;
+}
+
 export function EventModal() {
   const [params, setParams] = useSearchParams();
   const eventId = params.get('event');
@@ -25,7 +30,7 @@ export function EventModal() {
     { l: 'Формат участия', v: event.format },
     { l: 'Цена', v: event.price === 'free' ? 'Бесплатно' : event.cost ?? '' },
     { l: 'Уровень', v: event.level === 'local' ? 'Локальное' : 'Международное' },
-    { l: 'Дата', v: fmtDate(event.eventDate) },
+    ...(event.eventDate ? [{ l: 'Дата', v: fmtDate(event.eventDate) }] : []),
     { l: 'Дедлайн регистрации', v: event.deadlineDate ? fmtDate(event.deadlineDate) : '—' },
     { l: 'Адрес', v: event.place }
   ];
@@ -66,9 +71,11 @@ export function EventModal() {
                   Instagram
                 </a>
               )}
-              <a href="https://telegram.org" target="_blank" rel="noreferrer" className="ts-pill-link ghost">
-                Telegram
-              </a>
+              {event.telegram && (
+                <a href={telegramUrl(event.telegram)} target="_blank" rel="noreferrer" className="ts-pill-link ghost">
+                  Telegram
+                </a>
+              )}
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@ import { AdminGuard } from '../auth/admin.guard';
 import { AdminService } from './admin.service';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { CreateEventDto } from './dto/create-event.dto';
+import { UpdateEventDto } from './dto/update-event.dto';
 import { CreateNewsDto } from './dto/create-news.dto';
 
 @Controller('admin')
@@ -34,6 +35,23 @@ export class AdminController {
   @Post('events')
   createEvent(@Body() dto: CreateEventDto) {
     return this.admin.createEvent(dto);
+  }
+
+  @Patch('events/:id')
+  updateEvent(@Param('id') id: string, @Body() dto: UpdateEventDto) {
+    return this.admin.updateEvent(id, dto);
+  }
+
+  @Post('events/:id/archive')
+  @HttpCode(204)
+  archiveEvent(@Param('id') id: string) {
+    return this.admin.archiveEvent(id);
+  }
+
+  @Post('events/:id/move-to-voting')
+  @HttpCode(204)
+  moveEventToVoting(@Param('id') id: string) {
+    return this.admin.moveEventToVoting(id);
   }
 
   @Delete('events/:id')
