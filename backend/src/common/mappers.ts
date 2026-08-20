@@ -21,6 +21,7 @@ export interface EventRow {
   is_past: boolean;
   archived: boolean;
   image_url: string | null;
+  created_at: string;
 }
 
 export function mapEvent(row: EventRow) {

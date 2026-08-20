@@ -24,14 +24,16 @@ export function EventModal() {
   };
 
   const fav = favorites.has(event.id);
+  const themeLabel = event.themes.map((t) => THEMES.find((x) => x.key === t)?.label ?? t).join(', ');
+  const priceLabel = event.price === 'free' ? 'Бесплатно' : event.cost ?? '';
   const fields = [
-    { l: 'Тема', v: event.themes.map((t) => THEMES.find((x) => x.key === t)?.label ?? t).join(', ') },
+    ...(themeLabel ? [{ l: 'Тема', v: themeLabel }] : []),
     { l: 'Возраст', v: event.ageLabel },
-    { l: 'Формат участия', v: event.format },
-    { l: 'Цена', v: event.price === 'free' ? 'Бесплатно' : event.cost ?? '' },
+    ...(event.format ? [{ l: 'Формат участия', v: event.format }] : []),
+    ...(priceLabel ? [{ l: 'Цена', v: priceLabel }] : []),
     { l: 'Уровень', v: event.level === 'local' ? 'Локальное' : 'Международное' },
     ...(event.eventDate ? [{ l: 'Дата', v: fmtDate(event.eventDate) }] : []),
-    { l: 'Дедлайн регистрации', v: event.deadlineDate ? fmtDate(event.deadlineDate) : '—' },
+    ...(event.deadlineDate ? [{ l: 'Дедлайн регистрации', v: fmtDate(event.deadlineDate) }] : []),
     ...(event.place ? [{ l: 'Адрес', v: event.place }] : [])
   ];
 

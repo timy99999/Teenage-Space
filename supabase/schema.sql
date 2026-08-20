@@ -57,7 +57,8 @@ create table if not exists events (
   telegram text,
   is_past boolean not null default false,
   archived boolean not null default false,
-  image_url text
+  image_url text,
+  created_at timestamptz not null default now()
 );
 
 alter table events enable row level security;

@@ -23,7 +23,7 @@ export class EventsService {
     const themes = query.themes?.split(',').filter(Boolean) ?? [];
     if (themes.length) q = q.overlaps('themes', themes);
 
-    q = q.order('event_date', { ascending: query.scope !== 'past' });
+    q = q.order('created_at', { ascending: false });
 
     const { data, error } = await q;
     if (error) throw error;
