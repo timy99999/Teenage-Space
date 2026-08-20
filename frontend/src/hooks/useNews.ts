@@ -11,7 +11,7 @@ export function useNews() {
   const [loading, setLoading] = useState(() => !getCached<NewsItem[]>(CACHE_KEY));
 
   const reload = useCallback(async () => {
-    const data = await api.get<NewsItem[]>('/news').catch(() => []);
+    const data = await api.get<NewsItem[]>('/news', { noCache: true }).catch(() => []);
     setNews(data);
   }, []);
 

@@ -21,7 +21,7 @@ export function useEducation(track: string) {
   const [loading, setLoading] = useState(() => !seed);
 
   const reload = useCallback(async () => {
-    const data = await api.get<EducationData>(`/education/${track}`).catch(() => null);
+    const data = await api.get<EducationData>(`/education/${track}`, { noCache: true }).catch(() => null);
     if (data) {
       setTitle(data.title);
       setIntro(data.intro);
@@ -71,7 +71,7 @@ export function useEducationTracks() {
   const [tracks, setTracks] = useState<EducationTrack[]>(() => getCached<EducationTrack[]>(cacheKey) ?? []);
 
   const reload = useCallback(async () => {
-    const data = await api.get<EducationTrack[]>('/education/tracks').catch(() => []);
+    const data = await api.get<EducationTrack[]>('/education/tracks', { noCache: true }).catch(() => []);
     setTracks(data);
   }, []);
 

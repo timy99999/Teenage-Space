@@ -870,20 +870,32 @@
 .ts-material-row {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 12px;
   padding: 20px 4px;
   border-top: 1px solid var(--ts-line);
-  cursor: pointer;
   transition: padding-left 0.2s;
-  background: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
   width: 100%;
-  text-align: left;
 }
 .ts-material-row:hover {
   padding-left: 12px;
+}
+.ts-material-row-link {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+}
+.ts-material-row-admin {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
 }
 .ts-material-n {
   font-family: 'Open Sans', sans-serif;
@@ -915,6 +927,11 @@
 .ts-article-inner {
   max-width: 720px;
   margin: 0 auto;
+}
+.ts-article-admin-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
 }
 .ts-article-kicker {
   font-family: 'Open Sans', sans-serif;
