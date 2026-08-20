@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsIn, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class UpdateSubmissionDto {
   @IsOptional()
@@ -10,20 +10,24 @@ export class UpdateSubmissionDto {
   imageUrl?: string;
 
   @IsOptional()
-  @IsArray()
-  categories?: string[];
+  @IsString()
+  category?: string | null;
 
   @IsOptional()
   @IsArray()
   themes?: string[];
 
   @IsOptional()
-  @IsArray()
-  ages?: string[];
+  @IsInt()
+  ageMin?: number | null;
 
   @IsOptional()
-  @IsArray()
-  format?: string[];
+  @IsInt()
+  ageMax?: number | null;
+
+  @IsOptional()
+  @IsString()
+  format?: string | null;
 
   @IsOptional()
   @IsIn(['free', 'paid'])

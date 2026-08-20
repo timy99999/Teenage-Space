@@ -136,10 +136,11 @@ export function mapSubmission(row: SubmissionRow) {
 
 export interface SubmissionAdminRow extends SubmissionRow {
   user_id: string;
-  categories: string[];
+  category: string | null;
   themes: string[];
-  ages: string[];
-  format: string[];
+  age_min: number | null;
+  age_max: number | null;
+  format: string | null;
   price: 'free' | 'paid' | null;
   cost: string | null;
   charity: boolean;
@@ -164,10 +165,11 @@ export function mapSubmissionAdmin(row: SubmissionAdminRow) {
     id: row.id,
     userId: row.user_id,
     title: row.title,
-    categories: row.categories ?? [],
+    category: row.category,
     themes: row.themes ?? [],
-    ages: row.ages ?? [],
-    format: row.format ?? [],
+    ageMin: row.age_min,
+    ageMax: row.age_max,
+    format: row.format,
     price: row.price,
     cost: row.cost,
     charity: row.charity,

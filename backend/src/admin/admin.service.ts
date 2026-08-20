@@ -17,6 +17,19 @@ import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CreateNewsDto } from './dto/create-news.dto';
 
+function deriveAgeLabel(min: number, max: number): string {
+  if (min <= 0 && max >= 99) return 'Любой';
+  if (min === max) return `${min}`;
+  if (max >= 99) return `${min}+`;
+  return `${min}–${max}`;
+}
+
+function deriveShortDesc(description: string): string {
+  const trimmed = description.trim();
+  if (trimmed.length <= 140) return trimmed;
+  return `${trimmed.slice(0, 139).trimEnd()}…`;
+}
+
 @Injectable()
 export class AdminService {
   constructor(
@@ -36,9 +49,10 @@ export class AdminService {
     const patch: Record<string, unknown> = {};
     if (dto.title !== undefined) patch.title = dto.title;
     if (dto.imageUrl !== undefined) patch.image_url = dto.imageUrl;
-    if (dto.categories !== undefined) patch.categories = dto.categories;
+    if (dto.category !== undefined) patch.category = dto.category;
     if (dto.themes !== undefined) patch.themes = dto.themes;
-    if (dto.ages !== undefined) patch.ages = dto.ages;
+    if (dto.ageMin !== undefined) patch.age_min = dto.ageMin;
+    if (dto.ageMax !== undefined) patch.age_max = dto.ageMax;
     if (dto.format !== undefined) patch.format = dto.format;
     if (dto.price !== undefined) patch.price = dto.price;
     if (dto.cost !== undefined) patch.cost = dto.cost;
@@ -100,20 +114,20 @@ export class AdminService {
         themes: dto.themes ?? [],
         age_min: dto.ageMin,
         age_max: dto.ageMax,
-        age_label: dto.ageLabel,
+        age_label: deriveAgeLabel(dto.ageMin, dto.ageMax),
         price: dto.price,
-        cost: dto.cost ?? null,
+        cost: dto.cost || null,
         level: dto.level,
         format: dto.format,
         event_date: dto.eventDate,
-        deadline_date: dto.deadlineDate ?? null,
-        place: dto.place,
-        short_desc: dto.shortDesc,
+        deadline_date: dto.deadlineDate || null,
+        place: dto.address,
+        short_desc: deriveShortDesc(dto.description),
         description: dto.description,
-        instagram: dto.instagram ?? false,
-        registration_url: dto.registrationUrl ?? null,
+        instagram: Boolean(dto.instagram),
+        registration_url: dto.registrationUrl || null,
         is_past: false,
-        image_url: dto.imageUrl ?? null
+        image_url: dto.imageUrl
       })
       .select('*')
       .single();

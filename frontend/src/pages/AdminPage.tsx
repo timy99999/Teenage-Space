@@ -8,15 +8,16 @@ import { useAdminAnalytics } from '../hooks/useAdminAnalytics';
 import { useNews } from '../hooks/useNews';
 import { api } from '../lib/api';
 import { Chip } from '../components/Chip';
-import { EventForm } from '../components/EventForm';
+import { PostSiteInfo, PostCardInfo, emptyPostForm } from '../components/PostForm';
 import { ImageUploadField } from '../components/ImageUploadField';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { TrashIcon } from '../components/TrashIcon';
-import type { AdminSubmission, AdminUser, CreateEventInput, NewsItem, SubmissionStatus } from '../types';
+import type { AdminSubmission, AdminUser, NewsItem, PostFormValue, SubmissionStatus } from '../types';
 
 const TABS = [
   { key: 'moderation', label: 'Модерация' },
-  { key: 'publish', label: 'Публикация' },
+  { key: 'publish-event', label: 'Опубликовать в Возможности' },
+  { key: 'publish-news', label: 'Опубликовать новость' },
   { key: 'users', label: 'Пользователи' },
   { key: 'analytics', label: 'Аналитика' }
 ] as const;
@@ -29,26 +30,29 @@ const STATUS_LABEL: Record<SubmissionStatus, string> = {
   rejected: 'Отклонено'
 };
 
-function emptyEventForm(): CreateEventInput {
+function buildFormFromSubmission(s: AdminSubmission): PostFormValue {
   return {
-    title: '',
-    category: '',
-    themes: [],
-    ageMin: 0,
-    ageMax: 0,
-    ageLabel: '',
-    price: 'free',
-    cost: null,
-    level: 'local',
-    format: '',
-    eventDate: '',
-    deadlineDate: null,
-    place: '',
-    shortDesc: '',
-    description: '',
-    instagram: false,
-    registrationUrl: null,
-    imageUrl: null
+    imageUrl: s.imageUrl,
+    title: s.title,
+    category: s.category ?? '',
+    themes: s.themes,
+    ageMin: s.ageMin ?? 0,
+    ageMax: s.ageMax ?? 0,
+    format: s.format ?? '',
+    price: s.price,
+    cost: s.cost ?? '',
+    charity: s.charity,
+    level: s.level,
+    eventDate: s.eventDate ?? '',
+    deadlineDate: s.deadlineDate ?? '',
+    address: s.address ?? '',
+    audience: s.audience ?? '',
+    description: s.description ?? '',
+    registrationUrl: s.registrationUrl ?? '',
+    extraLinkTitle: s.extraLinkTitle ?? '',
+    extraLinkUrl: s.extraLinkUrl ?? '',
+    instagram: s.instagram ?? '',
+    telegram: s.telegram ?? ''
   };
 }
 
@@ -66,7 +70,7 @@ export function AdminPage() {
   return (
     <div className="ts-page">
       <h1 className="ts-page-title">Админ-панель</h1>
-      <div className="ts-theme-btns" style={{ marginTop: 18, marginBottom: 8 }}>
+      <div className="ts-theme-btns" style={{ marginTop: 18, marginBottom: 8, flexWrap: 'wrap' }}>
         {TABS.map((t) => (
           <button key={t.key} className={`ts-theme-btn${tab === t.key ? ' on' : ''}`} onClick={() => setTab(t.key)}>
             {t.label}
@@ -74,34 +78,12 @@ export function AdminPage() {
         ))}
       </div>
       {tab === 'moderation' && <ModerationTab />}
-      {tab === 'publish' && <PublishTab />}
+      {tab === 'publish-event' && <PublishEventTab />}
+      {tab === 'publish-news' && <PublishNewsTab />}
       {tab === 'users' && <UsersTab />}
       {tab === 'analytics' && <AnalyticsTab />}
     </div>
   );
-}
-
-function buildInitialEventForm(s: AdminSubmission): CreateEventInput {
-  return {
-    title: s.title,
-    category: s.categories[0] ?? '',
-    themes: s.themes,
-    ageMin: 0,
-    ageMax: 0,
-    ageLabel: s.ages.join(', '),
-    price: s.price ?? 'free',
-    cost: s.cost,
-    level: s.level ?? 'local',
-    format: s.format[0] ?? '',
-    eventDate: s.eventDate ?? '',
-    deadlineDate: s.deadlineDate,
-    place: s.address ?? '',
-    shortDesc: '',
-    description: s.description ?? '',
-    instagram: false,
-    registrationUrl: s.registrationUrl,
-    imageUrl: s.imageUrl
-  };
 }
 
 function ModerationTab() {
@@ -151,7 +133,7 @@ function SubmissionRow({
     address: s.address ?? '',
     audience: s.audience ?? ''
   });
-  const [form, setForm] = useState<CreateEventInput>(() => buildInitialEventForm(s));
+  const [form, setForm] = useState<PostFormValue>(() => buildFormFromSubmission(s));
   const [busy, setBusy] = useState(false);
 
   async function saveEdit() {
@@ -168,8 +150,8 @@ function SubmissionRow({
   }
 
   async function publish() {
-    if (!form.category || !form.eventDate || !form.place || !form.shortDesc) {
-      flash('Заполните категорию, дату, место и краткое описание');
+    if (!form.title.trim() || !form.category || !form.eventDate || !form.address) {
+      flash('Заполните название, категорию, дату и адрес');
       return;
     }
     if (!form.imageUrl) {
@@ -256,7 +238,8 @@ function SubmissionRow({
 
           <div>
             <div className="ts-field-label">Оформить как мероприятие для публикации</div>
-            <EventForm value={form} onChange={setForm} />
+            <PostSiteInfo value={form} onChange={setForm} />
+            <PostCardInfo value={form} onChange={setForm} />
           </div>
 
           <div style={{ display: 'flex', gap: 12 }}>
@@ -273,54 +256,64 @@ function SubmissionRow({
   );
 }
 
-function PublishTab() {
-  return (
-    <div className="ts-publish-grid" style={{ marginTop: 20 }}>
-      <CreateEventPanel />
-      <CreateNewsPanel />
-    </div>
-  );
-}
-
-function CreateEventPanel() {
+function PublishEventTab() {
   const { flash } = useUI();
-  const [form, setForm] = useState<CreateEventInput>(emptyEventForm);
-  const [busy, setBusy] = useState(false);
+  const [form, setForm] = useState<PostFormValue>(emptyPostForm);
+  const [published, setPublished] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  async function publish() {
-    if (!form.title || !form.category || !form.eventDate || !form.place || !form.shortDesc) {
-      flash('Заполните название, категорию, дату, место и краткое описание');
+  async function submit() {
+    if (!form.title.trim()) {
+      flash('Укажите название мероприятия');
       return;
     }
     if (!form.imageUrl) {
       flash('Загрузите фото мероприятия');
       return;
     }
-    setBusy(true);
+    if (!form.category || !form.eventDate || !form.address) {
+      flash('Заполните категорию, дату и адрес');
+      return;
+    }
+    setSubmitting(true);
     try {
       await api.post('/admin/events', form);
-      flash('Мероприятие опубликовано');
-      setForm(emptyEventForm());
+      setPublished(true);
+      setForm(emptyPostForm());
     } catch (e) {
       flash(e instanceof Error ? e.message : 'Не удалось опубликовать');
     } finally {
-      setBusy(false);
+      setSubmitting(false);
     }
   }
 
   return (
-    <section className="ts-card-panel">
-      <h2>Новое мероприятие</h2>
-      <div className="desc">Публикуется в «Возможности» сразу, без заявки от пользователя</div>
-      <EventForm value={form} onChange={setForm} />
-      <button className="ts-btn-outline block" style={{ marginTop: 22 }} onClick={publish} disabled={busy}>
-        Опубликовать
-      </button>
-    </section>
+    <div className="ts-publish-grid" style={{ marginTop: 20 }}>
+      <div className="ts-publish-col">
+        <section className="ts-card-panel">
+          <h2>Информация для сайта</h2>
+          <div className="desc">Определяет категорию, фильтры и расположение мероприятия</div>
+          <PostSiteInfo value={form} onChange={setForm} />
+        </section>
+      </div>
+
+      <section className="ts-card-panel">
+        <h2>Информация для карточки</h2>
+        <PostCardInfo value={form} onChange={setForm} />
+        <button className="ts-btn-outline block" style={{ marginTop: 22 }} onClick={submit} disabled={submitting}>
+          Опубликовать
+        </button>
+        {published && (
+          <div className="ts-published-note">
+            Мероприятие опубликовано в «Возможности».
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
 
-function CreateNewsPanel() {
+function PublishNewsTab() {
   const { flash } = useUI();
   const { news, reload } = useNews();
   const [title, setTitle] = useState('');
@@ -369,7 +362,7 @@ function CreateNewsPanel() {
   }
 
   return (
-    <section className="ts-card-panel">
+    <section className="ts-card-panel" style={{ marginTop: 20, maxWidth: 520 }}>
       <h2>Новая новость</h2>
       <div className="desc">Фото и текст, без категорий и фильтров</div>
       <div className="ts-field-group">

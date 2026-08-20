@@ -1,6 +1,9 @@
-import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsIn, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CreateEventDto {
+  @IsString()
+  imageUrl!: string;
+
   @IsString()
   title!: string;
 
@@ -18,7 +21,7 @@ export class CreateEventDto {
   ageMax!: number;
 
   @IsString()
-  ageLabel!: string;
+  format!: string;
 
   @IsIn(['free', 'paid'])
   price!: 'free' | 'paid';
@@ -31,9 +34,6 @@ export class CreateEventDto {
   level!: 'local' | 'intl';
 
   @IsString()
-  format!: string;
-
-  @IsString()
   eventDate!: string;
 
   @IsOptional()
@@ -41,22 +41,16 @@ export class CreateEventDto {
   deadlineDate?: string | null;
 
   @IsString()
-  place!: string;
-
-  @IsString()
-  shortDesc!: string;
+  address!: string;
 
   @IsString()
   description!: string;
 
   @IsOptional()
-  @IsBoolean()
-  instagram?: boolean;
-
-  @IsOptional()
   @IsString()
   registrationUrl?: string | null;
 
+  @IsOptional()
   @IsString()
-  imageUrl!: string;
+  instagram?: string | null;
 }

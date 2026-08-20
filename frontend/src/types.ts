@@ -85,10 +85,11 @@ export interface AdminSubmission {
   id: string;
   userId: string;
   title: string;
-  categories: string[];
+  category: string | null;
   themes: string[];
-  ages: string[];
-  format: string[];
+  ageMin: number | null;
+  ageMax: number | null;
+  format: string | null;
   price: PriceType | null;
   cost: string | null;
   charity: boolean;
@@ -132,23 +133,32 @@ export interface Analytics {
   submissions: { pending: number; approved: number; rejected: number };
 }
 
-export interface CreateEventInput {
+/**
+ * One shared shape for "create/publish an event" — used identically by the
+ * public submission form (PublishPage) and the admin's direct-publish form.
+ * Fields with no `events` column (audience, extraLink*, telegram, charity)
+ * are simply dropped server-side when publishing straight to an event.
+ */
+export interface PostFormValue {
+  imageUrl: string | null;
   title: string;
   category: string;
   themes: string[];
   ageMin: number;
   ageMax: number;
-  ageLabel: string;
-  price: PriceType;
-  cost: string | null;
-  level: Level;
   format: string;
+  price: PriceType | null;
+  cost: string;
+  charity: boolean;
+  level: Level | null;
   eventDate: string;
-  deadlineDate: string | null;
-  place: string;
-  shortDesc: string;
+  deadlineDate: string;
+  address: string;
+  audience: string;
   description: string;
-  instagram: boolean;
-  registrationUrl: string | null;
-  imageUrl: string | null;
+  registrationUrl: string;
+  extraLinkTitle: string;
+  extraLinkUrl: string;
+  instagram: string;
+  telegram: string;
 }
