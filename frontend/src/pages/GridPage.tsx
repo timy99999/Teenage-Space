@@ -7,7 +7,7 @@ import { useRatings } from '../hooks/useRatings';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { api } from '../lib/api';
-import { CATS, THEMES, TITLES, plural } from '../data/constants';
+import { CATS, NAV_CATS, THEMES, TITLES, plural } from '../data/constants';
 import { EventCard } from '../components/EventCard';
 import { NewsCard } from '../components/NewsCard';
 import { Chip } from '../components/Chip';
@@ -240,7 +240,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
             <button className={`ts-mobile-subtab${!category ? ' active' : ''}`} onClick={() => navigate('/opportunities')}>
               Все
             </button>
-            {CATS.map((c) => (
+            {NAV_CATS.map((c) => (
               <button
                 key={c.key}
                 className={`ts-mobile-subtab${category === c.key ? ' active' : ''}`}
@@ -342,7 +342,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
 
       {isVote && (
         <div className="ts-cat-chip-row">
-          {CATS.map((c) => (
+          {NAV_CATS.map((c) => (
             <Chip
               key={c.key}
               label={c.label}

@@ -10,6 +10,9 @@ export const CATS: CategoryDef[] = [
   { key: 'other', label: 'Другое' }
 ];
 
+// "Другое" не отображается как своя вкладка/фильтр — такие мероприятия видны только в общей сетке.
+export const NAV_CATS: CategoryDef[] = CATS.filter((c) => c.key !== 'other');
+
 export const THEMES: CategoryDef[] = [
   { key: 'sport', label: 'Спорт' },
   { key: 'it', label: 'IT и AI' },

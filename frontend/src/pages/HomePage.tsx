@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import logo from '../assets/logo-ts.png';
 import { useEvents } from '../hooks/useEvents';
-import { CATS, CATN, fmtDate } from '../data/constants';
+import { NAV_CATS, CATN, fmtDate } from '../data/constants';
 import { EventPhoto } from '../components/EventPhoto';
 
 export function HomePage() {
@@ -35,7 +35,7 @@ export function HomePage() {
       <section className="ts-section">
         <h2 className="ts-section-head">Что здесь можно найти</h2>
         <div className="ts-tile-grid">
-          {CATS.map((c) => (
+          {NAV_CATS.map((c) => (
             <button key={c.key} className="ts-tile" onClick={() => navigate(`/opportunities/${c.key}`)}>
               <div className="ts-tile-title">{c.label}</div>
               <div className="ts-tile-sub">

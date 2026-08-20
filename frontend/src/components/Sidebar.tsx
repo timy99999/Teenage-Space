@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useEducationTracks } from '../hooks/useEducation';
-import { CATS } from '../data/constants';
+import { NAV_CATS } from '../data/constants';
 
 export function Sidebar() {
   const navigate = useNavigate();
@@ -75,7 +75,7 @@ export function Sidebar() {
         </button>
         {oppsOpen && (
           <div className="ts-nav-sub-wrap">
-            {CATS.map((c) => (
+            {NAV_CATS.map((c) => (
               <button
                 key={c.key}
                 className={`ts-nav-sub${isOppsRoot && activeCategory === c.key ? ' active' : ''}`}
