@@ -5,19 +5,23 @@ import { useUI } from '../contexts/UIContext';
 import { useAdminSubmissions } from '../hooks/useAdminSubmissions';
 import { useAdminUsers } from '../hooks/useAdminUsers';
 import { useAdminAnalytics } from '../hooks/useAdminAnalytics';
+import { useAdminArchivedEvents } from '../hooks/useAdminArchivedEvents';
 import { useNews } from '../hooks/useNews';
 import { api } from '../lib/api';
 import { Chip } from '../components/Chip';
+import { CATS } from '../data/constants';
 import { PostSiteInfo, PostCardInfo, emptyPostForm, postFormPayload } from '../components/PostForm';
 import { ImageUploadField } from '../components/ImageUploadField';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { TrashIcon } from '../components/TrashIcon';
-import type { AdminSubmission, AdminUser, NewsItem, PostFormValue, SubmissionStatus } from '../types';
+import { EditEventModal } from '../components/EditEventModal';
+import type { AdminSubmission, AdminUser, EventItem, NewsItem, PostFormValue, SubmissionStatus } from '../types';
 
 const TABS = [
   { key: 'moderation', label: 'Модерация' },
   { key: 'publish-event', label: 'Опубликовать в Возможности' },
   { key: 'publish-news', label: 'Опубликовать новость' },
+  { key: 'archive', label: 'Архив' },
   { key: 'users', label: 'Пользователи' },
   { key: 'analytics', label: 'Аналитика' }
 ] as const;
@@ -80,6 +84,7 @@ export function AdminPage() {
       {tab === 'moderation' && <ModerationTab />}
       {tab === 'publish-event' && <PublishEventTab />}
       {tab === 'publish-news' && <PublishNewsTab />}
+      {tab === 'archive' && <ArchiveTab />}
       {tab === 'users' && <UsersTab />}
       {tab === 'analytics' && <AnalyticsTab />}
     </div>
@@ -396,6 +401,81 @@ function PublishNewsTab() {
         <ConfirmDialog
           title="Удалить новость?"
           message={`«${deleteTarget.title}» будет удалена без возможности восстановления.`}
+          confirmLabel="Удалить"
+          danger
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+    </section>
+  );
+}
+
+function ArchiveTab() {
+  const { flash } = useUI();
+  const { events, reload } = useAdminArchivedEvents();
+  const [editTarget, setEditTarget] = useState<EventItem | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<EventItem | null>(null);
+
+  async function unarchive(event: EventItem) {
+    try {
+      await api.post(`/admin/events/${event.id}/unarchive`);
+      flash('Восстановлено');
+      reload();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось восстановить');
+    }
+  }
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
+    setDeleteTarget(null);
+    try {
+      await api.del(`/admin/events/${id}`);
+      flash('Удалено навсегда');
+      reload();
+    } catch (e) {
+      flash(e instanceof Error ? e.message : 'Не удалось удалить');
+    }
+  }
+
+  return (
+    <section className="ts-account-section">
+      <div className="desc" style={{ marginBottom: 10 }}>
+        Скрыто с сайта, но не удалено. Можно вернуть или удалить навсегда.
+      </div>
+      {events.map((e) => (
+        <div className="ts-request-row" key={e.id}>
+          <span className="ts-request-title">{e.title}</span>
+          <span className="ts-badge">{CATS.find((c) => c.key === e.category)?.label ?? e.category}</span>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="ts-btn-outline small" onClick={() => setEditTarget(e)}>
+              Редактировать
+            </button>
+            <button className="ts-btn-outline small" onClick={() => unarchive(e)}>
+              Восстановить
+            </button>
+            <button className="ts-btn-outline small danger" onClick={() => setDeleteTarget(e)}>
+              Удалить
+            </button>
+          </div>
+        </div>
+      ))}
+      {events.length === 0 && <div className="ts-center-note">Архив пуст</div>}
+
+      {editTarget && (
+        <EditEventModal
+          event={editTarget}
+          onClose={() => setEditTarget(null)}
+          onSaved={() => reload()}
+        />
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Удалить навсегда?"
+          message={`«${deleteTarget.title}» будет удалён без возможности восстановления.`}
           confirmLabel="Удалить"
           danger
           onConfirm={confirmDelete}

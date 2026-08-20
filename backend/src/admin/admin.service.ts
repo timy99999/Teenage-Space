@@ -177,8 +177,20 @@ export class AdminService {
     return mapEvent(data as EventRow);
   }
 
+  async listArchivedEvents() {
+    const { data, error } = await this.supabase.client.from('events').select('*').eq('archived', true).order('title');
+    if (error) throw error;
+    return (data as EventRow[]).map(mapEvent);
+  }
+
   async archiveEvent(id: string) {
     const { error } = await this.supabase.client.from('events').update({ archived: true }).eq('id', id);
+    if (error) throw error;
+    await this.cache.clear();
+  }
+
+  async unarchiveEvent(id: string) {
+    const { error } = await this.supabase.client.from('events').update({ archived: false }).eq('id', id);
     if (error) throw error;
     await this.cache.clear();
   }

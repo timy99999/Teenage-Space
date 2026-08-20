@@ -37,6 +37,11 @@ export class AdminController {
     return this.admin.createEvent(dto);
   }
 
+  @Get('events/archived')
+  listArchivedEvents() {
+    return this.admin.listArchivedEvents();
+  }
+
   @Patch('events/:id')
   updateEvent(@Param('id') id: string, @Body() dto: UpdateEventDto) {
     return this.admin.updateEvent(id, dto);
@@ -46,6 +51,12 @@ export class AdminController {
   @HttpCode(204)
   archiveEvent(@Param('id') id: string) {
     return this.admin.archiveEvent(id);
+  }
+
+  @Post('events/:id/unarchive')
+  @HttpCode(204)
+  unarchiveEvent(@Param('id') id: string) {
+    return this.admin.unarchiveEvent(id);
   }
 
   @Post('events/:id/move-to-voting')
