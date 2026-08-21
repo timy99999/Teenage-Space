@@ -94,7 +94,19 @@ export const WANDER_FLOATERS: Floater[] = [
   { key: 'medal3', icon: MedalIcon, size: 20, top: '59%', left: '25%', duration: 17, delay: 2.8, variant: 4 },
   { key: 'pencil3', icon: PencilIcon, size: 22, top: '69%', left: '55%', duration: 13, delay: 4.2, variant: 2 },
   { key: 'bulb3', icon: BulbIcon, size: 24, top: '79%', left: '68%', duration: 20, delay: 1.3, variant: 1 },
-  { key: 'trophy3', icon: TrophyIcon, size: 22, top: '88%', left: '42%', duration: 16, delay: 3.6, variant: 3 }
+  { key: 'trophy3', icon: TrophyIcon, size: 22, top: '88%', left: '42%', duration: 16, delay: 3.6, variant: 3 },
+  { key: 'book4', icon: BookIcon, size: 24, top: '5%', left: '30%', duration: 15, delay: 3.8, variant: 2 },
+  { key: 'medal4', icon: MedalIcon, size: 24, top: '15%', left: '70%', duration: 18, delay: 0.3, variant: 4 },
+  { key: 'pencil4', icon: PencilIcon, size: 20, top: '22%', left: '15%', duration: 13, delay: 2.2, variant: 1 },
+  { key: 'bulb4', icon: BulbIcon, size: 26, top: '32%', left: '78%', duration: 19, delay: 4.8, variant: 3 },
+  { key: 'trophy4', icon: TrophyIcon, size: 22, top: '42%', left: '20%', duration: 16, delay: 1.1, variant: 2 },
+  { key: 'cap3', icon: CapIcon, size: 26, top: '52%', left: '60%', duration: 14, delay: 3.4, variant: 4 },
+  { key: 'target3', icon: TargetIcon, size: 22, top: '62%', left: '32%', duration: 17, delay: 0.6, variant: 1 },
+  { key: 'book5', icon: BookIcon, size: 20, top: '72%', left: '8%', duration: 20, delay: 2.6, variant: 3 },
+  { key: 'medal5', icon: MedalIcon, size: 22, top: '82%', left: '78%', duration: 15, delay: 4.1, variant: 2 },
+  { key: 'pencil5', icon: PencilIcon, size: 24, top: '90%', left: '20%', duration: 12, delay: 1.7, variant: 4 },
+  { key: 'bulb5', icon: BulbIcon, size: 20, top: '96%', left: '60%', duration: 18, delay: 3.0, variant: 1 },
+  { key: 'trophy5', icon: TrophyIcon, size: 26, top: '3%', left: '55%', duration: 21, delay: 0.9, variant: 3 }
 ];
 
 // Big sweeping curves across the whole page — the same "shooting star" motion as the star icon,
@@ -114,5 +126,13 @@ export const ORBIT_FLOATERS: Floater[] = [
   { key: 'pencil-o', icon: PencilIcon, size: 20, top: '20%', left: '50%', duration: 28, delay: 19, variant: 1 },
   { key: 'star-f', icon: StarIcon, size: 26, top: '65%', left: '95%', duration: 32, delay: 11, variant: 2 },
   { key: 'cap-o2', icon: CapIcon, size: 22, top: '65%', left: '95%', duration: 26, delay: 24, variant: 2 },
-  { key: 'star-g', icon: StarIcon, size: 24, top: '35%', left: '20%', duration: 37, delay: 7, variant: 3 }
+  { key: 'star-g', icon: StarIcon, size: 24, top: '35%', left: '20%', duration: 37, delay: 7, variant: 3 },
+  { key: 'star-h', icon: StarIcon, size: 22, top: '12%', left: '30%', duration: 33, delay: 2, variant: 4 },
+  { key: 'medal-o2', icon: MedalIcon, size: 20, top: '12%', left: '30%', duration: 27, delay: 17, variant: 4 },
+  { key: 'book-o2', icon: BookIcon, size: 24, top: '55%', left: '50%', duration: 36, delay: 9, variant: 5 },
+  { key: 'trophy-o2', icon: TrophyIcon, size: 20, top: '55%', left: '50%', duration: 29, delay: 23, variant: 5 },
+  { key: 'cap-o3', icon: CapIcon, size: 22, top: '25%', left: '8%', duration: 31, delay: 4, variant: 2 },
+  { key: 'bulb-o2', icon: BulbIcon, size: 22, top: '25%', left: '8%', duration: 24, delay: 15, variant: 2 },
+  { key: 'target-o2', icon: TargetIcon, size: 20, top: '78%', left: '25%', duration: 34, delay: 12, variant: 1 },
+  { key: 'pencil-o2', icon: PencilIcon, size: 20, top: '78%', left: '25%', duration: 26, delay: 27, variant: 1 }
 ];

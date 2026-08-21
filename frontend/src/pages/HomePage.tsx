@@ -6,6 +6,7 @@ import { EventPhoto } from '../components/EventPhoto';
 import { ORBIT_ITEMS } from '../data/heroOrbit';
 import { WANDER_FLOATERS, ORBIT_FLOATERS } from '../data/pageFloaters';
 import { useReveal } from '../hooks/useReveal';
+import { useFloaterRepulsion } from '../hooks/useFloaterRepulsion';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export function HomePage() {
   const catsReveal = useReveal<HTMLElement>();
   const eventsReveal = useReveal<HTMLElement>();
   const ctaReveal = useReveal<HTMLElement>();
+  const floaterRefs = useFloaterRepulsion();
 
   return (
     <div className="ts-home">
@@ -24,6 +26,7 @@ export function HomePage() {
         {WANDER_FLOATERS.map((f) => (
           <div
             key={f.key}
+            ref={floaterRefs(f.key).outer}
             className={`ts-floater ts-floater-v${f.variant}`}
             style={{
               top: f.top,
@@ -34,12 +37,15 @@ export function HomePage() {
               animationDelay: `${f.delay}s`
             }}
           >
-            {f.icon}
+            <div ref={floaterRefs(f.key).nudge} className="ts-floater-nudge">
+              {f.icon}
+            </div>
           </div>
         ))}
         {ORBIT_FLOATERS.map((f) => (
           <div
             key={f.key}
+            ref={floaterRefs(f.key).outer}
             className={`ts-floater ts-floater-orbit${f.variant}`}
             style={{
               top: f.top,
@@ -50,7 +56,9 @@ export function HomePage() {
               animationDelay: `${f.delay}s`
             }}
           >
-            {f.icon}
+            <div ref={floaterRefs(f.key).nudge} className="ts-floater-nudge">
+              {f.icon}
+            </div>
           </div>
         ))}
       </div>
