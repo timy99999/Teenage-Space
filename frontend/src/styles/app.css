@@ -268,8 +268,28 @@
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
-.ts-floater-orbit {
-  animation-name: tsPageOrbit;
+.ts-floater-orbit1 {
+  animation-name: tsPageOrbit1;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.ts-floater-orbit2 {
+  animation-name: tsPageOrbit2;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.ts-floater-orbit3 {
+  animation-name: tsPageOrbit3;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.ts-floater-orbit4 {
+  animation-name: tsPageOrbit4;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.ts-floater-orbit5 {
+  animation-name: tsPageOrbit5;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
@@ -341,7 +361,7 @@
     transform: translate(0, 0) rotate(0deg);
   }
 }
-@keyframes tsPageOrbit {
+@keyframes tsPageOrbit1 {
   0% {
     top: 4%;
     left: 8%;
@@ -373,6 +393,110 @@
   100% {
     top: 4%;
     left: 8%;
+  }
+}
+@keyframes tsPageOrbit2 {
+  0% {
+    top: 90%;
+    left: 85%;
+  }
+  18% {
+    top: 70%;
+    left: 55%;
+  }
+  36% {
+    top: 82%;
+    left: 15%;
+  }
+  54% {
+    top: 55%;
+    left: 8%;
+  }
+  72% {
+    top: 30%;
+    left: 35%;
+  }
+  88% {
+    top: 15%;
+    left: 70%;
+  }
+  100% {
+    top: 90%;
+    left: 85%;
+  }
+}
+@keyframes tsPageOrbit3 {
+  0% {
+    top: 48%;
+    left: 3%;
+  }
+  20% {
+    top: 20%;
+    left: 30%;
+  }
+  40% {
+    top: 10%;
+    left: 65%;
+  }
+  60% {
+    top: 35%;
+    left: 90%;
+  }
+  80% {
+    top: 65%;
+    left: 60%;
+  }
+  100% {
+    top: 48%;
+    left: 3%;
+  }
+}
+@keyframes tsPageOrbit4 {
+  0% {
+    top: 8%;
+    left: 92%;
+  }
+  22% {
+    top: 35%;
+    left: 60%;
+  }
+  44% {
+    top: 20%;
+    left: 20%;
+  }
+  66% {
+    top: 55%;
+    left: 5%;
+  }
+  88% {
+    top: 80%;
+    left: 40%;
+  }
+  100% {
+    top: 8%;
+    left: 92%;
+  }
+}
+@keyframes tsPageOrbit5 {
+  0% {
+    top: 96%;
+    left: 12%;
+  }
+  25% {
+    top: 75%;
+    left: 45%;
+  }
+  50% {
+    top: 92%;
+    left: 80%;
+  }
+  75% {
+    top: 60%;
+    left: 65%;
+  }
+  100% {
+    top: 96%;
+    left: 12%;
   }
 }
 

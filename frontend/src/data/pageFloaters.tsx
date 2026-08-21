@@ -70,30 +70,35 @@ export type Floater = {
   left: string;
   duration: number;
   delay: number;
-  variant: 1 | 2 | 3 | 4;
+  variant: number;
 };
 
-// Scattered across the full page height (top/left are percentages of the page, not the viewport)
-// with mismatched durations/delays/variants so the drift reads as chaotic rather than synced.
-export const PAGE_FLOATERS: Floater[] = [
+// Small local drift — scattered across the full page height (top/left are percentages of the
+// page, not the viewport), each on a mismatched wander animation so the motion reads as chaotic.
+export const WANDER_FLOATERS: Floater[] = [
   { key: 'book1', icon: BookIcon, size: 30, top: '6%', left: '13%', duration: 15, delay: 0, variant: 1 },
-  { key: 'medal1', icon: MedalIcon, size: 26, top: '16%', left: '86%', duration: 19, delay: 2, variant: 2 },
-  { key: 'pencil1', icon: PencilIcon, size: 24, top: '30%', left: '4%', duration: 13, delay: 1, variant: 3 },
-  { key: 'bulb1', icon: BulbIcon, size: 28, top: '38%', left: '92%', duration: 17, delay: 3.5, variant: 4 },
-  { key: 'trophy1', icon: TrophyIcon, size: 30, top: '52%', left: '9%', duration: 21, delay: 1.5, variant: 2 },
-  { key: 'cap1', icon: CapIcon, size: 30, top: '63%', left: '90%', duration: 14, delay: 0.5, variant: 1 },
-  { key: 'target1', icon: TargetIcon, size: 24, top: '74%', left: '6%', duration: 18, delay: 4, variant: 3 },
-  { key: 'book2', icon: BookIcon, size: 22, top: '86%', left: '88%', duration: 16, delay: 2.5, variant: 4 },
-  { key: 'medal2', icon: MedalIcon, size: 22, top: '95%', left: '22%', duration: 20, delay: 1, variant: 2 }
+  { key: 'medal1', icon: MedalIcon, size: 26, top: '14%', left: '85%', duration: 19, delay: 2, variant: 2 },
+  { key: 'pencil1', icon: PencilIcon, size: 24, top: '24%', left: '4%', duration: 13, delay: 1, variant: 3 },
+  { key: 'bulb1', icon: BulbIcon, size: 28, top: '34%', left: '92%', duration: 17, delay: 3.5, variant: 4 },
+  { key: 'trophy1', icon: TrophyIcon, size: 30, top: '44%', left: '9%', duration: 21, delay: 1.5, variant: 2 },
+  { key: 'cap1', icon: CapIcon, size: 30, top: '54%', left: '90%', duration: 14, delay: 0.5, variant: 1 },
+  { key: 'target1', icon: TargetIcon, size: 24, top: '64%', left: '5%', duration: 18, delay: 4, variant: 3 },
+  { key: 'book2', icon: BookIcon, size: 22, top: '74%', left: '88%', duration: 16, delay: 2.5, variant: 4 },
+  { key: 'medal2', icon: MedalIcon, size: 22, top: '84%', left: '12%', duration: 20, delay: 1, variant: 2 },
+  { key: 'pencil2', icon: PencilIcon, size: 22, top: '93%', left: '82%', duration: 12, delay: 3, variant: 1 }
 ];
 
-export const ORBIT_FLOATER: Floater = {
-  key: 'orbiter',
-  icon: StarIcon,
-  size: 26,
-  top: '4%',
-  left: '8%',
-  duration: 34,
-  delay: 0,
-  variant: 1
-};
+// Big sweeping curves across the whole page — the same "shooting star" motion as the star icon,
+// just spread across five differently shaped loops so ten of them don't all trace one path.
+export const ORBIT_FLOATERS: Floater[] = [
+  { key: 'star-a', icon: StarIcon, size: 26, top: '4%', left: '8%', duration: 34, delay: 0, variant: 1 },
+  { key: 'star-b', icon: StarIcon, size: 20, top: '4%', left: '8%', duration: 29, delay: 14, variant: 1 },
+  { key: 'star-c', icon: StarIcon, size: 24, top: '90%', left: '85%', duration: 38, delay: 5, variant: 2 },
+  { key: 'medal-o', icon: MedalIcon, size: 22, top: '90%', left: '85%', duration: 31, delay: 20, variant: 2 },
+  { key: 'book-o', icon: BookIcon, size: 24, top: '48%', left: '3%', duration: 36, delay: 8, variant: 3 },
+  { key: 'trophy-o', icon: TrophyIcon, size: 22, top: '48%', left: '3%', duration: 27, delay: 18, variant: 3 },
+  { key: 'cap-o', icon: CapIcon, size: 26, top: '8%', left: '92%', duration: 40, delay: 3, variant: 4 },
+  { key: 'bulb-o', icon: BulbIcon, size: 20, top: '8%', left: '92%', duration: 25, delay: 16, variant: 4 },
+  { key: 'star-d', icon: StarIcon, size: 28, top: '96%', left: '12%', duration: 33, delay: 10, variant: 5 },
+  { key: 'target-o', icon: TargetIcon, size: 20, top: '96%', left: '12%', duration: 30, delay: 22, variant: 5 }
+];

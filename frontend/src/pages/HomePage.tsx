@@ -4,7 +4,7 @@ import { useEvents } from '../hooks/useEvents';
 import { NAV_CATS, CATN, fmtDate } from '../data/constants';
 import { EventPhoto } from '../components/EventPhoto';
 import { ORBIT_ITEMS } from '../data/heroOrbit';
-import { PAGE_FLOATERS, ORBIT_FLOATER } from '../data/pageFloaters';
+import { WANDER_FLOATERS, ORBIT_FLOATERS } from '../data/pageFloaters';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export function HomePage() {
   return (
     <div className="ts-home">
       <div className="ts-page-floaters" aria-hidden="true">
-        {PAGE_FLOATERS.map((f) => (
+        {WANDER_FLOATERS.map((f) => (
           <div
             key={f.key}
             className={`ts-floater ts-floater-v${f.variant}`}
@@ -32,12 +32,22 @@ export function HomePage() {
             {f.icon}
           </div>
         ))}
-        <div
-          className="ts-floater ts-floater-orbit"
-          style={{ width: ORBIT_FLOATER.size, height: ORBIT_FLOATER.size, animationDuration: `${ORBIT_FLOATER.duration}s` }}
-        >
-          {ORBIT_FLOATER.icon}
-        </div>
+        {ORBIT_FLOATERS.map((f) => (
+          <div
+            key={f.key}
+            className={`ts-floater ts-floater-orbit${f.variant}`}
+            style={{
+              top: f.top,
+              left: f.left,
+              width: f.size,
+              height: f.size,
+              animationDuration: `${f.duration}s`,
+              animationDelay: `${f.delay}s`
+            }}
+          >
+            {f.icon}
+          </div>
+        ))}
       </div>
 
       <section className="ts-hero">
