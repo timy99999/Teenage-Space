@@ -1,5 +1,5 @@
 -- Teenage Space - seed data ported from the original design prototype.
--- Run after schema.sql. Safe to re-run (upserts on primary key).
+-- Run after supabase/migrations/ has been applied. Safe to re-run (upserts on primary key).
 
 insert into events (id, title, category, themes, age_min, age_max, age_label, price, cost, level, format, event_date, deadline_date, place, short_desc, description, instagram, registration_url, is_past)
 values

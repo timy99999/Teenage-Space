@@ -1,0 +1,7 @@
+# Supabase CLI project config.
+#
+# Only used to run `supabase link` / `supabase db push`, which apply
+# supabase/migrations/*.sql to the hosted project. This repo doesn't use
+# `supabase start` (local Docker stack), so none of the local-dev service
+# settings the CLI supports are needed here.
+project_id = "teenage-space"
