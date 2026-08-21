@@ -3,6 +3,7 @@ import logo from '../assets/logo-ts.png';
 import { useEvents } from '../hooks/useEvents';
 import { NAV_CATS, CATN, fmtDate } from '../data/constants';
 import { EventPhoto } from '../components/EventPhoto';
+import { ORBIT_ITEMS } from '../data/heroOrbit';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -15,20 +16,49 @@ export function HomePage() {
     <div>
       <section className="ts-hero">
         <div className="ts-hero-glow" />
-        <div className="ts-hero-intro">
-          <h1 className="ts-hero-title">Teenage Space</h1>
+        <div className="ts-hero-brand">
+          <img src={logo} alt="" className="ts-hero-brand-mark" />
+          <span>Teenage Space</span>
+        </div>
+
+        <div className="ts-hero-stage">
+          <div className="ts-hero-orbit">
+            <div className="ts-orbit-ring">
+              {ORBIT_ITEMS.map((item, i) => (
+                <div
+                  key={item.key}
+                  className="ts-orbit-item"
+                  style={
+                    {
+                      '--i': i,
+                      '--n': ORBIT_ITEMS.length,
+                      animationDelay: `${0.5 + i * 0.08}s`
+                    } as React.CSSProperties
+                  }
+                >
+                  <div className="ts-orbit-icon" title={item.label}>
+                    {item.icon}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="ts-hero-orb-wrap">
+              <div className="ts-hero-orb">
+                <div className="ts-hero-orb-ring" />
+                <div className="ts-hero-orb-inner">
+                  <img src={logo} alt="Teenage Space" />
+                </div>
+              </div>
+            </div>
+          </div>
+
           <p className="ts-hero-lead">
             Teenage Space — это пространство для активных подростков и молодёжи. Специально для вас наша команда
             собрала все самые лучшие ивенты Бишкека. Здесь вы можете найти всё от волонтёрства до международных
             конкурсов и собрать выдающееся портфолио!
           </p>
         </div>
-        <div className="ts-hero-orb">
-          <div className="ts-hero-orb-ring" />
-          <div className="ts-hero-orb-inner">
-            <img src={logo} alt="Teenage Space" />
-          </div>
-        </div>
+
         <button className="ts-btn-outline hero" onClick={() => navigate('/opportunities')}>
           Смотреть возможности
         </button>

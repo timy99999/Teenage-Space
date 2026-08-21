@@ -231,13 +231,11 @@
 /* ---- home ---- */
 .ts-hero {
   position: relative;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 26px;
-  padding: 70px 32px 60px;
+  gap: 18px;
+  padding: 28px 32px 36px;
   overflow: hidden;
 }
 .ts-hero-glow {
@@ -251,31 +249,86 @@
   background: radial-gradient(circle, rgba(139, 92, 246, 0.16), transparent 65%);
   pointer-events: none;
 }
-.ts-hero-intro {
+.ts-hero-brand {
+  align-self: flex-start;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 10px;
-}
-.ts-hero-title {
-  margin: 0;
+  gap: 9px;
   position: relative;
   font-family: 'Bryndan Write', 'Comfortaa', sans-serif;
   font-weight: 700;
-  font-size: clamp(46px, 7vw, 104px);
-  line-height: 1;
-  letter-spacing: 0.01em;
+  font-size: clamp(19px, 2.2vw, 26px);
   color: var(--ts-blue);
-  text-align: center;
-  animation: tsUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: tsUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.ts-hero-brand-mark {
+  width: clamp(26px, 2.6vw, 32px);
+  height: clamp(26px, 2.6vw, 32px);
+  border-radius: 50%;
+  object-fit: cover;
+}
+.ts-hero-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.ts-hero-orbit {
+  --orbit-size: clamp(190px, 32vw, 320px);
+  --chip: clamp(26px, 6vw, 40px);
+  position: relative;
+  width: var(--orbit-size);
+  height: var(--orbit-size);
+}
+.ts-orbit-ring {
+  position: absolute;
+  inset: 0;
+  animation: tsSpin 46s linear infinite;
+}
+.ts-orbit-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(calc(360deg / var(--n) * var(--i))) translateX(calc(var(--orbit-size) / 2 - var(--chip) / 2 - 2px));
+  opacity: 0;
+  animation: tsOrbitIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.ts-orbit-icon {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(calc(-360deg / var(--n) * var(--i)));
+  width: var(--chip);
+  height: var(--chip);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--ts-surface);
+  border: 1.5px solid rgba(139, 92, 246, 0.35);
+  color: var(--ts-violet);
+  box-shadow: 0 4px 14px rgba(36, 18, 200, 0.12);
+}
+.ts-orbit-icon svg {
+  width: 52%;
+  height: 52%;
+}
+.ts-hero-orb-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--orbit-size) - var(--chip) - 26px);
+  aspect-ratio: 1;
 }
 .ts-hero-orb {
   position: relative;
-  width: min(430px, 72vw);
-  aspect-ratio: 1;
+  width: 100%;
+  height: 100%;
   display: grid;
   place-items: center;
-  animation: tsUp 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+  transform: scale(0.4);
+  opacity: 0;
+  animation: tsOrbFly 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
 }
 .ts-hero-orb-ring {
   position: absolute;
@@ -301,20 +354,34 @@
   transform: scale(1.06);
 }
 .ts-hero-lead {
-  max-width: 840px;
+  max-width: 720px;
   margin: 0;
   text-align: center;
   font-family: 'Caveat', cursive;
   font-weight: 500;
-  font-size: clamp(22px, 2.5vw, 34px);
-  line-height: 1.5;
+  font-size: clamp(15px, 2.3vw, 23px);
+  line-height: 1.4;
   color: var(--ts-blue);
   text-wrap: pretty;
-  animation: tsUp 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  animation: tsUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s both;
+}
+@keyframes tsOrbitIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes tsOrbFly {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .ts-btn-outline {

@@ -133,6 +133,15 @@
     color: var(--ts-violet);
   }
 
+  /* ---- home hero ---- */
+  .ts-hero {
+    padding: 20px 20px 26px;
+    gap: 14px;
+  }
+  .ts-hero-stage {
+    gap: 10px;
+  }
+
   /* ---- generic page paddings ---- */
   .ts-page,
   .ts-edu-page {
