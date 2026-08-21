@@ -1,13 +1,30 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEducation } from '../hooks/useEducation';
+import { useEducation, useEducationTracks } from '../hooks/useEducation';
 
 export function EducationPage() {
   const navigate = useNavigate();
   const { trackId } = useParams<{ trackId: string }>();
   const { title, intro, items } = useEducation(trackId ?? '');
+  const { tracks } = useEducationTracks();
 
   return (
     <div className="ts-edu-page">
+      <div className="ts-edu-mobile-head">
+        <button className="ts-edu-mobile-back" aria-label="Назад" onClick={() => navigate('/')}>
+          ←
+        </button>
+        <div className="ts-edu-mobile-tabs">
+          {tracks.map((t) => (
+            <button
+              key={t.id}
+              className={`ts-edu-mobile-tab${t.id === trackId ? ' active' : ''}`}
+              onClick={() => navigate(`/education/${t.id}`)}
+            >
+              {t.title}
+            </button>
+          ))}
+        </div>
+      </div>
       <h1 className="ts-edu-title">{title}</h1>
       <div className="ts-edu-intro">{intro}</div>
       <div className="ts-material-list">
