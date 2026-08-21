@@ -5,6 +5,7 @@ import { NAV_CATS, CATN, fmtDate } from '../data/constants';
 import { EventPhoto } from '../components/EventPhoto';
 import { ORBIT_ITEMS } from '../data/heroOrbit';
 import { WANDER_FLOATERS, ORBIT_FLOATERS } from '../data/pageFloaters';
+import { useReveal } from '../hooks/useReveal';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ export function HomePage() {
   const { events } = useEvents({ scope: 'upcoming' });
 
   const openEvent = (id: string) => setParams({ event: id });
+
+  const catsReveal = useReveal<HTMLElement>();
+  const eventsReveal = useReveal<HTMLElement>();
+  const ctaReveal = useReveal<HTMLElement>();
 
   return (
     <div className="ts-home">
@@ -100,7 +105,10 @@ export function HomePage() {
         </button>
       </section>
 
-      <section className="ts-section">
+      <section
+        ref={catsReveal.ref}
+        className={`ts-section ts-reveal-section${catsReveal.visible ? ' is-visible' : ''}`}
+      >
         <h2 className="ts-section-head">Что здесь можно найти</h2>
         <div className="ts-tile-grid">
           {NAV_CATS.map((c) => (
@@ -114,7 +122,11 @@ export function HomePage() {
         </div>
       </section>
 
-      <section style={{ padding: '20px 44px 12px' }}>
+      <section
+        ref={eventsReveal.ref}
+        className={`ts-reveal-section${eventsReveal.visible ? ' is-visible' : ''}`}
+        style={{ padding: '20px 44px 12px' }}
+      >
         <div className="ts-section-head-row">
           <h2 className="ts-section-head" style={{ margin: 0 }}>
             Актуально сейчас
@@ -138,7 +150,10 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="ts-cta">
+      <section
+        ref={ctaReveal.ref}
+        className={`ts-cta ts-reveal-cta${ctaReveal.visible ? ' is-visible' : ''}`}
+      >
         <div>
           <div className="ts-cta-title">Есть своё мероприятие?</div>
           <div className="ts-cta-sub">Отправьте заявку — мы проверим и опубликуем</div>

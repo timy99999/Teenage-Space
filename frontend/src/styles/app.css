@@ -812,6 +812,88 @@
   color: var(--ts-muted);
 }
 
+/* ---- scroll-in reveal animations (home page) ---- */
+.ts-reveal-section .ts-section-head,
+.ts-reveal-section .ts-section-head-row {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ts-reveal-section.is-visible .ts-section-head,
+.ts-reveal-section.is-visible .ts-section-head-row {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reveal motion rides on the standalone translate/scale properties (not transform), so it
+   composes with each card's own hover transform instead of overriding its transition speed. */
+.ts-reveal-section .ts-tile-grid > *,
+.ts-reveal-section .ts-home-grid > * {
+  --reveal-delay: 0.12s;
+  opacity: 0;
+  translate: 0 34px;
+  scale: 0.95;
+  transition-property: opacity, translate, scale, transform, border-color;
+  transition-duration: 0.65s, 0.65s, 0.65s, 0.22s, 0.22s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.16, 1, 0.3, 1),
+    cubic-bezier(0.16, 1, 0.3, 1), cubic-bezier(0.2, 0.8, 0.2, 1), ease;
+  transition-delay: var(--reveal-delay), var(--reveal-delay), var(--reveal-delay), 0s, 0s;
+}
+.ts-reveal-section.is-visible .ts-tile-grid > *,
+.ts-reveal-section.is-visible .ts-home-grid > * {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+}
+.ts-reveal-section .ts-tile-grid > *:nth-child(1),
+.ts-reveal-section .ts-home-grid > *:nth-child(1) { --reveal-delay: 0.12s; }
+.ts-reveal-section .ts-tile-grid > *:nth-child(2),
+.ts-reveal-section .ts-home-grid > *:nth-child(2) { --reveal-delay: 0.19s; }
+.ts-reveal-section .ts-tile-grid > *:nth-child(3),
+.ts-reveal-section .ts-home-grid > *:nth-child(3) { --reveal-delay: 0.26s; }
+.ts-reveal-section .ts-tile-grid > *:nth-child(4),
+.ts-reveal-section .ts-home-grid > *:nth-child(4) { --reveal-delay: 0.33s; }
+.ts-reveal-section .ts-tile-grid > *:nth-child(5) { --reveal-delay: 0.4s; }
+.ts-reveal-section .ts-tile-grid > *:nth-child(6) { --reveal-delay: 0.47s; }
+.ts-reveal-section .ts-tile-grid > *:nth-child(7) { --reveal-delay: 0.54s; }
+.ts-reveal-section .ts-tile-grid > *:nth-child(8) { --reveal-delay: 0.61s; }
+
+.ts-reveal-cta {
+  opacity: 0;
+  transform: translateY(30px) scale(0.97);
+  filter: blur(6px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ts-reveal-cta.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ts-reveal-section .ts-section-head,
+  .ts-reveal-section .ts-section-head-row {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .ts-reveal-section .ts-tile-grid > *,
+  .ts-reveal-section .ts-home-grid > * {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+    transition-duration: 0.22s, 0.22s, 0.22s, 0.22s, 0.22s;
+    transition-delay: 0s, 0s, 0s, 0s, 0s;
+  }
+  .ts-reveal-cta {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
 /* ---- grid pages (opportunities / favorites / vote / news) ---- */
 .ts-grid-page {
   display: flex;
