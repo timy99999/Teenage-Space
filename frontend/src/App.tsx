@@ -5,6 +5,7 @@ import { BottomNav } from './components/BottomNav';
 import { Loader } from './components/Loader';
 import { Toast } from './components/Toast';
 import { EventModal } from './components/EventModal';
+import { NewsModal } from './components/NewsModal';
 import { PolicyGate } from './components/PolicyGate';
 import { useIsMobile } from './hooks/useIsMobile';
 import { useEducationTracks } from './hooks/useEducation';
@@ -38,6 +39,7 @@ function AppLayout() {
         {!(path === '/' || path === '/news') && <div className="ts-footer" />}
       </main>
       <EventModal />
+      <NewsModal />
       <PolicyGate />
       <Toast />
       <BottomNav />

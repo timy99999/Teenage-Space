@@ -1,11 +1,15 @@
+import { useSearchParams } from 'react-router-dom';
 import type { NewsItem } from '../types';
 import { fmtDate } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
-import { useUI } from '../contexts/UIContext';
 
 export function NewsCard({ item }: { item: NewsItem }) {
-  const { flash } = useUI();
-  const open = () => flash('Полная новость появится в следующей версии');
+  const [params, setParams] = useSearchParams();
+  const open = () => {
+    const next = new URLSearchParams(params);
+    next.set('news', item.id);
+    setParams(next);
+  };
 
   return (
     <article className="ts-card">
