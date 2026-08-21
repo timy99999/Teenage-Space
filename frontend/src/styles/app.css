@@ -229,6 +229,153 @@
 }
 
 /* ---- home ---- */
+.ts-home {
+  position: relative;
+  isolation: isolate;
+}
+.ts-page-floaters {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.ts-floater {
+  position: absolute;
+  color: var(--ts-violet);
+  opacity: 0.5;
+}
+.ts-floater svg {
+  width: 100%;
+  height: 100%;
+}
+.ts-floater-v1 {
+  animation-name: tsWander1;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.ts-floater-v2 {
+  animation-name: tsWander2;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.ts-floater-v3 {
+  animation-name: tsWander3;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.ts-floater-v4 {
+  animation-name: tsWander4;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+.ts-floater-orbit {
+  animation-name: tsPageOrbit;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes tsWander1 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(18px, -14px) rotate(8deg);
+  }
+  50% {
+    transform: translate(-10px, 10px) rotate(-6deg);
+  }
+  75% {
+    transform: translate(12px, 16px) rotate(5deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+@keyframes tsWander2 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  30% {
+    transform: translate(-16px, 12px) rotate(-10deg);
+  }
+  55% {
+    transform: translate(14px, -18px) rotate(6deg);
+  }
+  80% {
+    transform: translate(-8px, -8px) rotate(-4deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+@keyframes tsWander3 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(10px, 18px) rotate(6deg);
+  }
+  48% {
+    transform: translate(-18px, -6px) rotate(-8deg);
+  }
+  74% {
+    transform: translate(6px, -16px) rotate(10deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+@keyframes tsWander4 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  35% {
+    transform: translate(-12px, -16px) rotate(-5deg);
+  }
+  60% {
+    transform: translate(16px, 8px) rotate(9deg);
+  }
+  85% {
+    transform: translate(-6px, 14px) rotate(-7deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+@keyframes tsPageOrbit {
+  0% {
+    top: 4%;
+    left: 8%;
+  }
+  15% {
+    top: 10%;
+    left: 55%;
+  }
+  30% {
+    top: 22%;
+    left: 88%;
+  }
+  45% {
+    top: 40%;
+    left: 70%;
+  }
+  60% {
+    top: 58%;
+    left: 30%;
+  }
+  75% {
+    top: 78%;
+    left: 12%;
+  }
+  90% {
+    top: 90%;
+    left: 60%;
+  }
+  100% {
+    top: 4%;
+    left: 8%;
+  }
+}
+
 .ts-hero {
   position: relative;
   display: flex;
