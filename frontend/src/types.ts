@@ -36,6 +36,8 @@ export interface NewsItem {
   date: string;
   short: string;
   imageUrl: string | null;
+  linkTitle: string | null;
+  linkUrl: string | null;
 }
 
 export interface CreateNewsInput {
@@ -43,6 +45,8 @@ export interface CreateNewsInput {
   shortDesc: string;
   eventDate: string;
   imageUrl: string | null;
+  linkTitle: string | null;
+  linkUrl: string | null;
 }
 
 export interface MaterialItem {

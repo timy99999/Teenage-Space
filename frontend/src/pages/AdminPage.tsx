@@ -326,6 +326,8 @@ function PublishNewsTab() {
   const [shortDesc, setShortDesc] = useState('');
   const [eventDate, setEventDate] = useState('');
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [linkTitle, setLinkTitle] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
   const [busy, setBusy] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<NewsItem | null>(null);
 
@@ -340,12 +342,21 @@ function PublishNewsTab() {
     }
     setBusy(true);
     try {
-      await api.post('/admin/news', { title, shortDesc, eventDate, imageUrl });
+      await api.post('/admin/news', {
+        title,
+        shortDesc,
+        eventDate,
+        imageUrl,
+        linkTitle: linkTitle || null,
+        linkUrl: linkUrl || null
+      });
       flash('Новость опубликована');
       setTitle('');
       setShortDesc('');
       setEventDate('');
       setImageUrl(null);
+      setLinkTitle('');
+      setLinkUrl('');
       reload();
     } catch (e) {
       flash(e instanceof Error ? e.message : 'Не удалось опубликовать');
@@ -381,6 +392,18 @@ function PublishNewsTab() {
           placeholder="Текст новости"
           value={shortDesc}
           onChange={(e) => setShortDesc(e.target.value)}
+        />
+        <input
+          className="ts-input"
+          placeholder="Ссылка (необязательно)"
+          value={linkUrl}
+          onChange={(e) => setLinkUrl(e.target.value)}
+        />
+        <input
+          className="ts-input"
+          placeholder="Название кнопки"
+          value={linkTitle}
+          onChange={(e) => setLinkTitle(e.target.value)}
         />
       </div>
       <button className="ts-btn-outline block" style={{ marginTop: 22 }} onClick={publish} disabled={busy}>

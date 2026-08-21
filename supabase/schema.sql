@@ -75,7 +75,9 @@ create table if not exists news (
   title text not null,
   event_date date not null,
   short_desc text not null,
-  image_url text
+  image_url text,
+  link_title text,
+  link_url text
 );
 
 alter table news enable row level security;

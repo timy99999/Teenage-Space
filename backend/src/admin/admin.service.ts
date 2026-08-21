@@ -302,7 +302,9 @@ export class AdminService {
         title: dto.title,
         event_date: dto.eventDate,
         short_desc: dto.shortDesc,
-        image_url: dto.imageUrl ?? null
+        image_url: dto.imageUrl ?? null,
+        link_title: dto.linkTitle || null,
+        link_url: dto.linkUrl || null
       })
       .select('*')
       .single();

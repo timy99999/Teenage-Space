@@ -21,7 +21,17 @@ export function NewsCard({ item }: { item: NewsItem }) {
         </div>
       </button>
       <div className="ts-card-foot" style={{ justifyContent: 'flex-end' }}>
-        <span />
+        {item.linkUrl && (
+          <a
+            href={item.linkUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="ts-btn-outline small"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {item.linkTitle || 'Подробнее'}
+          </a>
+        )}
       </div>
     </article>
   );

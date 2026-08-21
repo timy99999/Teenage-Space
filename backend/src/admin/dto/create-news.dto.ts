@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateNewsDto {
   @IsString()
@@ -12,4 +12,12 @@ export class CreateNewsDto {
 
   @IsString()
   imageUrl!: string;
+
+  @IsOptional()
+  @IsString()
+  linkTitle?: string | null;
+
+  @IsOptional()
+  @IsString()
+  linkUrl?: string | null;
 }
