@@ -47,6 +47,8 @@ export function PublishPage() {
         charity: form.price === 'paid' ? form.charity : false,
         level: form.level,
         eventDate: form.eventDate || null,
+        eventDateEnd: form.eventDateEnd || null,
+        eventTime: form.eventTime || null,
         deadlineDate: form.deadlineDate || null,
         address: form.address,
         audience: form.audience,

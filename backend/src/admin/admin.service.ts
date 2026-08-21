@@ -68,6 +68,8 @@ export class AdminService {
     if (dto.charity !== undefined) patch.charity = dto.charity;
     if (dto.level !== undefined) patch.level = dto.level;
     if (dto.eventDate !== undefined) patch.event_date = dto.eventDate;
+    if (dto.eventDateEnd !== undefined) patch.event_date_end = dto.eventDateEnd;
+    if (dto.eventTime !== undefined) patch.event_time = dto.eventTime;
     if (dto.deadlineDate !== undefined) patch.deadline_date = dto.deadlineDate;
     if (dto.address !== undefined) patch.address = dto.address;
     if (dto.audience !== undefined) patch.audience = dto.audience;
@@ -129,6 +131,8 @@ export class AdminService {
         level: dto.level,
         format: dto.format,
         event_date: dto.eventDate || null,
+        event_date_end: dto.eventDateEnd || null,
+        event_time: dto.eventTime || null,
         deadline_date: dto.deadlineDate || null,
         place: dto.address ?? '',
         audience: dto.audience || null,
@@ -162,6 +166,8 @@ export class AdminService {
     if (dto.cost !== undefined) patch.cost = dto.cost || null;
     if (dto.level !== undefined) patch.level = dto.level;
     if (dto.eventDate !== undefined) patch.event_date = dto.eventDate || null;
+    if (dto.eventDateEnd !== undefined) patch.event_date_end = dto.eventDateEnd || null;
+    if (dto.eventTime !== undefined) patch.event_time = dto.eventTime || null;
     if (dto.deadlineDate !== undefined) patch.deadline_date = dto.deadlineDate || null;
     if (dto.address !== undefined) patch.place = dto.address ?? '';
     if (dto.audience !== undefined) patch.audience = dto.audience || null;

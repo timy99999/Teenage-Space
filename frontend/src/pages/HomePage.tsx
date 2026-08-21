@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import logo from '../assets/logo-ts.png';
 import { useEvents } from '../hooks/useEvents';
-import { NAV_CATS, CATN, fmtDate } from '../data/constants';
+import { NAV_CATS, CATN, fmtEventWhen } from '../data/constants';
 import { EventPhoto } from '../components/EventPhoto';
 import { ORBIT_ITEMS } from '../data/heroOrbit';
 import { WANDER_FLOATERS, ORBIT_FLOATERS } from '../data/pageFloaters';
@@ -151,7 +151,7 @@ export function HomePage() {
               </div>
               <div className="ts-home-card-body">
                 <div className="ts-home-card-title">{e.title}</div>
-                <div className="ts-home-card-date">{fmtDate(e.eventDate)}</div>
+                <div className="ts-home-card-date">{fmtEventWhen(e.eventDate, e.eventDateEnd, e.eventTime)}</div>
               </div>
             </button>
           ))}

@@ -15,6 +15,8 @@ export interface EventItem {
   level: Level;
   format: Format;
   eventDate: string | null;
+  eventDateEnd: string | null;
+  eventTime: string | null;
   deadlineDate: string | null;
   place: string;
   audience: string | null;
@@ -111,6 +113,8 @@ export interface AdminSubmission {
   charity: boolean;
   level: Level | null;
   eventDate: string | null;
+  eventDateEnd: string | null;
+  eventTime: string | null;
   deadlineDate: string | null;
   address: string | null;
   audience: string | null;
@@ -169,6 +173,8 @@ export interface PostFormValue {
   charity: boolean;
   level: Level | null;
   eventDate: string;
+  eventDateEnd: string;
+  eventTime: string;
   deadlineDate: string;
   address: string;
   audience: string;

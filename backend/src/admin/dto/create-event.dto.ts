@@ -43,6 +43,14 @@ export class CreateEventDto {
 
   @IsOptional()
   @IsString()
+  eventDateEnd?: string | null;
+
+  @IsOptional()
+  @IsString()
+  eventTime?: string | null;
+
+  @IsOptional()
+  @IsString()
   deadlineDate?: string | null;
 
   @IsOptional()

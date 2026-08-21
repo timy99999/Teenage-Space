@@ -11,6 +11,8 @@ export interface EventRow {
   level: 'local' | 'intl';
   format: string;
   event_date: string | null;
+  event_date_end: string | null;
+  event_time: string | null;
   deadline_date: string | null;
   place: string;
   audience: string | null;
@@ -41,6 +43,8 @@ export function mapEvent(row: EventRow) {
     level: row.level,
     format: row.format,
     eventDate: row.event_date,
+    eventDateEnd: row.event_date_end,
+    eventTime: row.event_time,
     deadlineDate: row.deadline_date,
     place: row.place,
     audience: row.audience,
@@ -177,6 +181,8 @@ export interface SubmissionAdminRow extends SubmissionRow {
   charity: boolean;
   level: 'local' | 'intl' | null;
   event_date: string | null;
+  event_date_end: string | null;
+  event_time: string | null;
   deadline_date: string | null;
   address: string | null;
   audience: string | null;
@@ -206,6 +212,8 @@ export function mapSubmissionAdmin(row: SubmissionAdminRow) {
     charity: row.charity,
     level: row.level,
     eventDate: row.event_date,
+    eventDateEnd: row.event_date_end,
+    eventTime: row.event_time,
     deadlineDate: row.deadline_date,
     address: row.address,
     audience: row.audience,

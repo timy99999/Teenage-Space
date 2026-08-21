@@ -64,3 +64,19 @@ export function fmtDate(iso: string | null): string {
   const d = new Date(iso);
   return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
 }
+
+function fmtDateRange(startIso: string, endIso: string): string {
+  const start = new Date(startIso);
+  const end = new Date(endIso);
+  if (start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth()) {
+    return `${start.getDate()}–${end.getDate()} ${MONTHS[start.getMonth()]}`;
+  }
+  return `${fmtDate(startIso)} – ${fmtDate(endIso)}`;
+}
+
+/** Date (or date range) and time as one string for cards/detail views — joined by a comma, not a separate field. */
+export function fmtEventWhen(eventDate: string | null, eventDateEnd?: string | null, eventTime?: string | null): string {
+  if (!eventDate) return '';
+  const datePart = eventDateEnd ? fmtDateRange(eventDate, eventDateEnd) : fmtDate(eventDate);
+  return eventTime ? `${datePart}, ${eventTime}` : datePart;
+}

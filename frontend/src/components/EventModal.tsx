@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { useEvent } from '../hooks/useEvents';
 import { useFavorites } from '../hooks/useFavorites';
-import { CATS, THEMES, fmtDate } from '../data/constants';
+import { CATS, THEMES, fmtDate, fmtEventWhen } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
 
 function telegramUrl(handle: string): string {
@@ -37,7 +37,7 @@ export function EventModal() {
     ...(event.format ? [{ l: 'Формат участия', v: event.format }] : []),
     ...(priceLabel ? [{ l: 'Цена', v: priceLabel }] : []),
     { l: 'Уровень', v: event.level === 'local' ? 'Локальное' : 'Международное' },
-    ...(event.eventDate ? [{ l: 'Дата', v: fmtDate(event.eventDate) }] : []),
+    ...(event.eventDate ? [{ l: 'Дата', v: fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime) }] : []),
     ...(event.deadlineDate ? [{ l: 'Дедлайн регистрации', v: fmtDate(event.deadlineDate) }] : []),
     ...(event.place ? [{ l: 'Адрес', v: event.place }] : [])
   ];

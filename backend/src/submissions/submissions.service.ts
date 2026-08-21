@@ -35,6 +35,8 @@ export class SubmissionsService {
         charity: dto.charity ?? false,
         level: dto.level ?? null,
         event_date: dto.eventDate ?? null,
+        event_date_end: dto.eventDateEnd ?? null,
+        event_time: dto.eventTime ?? null,
         deadline_date: dto.deadlineDate ?? null,
         address: dto.address ?? null,
         audience: dto.audience ?? null,

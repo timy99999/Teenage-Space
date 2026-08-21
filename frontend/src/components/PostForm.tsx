@@ -1,4 +1,4 @@
-import type { Dispatch, SetStateAction } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { Chip } from './Chip';
 import { ImageUploadField } from './ImageUploadField';
 import { CATS, THEMES } from '../data/constants';
@@ -27,6 +27,16 @@ export interface PostFormFieldsProps {
 }
 
 export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsProps) {
+  const [dateRange, setDateRange] = useState(() => !!form.eventDateEnd);
+
+  function toggleDateRange() {
+    setDateRange((r) => {
+      const next = !r;
+      if (!next) setForm((v) => ({ ...v, eventDateEnd: '' }));
+      return next;
+    });
+  }
+
   return (
     <div className="ts-field-group">
       <div>
@@ -120,16 +130,43 @@ export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsP
           ))}
         </div>
       </div>
+      <div>
+        <div className="ts-date-row">
+          <label className="ts-date-field">
+            {dateRange ? 'Дата начала' : 'Дата мероприятия'} (необязательно)
+            <input
+              type="date"
+              className="ts-input"
+              value={form.eventDate}
+              onChange={(e) => setForm((v) => ({ ...v, eventDate: e.target.value }))}
+            />
+          </label>
+          {dateRange && (
+            <label className="ts-date-field">
+              Дата окончания
+              <input
+                type="date"
+                className="ts-input"
+                value={form.eventDateEnd}
+                onChange={(e) => setForm((v) => ({ ...v, eventDateEnd: e.target.value }))}
+              />
+            </label>
+          )}
+          <label className="ts-date-field">
+            Время (необязательно)
+            <input
+              type="time"
+              className="ts-input"
+              value={form.eventTime}
+              onChange={(e) => setForm((v) => ({ ...v, eventTime: e.target.value }))}
+            />
+          </label>
+        </div>
+        <button type="button" className="ts-btn-outline small" style={{ marginTop: 10 }} onClick={toggleDateRange}>
+          {dateRange ? 'Указать одну дату' : 'Указать две даты'}
+        </button>
+      </div>
       <div className="ts-date-row">
-        <label className="ts-date-field">
-          Дата мероприятия (необязательно)
-          <input
-            type="date"
-            className="ts-input"
-            value={form.eventDate}
-            onChange={(e) => setForm((v) => ({ ...v, eventDate: e.target.value }))}
-          />
-        </label>
         <label className="ts-date-field">
           Дедлайн регистрации (необязательно)
           <input
@@ -222,6 +259,8 @@ export function emptyPostForm(): PostFormValue {
     charity: false,
     level: null,
     eventDate: '',
+    eventDateEnd: '',
+    eventTime: '',
     deadlineDate: '',
     address: '',
     audience: '',
@@ -258,6 +297,8 @@ export function eventToPostForm(event: EventItem): PostFormValue {
     charity: false,
     level: event.level,
     eventDate: event.eventDate ?? '',
+    eventDateEnd: event.eventDateEnd ?? '',
+    eventTime: event.eventTime ?? '',
     deadlineDate: event.deadlineDate ?? '',
     address: event.place,
     audience: event.audience ?? '',

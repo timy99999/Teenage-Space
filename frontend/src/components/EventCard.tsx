@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { EventItem } from '../types';
-import { fmtDate } from '../data/constants';
+import { fmtEventWhen } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
 
 function instagramUrl(handle: string): string {
@@ -41,7 +41,7 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
         <h3 className="ts-card-title">{event.title}</h3>
         <p className="ts-card-short">{event.short}</p>
         <div className="ts-card-meta">
-          {event.eventDate && <span>{fmtDate(event.eventDate)}</span>}
+          {event.eventDate && <span>{fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime)}</span>}
           <span>{event.ageLabel}</span>
           <span>{priceLabel}</span>
         </div>

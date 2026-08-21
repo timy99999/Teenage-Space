@@ -50,6 +50,8 @@ function buildFormFromSubmission(s: AdminSubmission): PostFormValue {
     charity: s.charity,
     level: s.level,
     eventDate: s.eventDate ?? '',
+    eventDateEnd: s.eventDateEnd ?? '',
+    eventTime: s.eventTime ?? '',
     deadlineDate: s.deadlineDate ?? '',
     address: s.address ?? '',
     audience: s.audience ?? '',
