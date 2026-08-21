@@ -52,16 +52,6 @@ export function ProfilePage() {
   return (
     <div className="ts-page">
       <div className="ts-profile-top">
-        <div className="ts-account-links">
-          <button className="ts-account-link" onClick={() => navigate('/favorites')}>
-            <span>Избранное</span>
-            <span className="arrow">→</span>
-          </button>
-          <button className="ts-account-link" onClick={() => navigate('/vote')}>
-            <span>Голосование</span>
-            <span className="arrow">→</span>
-          </button>
-        </div>
         <button className="ts-logout-link" onClick={() => setConfirmLogout(true)}>
           Выйти из аккаунта
         </button>
@@ -145,6 +135,17 @@ export function ProfilePage() {
         ))}
         {submissions.length === 0 && <div className="ts-center-note">Ничего нет</div>}
       </section>
+
+      <div className="ts-account-links">
+        <button className="ts-account-link" onClick={() => navigate('/favorites')}>
+          <span>Избранное</span>
+          <span className="arrow">→</span>
+        </button>
+        <button className="ts-account-link" onClick={() => navigate('/vote')}>
+          <span>Голосование</span>
+          <span className="arrow">→</span>
+        </button>
+      </div>
 
       {confirmLogout && (
         <ConfirmDialog
