@@ -296,7 +296,7 @@
 }
 .ts-hero-lead {
   max-width: 840px;
-  margin: 12px 0 0;
+  margin: 0;
   text-align: center;
   font-family: 'Caveat', cursive;
   font-weight: 500;
@@ -305,6 +305,10 @@
   color: var(--ts-blue);
   text-wrap: pretty;
   animation: tsUp 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .ts-btn-outline {

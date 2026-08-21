@@ -16,17 +16,17 @@ export function HomePage() {
       <section className="ts-hero">
         <div className="ts-hero-glow" />
         <h1 className="ts-hero-title">Teenage Space</h1>
+        <p className="ts-hero-lead">
+          Teenage Space — это пространство для активных подростков и молодёжи. Специально для вас наша команда
+          собрала все самые лучшие ивенты Бишкека. Здесь вы можете найти всё от волонтёрства до международных
+          конкурсов и собрать выдающееся портфолио!
+        </p>
         <div className="ts-hero-orb">
           <div className="ts-hero-orb-ring" />
           <div className="ts-hero-orb-inner">
             <img src={logo} alt="Teenage Space" />
           </div>
         </div>
-        <p className="ts-hero-lead">
-          Teenage Space — это пространство для активных подростков и молодёжи. Специально для вас наша команда
-          собрала все самые лучшие ивенты Бишкека. Здесь вы можете найти всё от волонтёрства до международных
-          конкурсов и собрать выдающееся портфолио!
-        </p>
         <button className="ts-btn-outline hero" onClick={() => navigate('/opportunities')}>
           Смотреть возможности
         </button>
