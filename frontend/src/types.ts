@@ -12,6 +12,7 @@ export interface EventItem {
   ageLabel: string;
   price: PriceType;
   cost: string | null;
+  charity: boolean;
   level: Level;
   format: Format;
   eventDate: string | null;
@@ -156,9 +157,7 @@ export interface Analytics {
 /**
  * One shared shape for "create/publish an event" — used identically by the
  * public submission form (PublishPage) and the admin's direct-publish/edit
- * forms. Fields with no `events` column (audience, extraLink*, charity) are
- * simply dropped server-side when publishing straight to an event.
- * ageMin/ageMax use '' as the "field is empty while typing" state.
+ * forms. ageMin/ageMax use '' as the "field is empty while typing" state.
  */
 export interface PostFormValue {
   imageUrl: string | null;

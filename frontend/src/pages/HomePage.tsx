@@ -148,6 +148,7 @@ export function HomePage() {
             <button key={e.id} className="ts-home-card" onClick={() => openEvent(e.id)}>
               <div className="ts-home-card-img">
                 <EventPhoto src={e.imageUrl} alt={e.title} />
+                {e.charity && <span className="ts-card-charity-badge">Благотворительное</span>}
               </div>
               <div className="ts-home-card-body">
                 <div className="ts-home-card-title">{e.title}</div>

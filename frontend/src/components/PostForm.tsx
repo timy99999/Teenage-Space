@@ -110,15 +110,22 @@ export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsP
           ))}
         </div>
         {form.price === 'paid' && (
-          <div style={{ marginTop: 12, display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
-            <input
-              className="ts-input"
-              style={{ flex: 1, minWidth: 150 }}
-              placeholder="Стоимость, сом"
-              value={form.cost}
-              onChange={(e) => setForm((v) => ({ ...v, cost: e.target.value }))}
-            />
-            <Chip label="Благотворительное мероприятие" active={form.charity} onClick={() => setForm((v) => ({ ...v, charity: !v.charity }))} />
+          <div style={{ marginTop: 12 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+              <input
+                className="ts-input"
+                style={{ flex: 1, minWidth: 150 }}
+                placeholder="Стоимость, сом"
+                value={form.cost}
+                onChange={(e) => setForm((v) => ({ ...v, cost: e.target.value }))}
+              />
+              <Chip label="Благотворительное мероприятие" active={form.charity} onClick={() => setForm((v) => ({ ...v, charity: !v.charity }))} />
+            </div>
+            {form.charity && (
+              <div className="ts-hint" style={{ marginTop: 10 }}>
+                Понадобится подтверждение — администратор свяжется с вами, чтобы его получить.
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -278,7 +285,8 @@ export function postFormPayload(form: PostFormValue) {
   return {
     ...form,
     ageMin: form.ageMin === '' ? 0 : form.ageMin,
-    ageMax: form.ageMax === '' ? 0 : form.ageMax
+    ageMax: form.ageMax === '' ? 0 : form.ageMax,
+    charity: form.price === 'paid' ? form.charity : false
   };
 }
 
@@ -294,7 +302,7 @@ export function eventToPostForm(event: EventItem): PostFormValue {
     format: event.format,
     price: event.price,
     cost: event.cost ?? '',
-    charity: false,
+    charity: event.charity,
     level: event.level,
     eventDate: event.eventDate ?? '',
     eventDateEnd: event.eventDateEnd ?? '',

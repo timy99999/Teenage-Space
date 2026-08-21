@@ -8,6 +8,7 @@ export interface EventRow {
   age_label: string;
   price: 'free' | 'paid';
   cost: string | null;
+  charity: boolean;
   level: 'local' | 'intl';
   format: string;
   event_date: string | null;
@@ -40,6 +41,7 @@ export function mapEvent(row: EventRow) {
     ageLabel: row.age_label,
     price: row.price,
     cost: row.cost,
+    charity: row.charity,
     level: row.level,
     format: row.format,
     eventDate: row.event_date,

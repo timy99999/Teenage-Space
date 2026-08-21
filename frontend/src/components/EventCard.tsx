@@ -35,6 +35,11 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
         <button className="ts-card-img" onClick={onOpen}>
           <EventPhoto src={event.imageUrl} alt={event.title} />
         </button>
+        {event.charity && (
+          <span className="ts-card-charity-badge" style={admin ? { right: 44 } : undefined}>
+            Благотворительное
+          </span>
+        )}
         {admin && <CardMenu isVoteMode={isVoteMode} {...admin} />}
       </div>
       <button className="ts-card-body" onClick={onOpen}>

@@ -1,4 +1,4 @@
-import { IsArray, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class UpdateEventDto {
   @IsOptional()
@@ -40,6 +40,10 @@ export class UpdateEventDto {
   @IsOptional()
   @IsString()
   cost?: string | null;
+
+  @IsOptional()
+  @IsBoolean()
+  charity?: boolean;
 
   @IsOptional()
   @IsIn(['local', 'intl'])

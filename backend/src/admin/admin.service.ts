@@ -128,6 +128,7 @@ export class AdminService {
         age_label: deriveAgeLabel(dto.ageMin, dto.ageMax),
         price: dto.price,
         cost: dto.cost || null,
+        charity: dto.charity ?? false,
         level: dto.level,
         format: dto.format,
         event_date: dto.eventDate || null,
@@ -164,6 +165,7 @@ export class AdminService {
     if (dto.format !== undefined) patch.format = dto.format;
     if (dto.price !== undefined) patch.price = dto.price;
     if (dto.cost !== undefined) patch.cost = dto.cost || null;
+    if (dto.charity !== undefined) patch.charity = dto.charity;
     if (dto.level !== undefined) patch.level = dto.level;
     if (dto.eventDate !== undefined) patch.event_date = dto.eventDate || null;
     if (dto.eventDateEnd !== undefined) patch.event_date_end = dto.eventDateEnd || null;

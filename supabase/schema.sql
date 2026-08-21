@@ -45,6 +45,7 @@ create table if not exists events (
   age_label text not null,
   price text not null check (price in ('free', 'paid')),
   cost text,
+  charity boolean not null default false,
   level text not null check (level in ('local', 'intl')),
   format text not null,
   event_date date,
