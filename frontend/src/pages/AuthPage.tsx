@@ -7,7 +7,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import type { Profile } from '../types';
 
-type View = 'login' | 'reg1' | 'reg2' | 'reg3';
+type View = 'login' | 'reg1' | 'reg2' | 'reg3' | 'forgot1' | 'forgot2' | 'forgot3';
 
 export function AuthPage() {
   const navigate = useNavigate();
@@ -154,9 +154,74 @@ export function AuthPage() {
 
   async function onResend() {
     if (resendLeft > 0) return;
-    await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
+    await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: view === 'reg2' } });
     startResend();
     flash('Код отправлен ещё раз');
+  }
+
+  async function onForgot1() {
+    if (!email) {
+      setError('Введите email');
+      return;
+    }
+    setError('');
+    setBusy(true);
+    try {
+      const { error: otpError } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+      if (otpError) throw otpError;
+      setView('forgot2');
+      startResend();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Не удалось отправить код');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onForgot2() {
+    if (!code || code.length < 4) {
+      setError('Введите код из письма');
+      return;
+    }
+    setError('');
+    setBusy(true);
+    try {
+      const { error: verifyError } = await supabase.auth.verifyOtp({ email, token: code, type: 'email' });
+      if (verifyError) throw verifyError;
+      setView('forgot3');
+    } catch {
+      setError('Неверный код подтверждения');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onForgot3() {
+    if (!/^(?=.*[A-Za-z]).{8,}$/.test(pw)) {
+      setError('Пароль: минимум 8 символов и латинские буквы');
+      return;
+    }
+    if (pw !== pw2) {
+      setError('Пароли не совпадают');
+      return;
+    }
+    setError('');
+    setBusy(true);
+    try {
+      const { error: pwError } = await supabase.auth.updateUser({ password: pw });
+      if (pwError) throw pwError;
+      flash('Пароль изменён');
+      await finishSignIn();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Не удалось изменить пароль');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onSkipPassword() {
+    setError('');
+    await finishSignIn();
   }
 
   const config: Record<
@@ -166,7 +231,22 @@ export function AuthPage() {
     login: { title: 'Вход', hint: 'Войдите, чтобы сохранять мероприятия и голосовать', primary: 'Войти', google: true, switchLabel: 'Создать аккаунт' },
     reg1: { title: 'Создать аккаунт', hint: 'Шаг 1 из 3 — расскажите о себе', primary: 'Продолжить', google: true, switchLabel: 'Войти в существующий аккаунт' },
     reg2: { title: 'Подтвердите email', hint: `Мы отправили код на ${email || 'вашу почту'}`, primary: 'Продолжить', google: false, switchLabel: 'Назад', resend: true },
-    reg3: { title: 'Почти готово', hint: 'Шаг 3 из 3 — придумайте username и пароль', primary: 'Создать аккаунт', google: false, switchLabel: 'Назад' }
+    reg3: { title: 'Почти готово', hint: 'Шаг 3 из 3 — придумайте username и пароль', primary: 'Создать аккаунт', google: false, switchLabel: 'Назад' },
+    forgot1: {
+      title: 'Восстановление пароля',
+      hint: 'Введите email, привязанный к аккаунту — мы отправим код подтверждения',
+      primary: 'Отправить код',
+      google: false,
+      switchLabel: 'Назад ко входу'
+    },
+    forgot2: { title: 'Подтвердите email', hint: `Мы отправили код на ${email || 'вашу почту'}`, primary: 'Продолжить', google: false, switchLabel: 'Назад', resend: true },
+    forgot3: {
+      title: 'Новый пароль',
+      hint: 'Придумайте новый пароль или пропустите этот шаг и войдите с текущим',
+      primary: 'Сохранить пароль',
+      google: false,
+      switchLabel: 'Пропустить'
+    }
   };
   const c = config[view];
 
@@ -174,7 +254,10 @@ export function AuthPage() {
     if (view === 'login') return onLogin();
     if (view === 'reg1') return onReg1();
     if (view === 'reg2') return onReg2();
-    return onReg3();
+    if (view === 'reg3') return onReg3();
+    if (view === 'forgot1') return onForgot1();
+    if (view === 'forgot2') return onForgot2();
+    return onForgot3();
   }
 
   function onSwitch() {
@@ -182,7 +265,10 @@ export function AuthPage() {
     if (view === 'login') setView('reg1');
     else if (view === 'reg1') setView('login');
     else if (view === 'reg2') setView('reg1');
-    else setView('reg2');
+    else if (view === 'reg3') setView('reg2');
+    else if (view === 'forgot1') setView('login');
+    else if (view === 'forgot2') setView('forgot1');
+    else onSkipPassword();
   }
 
   return (
@@ -206,6 +292,16 @@ export function AuthPage() {
                 value={loginPass}
                 onChange={(e) => setLoginPass(e.target.value)}
               />
+              <button
+                type="button"
+                className="ts-auth-resend"
+                onClick={() => {
+                  setError('');
+                  setView('forgot1');
+                }}
+              >
+                Забыли пароль?
+              </button>
             </>
           )}
           {view === 'reg1' && (
@@ -236,6 +332,18 @@ export function AuthPage() {
                   Teenage Space
                 </label>
               </div>
+            </>
+          )}
+          {view === 'forgot1' && (
+            <input className="ts-input auth" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          )}
+          {view === 'forgot2' && (
+            <input className="ts-input auth" placeholder="Код подтверждения" value={code} onChange={(e) => setCode(e.target.value)} />
+          )}
+          {view === 'forgot3' && (
+            <>
+              <input className="ts-input auth" placeholder="Новый пароль" type="password" value={pw} onChange={(e) => setPw(e.target.value)} />
+              <input className="ts-input auth" placeholder="Повторите новый пароль" type="password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
             </>
           )}
 
