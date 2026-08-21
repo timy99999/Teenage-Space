@@ -87,6 +87,7 @@ export interface Profile {
   notifOptIn: boolean;
   nameChangedAt: string | null;
   usernameChangedAt: string | null;
+  policyAcceptedAt: string | null;
   role: Role;
   isBanned: boolean;
 }

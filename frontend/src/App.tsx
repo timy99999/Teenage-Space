@@ -5,6 +5,7 @@ import { BottomNav } from './components/BottomNav';
 import { Loader } from './components/Loader';
 import { Toast } from './components/Toast';
 import { EventModal } from './components/EventModal';
+import { PolicyGate } from './components/PolicyGate';
 import { useIsMobile } from './hooks/useIsMobile';
 import { useEducationTracks } from './hooks/useEducation';
 import { HomePage } from './pages/HomePage';
@@ -17,11 +18,12 @@ import { SettingsPage } from './pages/SettingsPage';
 import { PublishPage } from './pages/PublishPage';
 import { AuthPage } from './pages/AuthPage';
 import { AdminPage } from './pages/AdminPage';
+import { PrivacyPage } from './pages/PrivacyPage';
 
 function AppLayout() {
   const location = useLocation();
   const path = location.pathname;
-  const noSidebar = path === '/publish' || path.startsWith('/article');
+  const noSidebar = path === '/publish' || path.startsWith('/article') || path === '/privacy';
 
   return (
     <div className="ts-shell">
@@ -36,6 +38,7 @@ function AppLayout() {
         {!(path === '/' || path === '/news') && <div className="ts-footer" />}
       </main>
       <EventModal />
+      <PolicyGate />
       <Toast />
       <BottomNav />
     </div>
@@ -82,6 +85,7 @@ export default function App() {
         <Route path="settings" element={<SettingsPage />} />
         <Route path="publish" element={<PublishPage />} />
         <Route path="admin" element={<AdminPage />} />
+        <Route path="privacy" element={<PrivacyPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

@@ -1,4 +1,4 @@
-import { IsIn, IsOptional, IsString, Matches } from 'class-validator';
+import { IsBoolean, IsIn, IsOptional, IsString, Matches } from 'class-validator';
 
 export class UpdateProfileDto {
   @IsOptional()
@@ -27,4 +27,8 @@ export class UpdateProfileDto {
 
   @IsOptional()
   notifOptIn?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  policyAccepted?: boolean;
 }

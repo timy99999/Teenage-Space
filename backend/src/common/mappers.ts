@@ -133,6 +133,7 @@ export interface ProfileRow {
   notif_opt_in: boolean;
   name_changed_at: string | null;
   username_changed_at: string | null;
+  policy_accepted_at: string | null;
   role: 'user' | 'admin';
   is_banned: boolean;
 }
@@ -150,6 +151,7 @@ export function mapProfile(row: ProfileRow) {
     notifOptIn: row.notif_opt_in,
     nameChangedAt: row.name_changed_at,
     usernameChangedAt: row.username_changed_at,
+    policyAcceptedAt: row.policy_accepted_at,
     role: row.role,
     isBanned: row.is_banned
   };

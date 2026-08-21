@@ -31,6 +31,7 @@ export function AuthPage() {
   const [username, setUsername] = useState('');
   const [pw, setPw] = useState('');
   const [pw2, setPw2] = useState('');
+  const [policyAccepted, setPolicyAccepted] = useState(false);
 
   useEffect(() => () => window.clearInterval(resendTimer.current), []);
 
@@ -128,12 +129,16 @@ export function AuthPage() {
       setError('Пароли не совпадают');
       return;
     }
+    if (!policyAccepted) {
+      setError('Нужно принять Политику конфиденциальности');
+      return;
+    }
     setError('');
     setBusy(true);
     try {
       const { error: pwError } = await supabase.auth.updateUser({ password: pw });
       if (pwError) throw pwError;
-      await api.patch<Profile>('/profile', { username, name, birthDate: birth });
+      await api.patch<Profile>('/profile', { username, name, birthDate: birth, policyAccepted: true });
       flash('Аккаунт создан');
       await finishSignIn();
     } catch (e) {
@@ -216,6 +221,21 @@ export function AuthPage() {
               <input className="ts-input auth" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
               <input className="ts-input auth" placeholder="Пароль" type="password" value={pw} onChange={(e) => setPw(e.target.value)} />
               <input className="ts-input auth" placeholder="Повторите пароль" type="password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
+              <div className="ts-consent-row">
+                <input
+                  id="reg-policy-check"
+                  type="checkbox"
+                  checked={policyAccepted}
+                  onChange={(e) => setPolicyAccepted(e.target.checked)}
+                />
+                <label htmlFor="reg-policy-check">
+                  Я принимаю{' '}
+                  <a href="/privacy" target="_blank" rel="noreferrer">
+                    Политику конфиденциальности
+                  </a>{' '}
+                  Teenage Space
+                </label>
+              </div>
             </>
           )}
 
@@ -226,7 +246,12 @@ export function AuthPage() {
             </button>
           )}
 
-          <button className="ts-btn-plain-outline" style={{ marginTop: 6, border: '1.5px solid var(--ts-violet)', color: 'var(--ts-blue)' }} onClick={onPrimary} disabled={busy}>
+          <button
+            className="ts-btn-plain-outline"
+            style={{ marginTop: 6, border: '1.5px solid var(--ts-violet)', color: 'var(--ts-blue)' }}
+            onClick={onPrimary}
+            disabled={busy || (view === 'reg3' && !policyAccepted)}
+          >
             {c.primary}
           </button>
           {c.google && (

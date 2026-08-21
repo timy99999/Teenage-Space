@@ -61,6 +61,7 @@ export class ProfileService {
     if (dto.birthDate !== undefined) patch.birth_date = dto.birthDate || null;
     if (dto.theme !== undefined) patch.theme = dto.theme;
     if (dto.notifOptIn !== undefined) patch.notif_opt_in = dto.notifOptIn;
+    if (dto.policyAccepted === true && !current.policyAcceptedAt) patch.policy_accepted_at = now.toISOString();
 
     const { data, error } = await this.supabase.client
       .from('profiles')

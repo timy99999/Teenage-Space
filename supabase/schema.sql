@@ -18,6 +18,7 @@ create table if not exists profiles (
   notif_opt_in boolean not null default false,
   name_changed_at timestamptz,
   username_changed_at timestamptz,
+  policy_accepted_at timestamptz,
   created_at timestamptz not null default now(),
   role text not null default 'user' check (role in ('user', 'admin')),
   is_banned boolean not null default false

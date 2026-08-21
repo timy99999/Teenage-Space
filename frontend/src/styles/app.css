@@ -1406,6 +1406,56 @@
   color: var(--ts-fg);
   text-wrap: pretty;
 }
+.ts-legal-h2 {
+  margin: 8px 0 0;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--ts-blue);
+}
+.ts-legal-h3 {
+  margin: 4px 0 0;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ts-fg);
+}
+.ts-legal-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ts-fg);
+}
+.ts-consent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+}
+.ts-consent-row input[type='checkbox'] {
+  margin-top: 3px;
+  width: 17px;
+  height: 17px;
+  flex: none;
+  accent-color: var(--ts-violet);
+  cursor: pointer;
+}
+.ts-consent-row label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ts-muted);
+  cursor: pointer;
+}
+.ts-consent-row label a {
+  color: var(--ts-blue);
+  text-decoration: underline;
+}
 
 /* ---- profile / settings ---- */
 .ts-page {
@@ -2065,6 +2115,31 @@
 }
 .ts-modal-close:hover {
   background: #8b5cf6;
+}
+.ts-gate-box {
+  max-width: 440px;
+  padding: 30px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ts-gate-title {
+  font-family: 'Bryndan Write', 'Comfortaa', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--ts-blue);
+}
+.ts-gate-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ts-fg);
+}
+.ts-gate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
 }
 .ts-modal-grid {
   display: grid;
