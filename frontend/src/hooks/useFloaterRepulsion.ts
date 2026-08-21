@@ -9,7 +9,10 @@ const REPEL_GAP = 5; // px — edge-to-edge gap under which floaters push apart
 const REPEL_STRENGTH = 9;
 const MAX_NUDGE = 16; // px — clamp so a cluster can't fling an icon far off its path
 const DECAY = 0.82; // per-tick falloff once floaters are no longer close
-const TICK_MS = 90;
+// Deliberately not every-frame: each tick calls getBoundingClientRect on every floater, which
+// forces a synchronous layout. 130ms keeps that cost low; the CSS transition on .ts-floater-nudge
+// (see app.css) glides between these steps so the motion still reads as continuous, not stepped.
+const TICK_MS = 130;
 
 type Nodes = { outer: HTMLDivElement | null; nudge: HTMLDivElement | null };
 
