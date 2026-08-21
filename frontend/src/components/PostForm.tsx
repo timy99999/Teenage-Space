@@ -263,9 +263,9 @@ export function eventToPostForm(event: EventItem): PostFormValue {
     audience: event.audience ?? '',
     description: event.description,
     registrationUrl: event.registrationUrl ?? '',
-    extraLinkTitle: '',
-    extraLinkUrl: '',
-    instagram: event.instagram ? 'instagram' : '',
+    extraLinkTitle: event.extraLinkTitle ?? '',
+    extraLinkUrl: event.extraLinkUrl ?? '',
+    instagram: event.instagram ?? '',
     telegram: event.telegram ?? ''
   };
 }

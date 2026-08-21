@@ -16,8 +16,10 @@ export interface EventRow {
   audience: string | null;
   short_desc: string;
   description: string;
-  instagram: boolean;
+  instagram: string | null;
   registration_url: string | null;
+  extra_link_title: string | null;
+  extra_link_url: string | null;
   telegram: string | null;
   is_past: boolean;
   archived: boolean;
@@ -46,6 +48,8 @@ export function mapEvent(row: EventRow) {
     description: row.description,
     instagram: row.instagram,
     registrationUrl: row.registration_url,
+    extraLinkTitle: row.extra_link_title,
+    extraLinkUrl: row.extra_link_url,
     telegram: row.telegram,
     isPast: row.is_past,
     archived: row.archived,

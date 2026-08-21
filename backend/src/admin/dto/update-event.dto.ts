@@ -71,6 +71,14 @@ export class UpdateEventDto {
 
   @IsOptional()
   @IsString()
+  extraLinkTitle?: string | null;
+
+  @IsOptional()
+  @IsString()
+  extraLinkUrl?: string | null;
+
+  @IsOptional()
+  @IsString()
   instagram?: string | null;
 
   @IsOptional()

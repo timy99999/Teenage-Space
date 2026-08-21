@@ -9,6 +9,11 @@ function telegramUrl(handle: string): string {
   return `https://t.me/${handle.replace(/^@/, '')}`;
 }
 
+function instagramUrl(handle: string): string {
+  if (handle.startsWith('http')) return handle;
+  return `https://instagram.com/${handle.replace(/^@/, '')}`;
+}
+
 export function EventModal() {
   const [params, setParams] = useSearchParams();
   const eventId = params.get('event');
@@ -75,13 +80,18 @@ export function EventModal() {
                 </a>
               )}
               {event.instagram && (
-                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="ts-pill-link ghost insta">
+                <a href={instagramUrl(event.instagram)} target="_blank" rel="noreferrer" className="ts-pill-link ghost insta">
                   Instagram
                 </a>
               )}
               {event.telegram && (
                 <a href={telegramUrl(event.telegram)} target="_blank" rel="noreferrer" className="ts-pill-link ghost">
                   Telegram
+                </a>
+              )}
+              {event.extraLinkUrl && (
+                <a href={event.extraLinkUrl} target="_blank" rel="noreferrer" className="ts-pill-link ghost">
+                  {event.extraLinkTitle || 'Ссылка'}
                 </a>
               )}
             </div>

@@ -3,6 +3,11 @@ import type { EventItem } from '../types';
 import { fmtDate } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
 
+function instagramUrl(handle: string): string {
+  if (handle.startsWith('http')) return handle;
+  return `https://instagram.com/${handle.replace(/^@/, '')}`;
+}
+
 export interface EventCardAdminActions {
   onEdit: () => void;
   onArchive: () => void;
@@ -70,7 +75,7 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {event.instagram && (
             <a
-              href="https://instagram.com"
+              href={instagramUrl(event.instagram)}
               target="_blank"
               rel="noreferrer"
               title="Instagram"

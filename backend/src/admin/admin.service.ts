@@ -134,8 +134,10 @@ export class AdminService {
         audience: dto.audience || null,
         short_desc: deriveShortDesc(dto.description),
         description: dto.description,
-        instagram: Boolean(dto.instagram),
+        instagram: dto.instagram || null,
         registration_url: dto.registrationUrl || null,
+        extra_link_title: dto.extraLinkTitle || null,
+        extra_link_url: dto.extraLinkUrl || null,
         telegram: dto.telegram || null,
         is_past: false,
         image_url: dto.imageUrl
@@ -165,7 +167,9 @@ export class AdminService {
     if (dto.audience !== undefined) patch.audience = dto.audience || null;
     if (dto.description !== undefined) patch.description = dto.description;
     if (dto.registrationUrl !== undefined) patch.registration_url = dto.registrationUrl || null;
-    if (dto.instagram !== undefined) patch.instagram = Boolean(dto.instagram);
+    if (dto.extraLinkTitle !== undefined) patch.extra_link_title = dto.extraLinkTitle || null;
+    if (dto.extraLinkUrl !== undefined) patch.extra_link_url = dto.extraLinkUrl || null;
+    if (dto.instagram !== undefined) patch.instagram = dto.instagram || null;
     if (dto.telegram !== undefined) patch.telegram = dto.telegram || null;
 
     if (dto.ageMin !== undefined || dto.ageMax !== undefined) {

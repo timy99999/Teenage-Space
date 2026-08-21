@@ -20,8 +20,10 @@ export interface EventItem {
   audience: string | null;
   short: string;
   description: string;
-  instagram: boolean;
+  instagram: string | null;
   registrationUrl: string | null;
+  extraLinkTitle: string | null;
+  extraLinkUrl: string | null;
   telegram: string | null;
   isPast: boolean;
   archived: boolean;
