@@ -129,7 +129,7 @@ export function HomePage() {
       >
         <div className="ts-section-head-row">
           <h2 className="ts-section-head" style={{ margin: 0 }}>
-            Актуально сейчас
+            Рекомендации
           </h2>
           <button className="ts-link" onClick={() => navigate('/opportunities')}>
             все →
