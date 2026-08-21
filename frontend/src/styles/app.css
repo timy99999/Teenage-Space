@@ -1752,6 +1752,9 @@
   font-size: 15px;
 }
 .ts-settings-row .open-link {
+  background: none;
+  border: none;
+  padding: 0;
   color: var(--ts-violet);
   cursor: pointer;
   font-family: 'Open Sans', sans-serif;

@@ -121,7 +121,9 @@ export function ProfilePage() {
         </div>
         <div className="ts-settings-row">
           <span className="label">Политика конфиденциальности</span>
-          <span className="open-link">открыть →</span>
+          <button className="open-link" onClick={() => navigate('/privacy')}>
+            открыть →
+          </button>
         </div>
       </section>
 
