@@ -251,6 +251,12 @@
   background: radial-gradient(circle, rgba(139, 92, 246, 0.16), transparent 65%);
   pointer-events: none;
 }
+.ts-hero-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
 .ts-hero-title {
   margin: 0;
   position: relative;
