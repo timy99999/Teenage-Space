@@ -39,7 +39,7 @@
   --ts-grey-on: #ffffff;
 }
 
-:root[data-ts-theme='dark'] .ts-grid-page-compact {
+:root[data-ts-theme='dark'] .ts-grid-page {
   --ts-grid-header-bg: #5b21b6;
 }
 
