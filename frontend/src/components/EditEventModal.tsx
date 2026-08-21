@@ -43,7 +43,7 @@ export function EditEventModal({ event, onClose, onSaved }: EditEventModalProps)
         <button className="ts-modal-close" onClick={onClose}>
           ←
         </button>
-        <div style={{ padding: '20px 26px 30px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div className="ts-edit-event-body">
           <h2 className="ts-modal-title">Редактировать мероприятие</h2>
           <section>
             <div className="ts-field-label">Информация для сайта</div>

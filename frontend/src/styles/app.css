@@ -2140,6 +2140,12 @@
   gap: 10px;
   align-items: center;
 }
+.ts-edit-event-body {
+  padding: 20px 26px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 .ts-pill-link {
   padding: 12px 24px;
   border-radius: 999px;
