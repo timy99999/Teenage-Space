@@ -232,6 +232,7 @@
 .ts-home {
   position: relative;
   isolation: isolate;
+  zoom: 1.2;
 }
 .ts-page-floaters {
   position: absolute;
