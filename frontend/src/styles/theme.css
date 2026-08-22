@@ -43,6 +43,24 @@
   --ts-grid-header-bg: #5b21b6;
 }
 
+:root[data-ts-theme='dark'] .ts-hero-brand,
+:root[data-ts-theme='dark'] .ts-section-head,
+:root[data-ts-theme='dark'] .ts-cta-title,
+:root[data-ts-theme='dark'] .ts-edu-title,
+:root[data-ts-theme='dark'] .ts-article-title,
+:root[data-ts-theme='dark'] .ts-legal-h2,
+:root[data-ts-theme='dark'] .ts-page-title,
+:root[data-ts-theme='dark'] .ts-account-section-title,
+:root[data-ts-theme='dark'] .ts-confirm-title,
+:root[data-ts-theme='dark'] .ts-settings-block h2,
+:root[data-ts-theme='dark'] .ts-block-title,
+:root[data-ts-theme='dark'] .ts-auth-title,
+:root[data-ts-theme='dark'] .ts-gate-title,
+:root[data-ts-theme='dark'] .ts-modal-title {
+  color: #fff;
+  font-weight: 700;
+}
+
 html,
 body {
   margin: 0;
