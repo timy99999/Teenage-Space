@@ -144,7 +144,7 @@ export function HomePage() {
           </button>
         </div>
         <div className="ts-home-grid">
-          {events.slice(0, 4).map((e) => (
+          {events.slice(0, 3).map((e) => (
             <button key={e.id} className="ts-home-card" onClick={() => openEvent(e.id)}>
               <div className="ts-home-card-img">
                 <EventPhoto src={e.imageUrl} alt={e.title} />
