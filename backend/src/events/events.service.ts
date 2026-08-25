@@ -23,13 +23,6 @@ export class EventsService {
     const themes = query.themes?.split(',').filter(Boolean) ?? [];
     if (themes.length) q = q.overlaps('themes', themes);
 
-    q = q.order('created_at', { ascending: false });
-
-    const { data, error } = await q;
-    if (error) throw error;
-
-    let rows = (data ?? []) as EventRow[];
-
     if (query.age) {
       const m = query.age.match(/^(\d+)\s*-\s*(\d+)$/);
       let lo: number | null = null;
@@ -41,11 +34,16 @@ export class EventsService {
         lo = hi = Number(query.age);
       }
       if (lo !== null && hi !== null) {
-        rows = rows.filter((r) => r.age_min <= (hi as number) && r.age_max >= (lo as number));
+        q = q.lte('age_min', hi).gte('age_max', lo);
       }
     }
 
-    return rows.map(mapEvent);
+    q = q.order('created_at', { ascending: false });
+
+    const { data, error } = await q;
+    if (error) throw error;
+
+    return ((data ?? []) as EventRow[]).map(mapEvent);
   }
 
   async findOne(id: string) {
