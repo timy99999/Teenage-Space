@@ -11,3 +11,5 @@ build/
 .env*
 .claude/
 supabase/.temp/
+
+graphify-out/cost.json
