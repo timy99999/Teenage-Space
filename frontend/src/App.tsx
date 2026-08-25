@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { BottomNav } from './components/BottomNav';
@@ -9,17 +9,19 @@ import { NewsModal } from './components/NewsModal';
 import { PolicyGate } from './components/PolicyGate';
 import { useIsMobile } from './hooks/useIsMobile';
 import { useEducationTracks } from './hooks/useEducation';
+import { useAuth } from './contexts/AuthContext';
 import { HomePage } from './pages/HomePage';
 import { GridPage } from './pages/GridPage';
-import { EducationPage } from './pages/EducationPage';
-import { ArticlePage } from './pages/ArticlePage';
-import { ProfilePage } from './pages/ProfilePage';
-import { EditAccountPage } from './pages/EditAccountPage';
-import { SettingsPage } from './pages/SettingsPage';
-import { PublishPage } from './pages/PublishPage';
-import { AuthPage } from './pages/AuthPage';
-import { AdminPage } from './pages/AdminPage';
-import { PrivacyPage } from './pages/PrivacyPage';
+
+const EducationPage = lazy(() => import('./pages/EducationPage').then((m) => ({ default: m.EducationPage })));
+const ArticlePage = lazy(() => import('./pages/ArticlePage').then((m) => ({ default: m.ArticlePage })));
+const ProfilePage = lazy(() => import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })));
+const EditAccountPage = lazy(() => import('./pages/EditAccountPage').then((m) => ({ default: m.EditAccountPage })));
+const SettingsPage = lazy(() => import('./pages/SettingsPage').then((m) => ({ default: m.SettingsPage })));
+const PublishPage = lazy(() => import('./pages/PublishPage').then((m) => ({ default: m.PublishPage })));
+const AuthPage = lazy(() => import('./pages/AuthPage').then((m) => ({ default: m.AuthPage })));
+const AdminPage = lazy(() => import('./pages/AdminPage').then((m) => ({ default: m.AdminPage })));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })));
 
 function AppLayout() {
   const location = useLocation();
@@ -60,37 +62,34 @@ function EducationIndex() {
 }
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1900);
-    return () => clearTimeout(t);
-  }, []);
+  const { loading } = useAuth();
 
   if (loading) return <Loader />;
 
   return (
-    <Routes>
-      <Route path="/auth" element={<AuthShell />} />
-      <Route path="/" element={<AppLayout />}>
-        <Route index element={<HomeGate />} />
-        <Route path="news" element={<GridPage mode="news" />} />
-        <Route path="opportunities" element={<GridPage mode="opps" />} />
-        <Route path="opportunities/:category" element={<GridPage mode="opps" />} />
-        <Route path="favorites" element={<GridPage mode="fav" />} />
-        <Route path="vote" element={<GridPage mode="vote" />} />
-        <Route path="education" element={<EducationIndex />} />
-        <Route path="education/:trackId" element={<EducationPage />} />
-        <Route path="article/:id" element={<ArticlePage />} />
-        <Route path="profile" element={<ProfilePage />} />
-        <Route path="profile/edit" element={<EditAccountPage />} />
-        <Route path="settings" element={<SettingsPage />} />
-        <Route path="publish" element={<PublishPage />} />
-        <Route path="admin" element={<AdminPage />} />
-        <Route path="privacy" element={<PrivacyPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
+    <Suspense fallback={<Loader />}>
+      <Routes>
+        <Route path="/auth" element={<AuthShell />} />
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<HomeGate />} />
+          <Route path="news" element={<GridPage mode="news" />} />
+          <Route path="opportunities" element={<GridPage mode="opps" />} />
+          <Route path="opportunities/:category" element={<GridPage mode="opps" />} />
+          <Route path="favorites" element={<GridPage mode="fav" />} />
+          <Route path="vote" element={<GridPage mode="vote" />} />
+          <Route path="education" element={<EducationIndex />} />
+          <Route path="education/:trackId" element={<EducationPage />} />
+          <Route path="article/:id" element={<ArticlePage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/edit" element={<EditAccountPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="publish" element={<PublishPage />} />
+          <Route path="admin" element={<AdminPage />} />
+          <Route path="privacy" element={<PrivacyPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 }
 
