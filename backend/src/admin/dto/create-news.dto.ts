@@ -1,4 +1,6 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsUrl } from 'class-validator';
+
+const URL_OPTS = { protocols: ['http', 'https'], require_protocol: true };
 
 export class CreateNewsDto {
   @IsString()
@@ -10,7 +12,7 @@ export class CreateNewsDto {
   @IsString()
   eventDate!: string;
 
-  @IsString()
+  @IsUrl(URL_OPTS)
   imageUrl!: string;
 
   @IsOptional()
@@ -18,6 +20,6 @@ export class CreateNewsDto {
   linkTitle?: string | null;
 
   @IsOptional()
-  @IsString()
+  @IsUrl(URL_OPTS)
   linkUrl?: string | null;
 }
