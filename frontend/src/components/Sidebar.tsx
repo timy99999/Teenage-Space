@@ -8,7 +8,7 @@ export function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const params = useParams();
-  const { session, profile, isAdmin } = useAuth();
+  const { session, profile, isAdmin, isSuperAdmin } = useAuth();
   const { tracks } = useEducationTracks();
 
   const path = location.pathname;
@@ -17,6 +17,7 @@ export function Sidebar() {
   const isFav = path === '/favorites';
   const isVote = path === '/vote';
   const isAdminPage = path === '/admin';
+  const isAnalyticsPage = path === '/analytics';
   const isOppsRoot = path.startsWith('/opportunities');
   const isEdu = path.startsWith('/education');
   const activeCategory = isOppsRoot ? params.category : undefined;
@@ -109,6 +110,12 @@ export function Sidebar() {
       <div className="ts-sidebar-spacer" />
 
       <nav className="ts-nav ts-sidebar-foot">
+        {isSuperAdmin && (
+          <button className="ts-nav-item" onClick={() => navigate('/analytics')}>
+            {isAnalyticsPage && <span className="ts-nav-dot" />}
+            <span>Аналитика</span>
+          </button>
+        )}
         {isAdmin && (
           <button className="ts-nav-item" onClick={() => navigate('/admin')}>
             {isAdminPage && <span className="ts-nav-dot" />}

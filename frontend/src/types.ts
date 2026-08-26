@@ -73,7 +73,7 @@ export interface CategoryDef {
   label: string;
 }
 
-export type Role = 'user' | 'admin';
+export type Role = 'user' | 'admin' | 'super_admin';
 
 export interface Profile {
   id: string;
@@ -153,6 +153,19 @@ export interface Analytics {
   ratingsTotal: number;
   ratingsAvg: number | null;
   submissions: { pending: number; approved: number; rejected: number };
+}
+
+export interface Capacity {
+  database: { usedBytes: number; limitBytes: number };
+  storage: {
+    usedBytes: number;
+    limitBytes: number;
+    buckets: { bucket: string; fileCount: number; bytes: number }[];
+  };
+  capacityEstimate: {
+    avgPostBytes: number | null;
+    estimatedRemainingPosts: number | null;
+  };
 }
 
 /**

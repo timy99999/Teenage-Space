@@ -2296,3 +2296,19 @@
   font-size: 32px;
   color: var(--ts-blue);
 }
+.ts-usage-bar {
+  margin-top: 14px;
+  height: 10px;
+  border-radius: 6px;
+  background: var(--ts-surface2);
+  overflow: hidden;
+}
+.ts-usage-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: var(--ts-blue);
+  transition: width 0.3s ease;
+}
+.ts-usage-bar-fill.warn {
+  background: #e0554f;
+}
