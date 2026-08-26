@@ -13,6 +13,7 @@ import { RatingsModule } from './ratings/ratings.module';
 import { ProfileModule } from './profile/profile.module';
 import { SubmissionsModule } from './submissions/submissions.module';
 import { AdminModule } from './admin/admin.module';
+import { CapacityModule } from './capacity/capacity.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { AdminModule } from './admin/admin.module';
     RatingsModule,
     ProfileModule,
     SubmissionsModule,
-    AdminModule
+    AdminModule,
+    CapacityModule
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }]
 })

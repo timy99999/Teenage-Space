@@ -134,7 +134,7 @@ export interface ProfileRow {
   name_changed_at: string | null;
   username_changed_at: string | null;
   policy_accepted_at: string | null;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'super_admin';
   is_banned: boolean;
 }
 

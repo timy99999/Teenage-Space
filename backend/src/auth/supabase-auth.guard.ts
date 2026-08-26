@@ -4,7 +4,7 @@ import type { User } from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase/supabase.service';
 
 export interface RequestProfile {
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'super_admin';
   is_banned: boolean;
 }
 
