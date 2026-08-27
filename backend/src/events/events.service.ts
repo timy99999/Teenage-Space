@@ -18,6 +18,7 @@ export class EventsService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
+    // Sweeps on boot too, so a restart after downtime catches events missed by the nightly cron.
     this.archiveExpiredEvents().catch((err) => this.logger.error('Startup archive sweep failed', err));
   }
 
