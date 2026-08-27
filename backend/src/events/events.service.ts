@@ -1,12 +1,18 @@
 import { Inject, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { SupabaseService } from '../supabase/supabase.service';
 import { EventRow, mapEvent } from '../common/mappers';
 import { QueryEventsDto } from './query-events.dto';
 
-const EVENT_TIMEZONE = 'Asia/Bishkek';
+// Kyrgyzstan doesn't observe DST, so a fixed UTC+6 offset is used instead of an IANA
+// timezone name — avoids depending on the runtime having full ICU timezone data.
+const BISHKEK_UTC_OFFSET_MS = 6 * 60 * 60 * 1000;
+
+function todayInBishkek(): string {
+  return new Date(Date.now() + BISHKEK_UTC_OFFSET_MS).toISOString().slice(0, 10);
+}
 
 @Injectable()
 export class EventsService implements OnModuleInit {
@@ -73,9 +79,9 @@ export class EventsService implements OnModuleInit {
    * the day after the event's (end) date. Runs nightly plus once on boot to catch up
    * after any downtime.
    */
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, { timeZone: EVENT_TIMEZONE })
+  @Cron('0 18 * * *') // 00:00 in Asia/Bishkek (UTC+6), expressed in UTC to sidestep IANA timezone lookups
   async archiveExpiredEvents() {
-    const today = new Date().toLocaleDateString('en-CA', { timeZone: EVENT_TIMEZONE });
+    const today = todayInBishkek();
     const base = () => this.supabase.client.from('events').update({ archived: true }).eq('archived', false);
 
     const [byDeadline, byEventEnd, byEventDate] = await Promise.all([
