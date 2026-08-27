@@ -13,10 +13,12 @@ export function NewsCard({ item }: { item: NewsItem }) {
 
   return (
     <article className="ts-card">
-      <button className="ts-card-img" onClick={open}>
-        <EventPhoto src={item.imageUrl} alt={item.title} />
+      <div className="ts-card-img-wrap">
+        <button className="ts-card-img" onClick={open}>
+          <EventPhoto src={item.imageUrl} alt={item.title} />
+        </button>
         <span className="ts-card-cat-badge">Новость</span>
-      </button>
+      </div>
       <button className="ts-card-body" onClick={open}>
         <h3 className="ts-card-title">{item.title}</h3>
         <p className="ts-card-short">{item.short}</p>
