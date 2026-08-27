@@ -1,11 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { SupabaseService } from '../supabase/supabase.service';
 import { EventRow, mapEvent } from '../common/mappers';
 import { QueryEventsDto } from './query-events.dto';
 
+const EVENT_TIMEZONE = 'Asia/Bishkek';
+
 @Injectable()
-export class EventsService {
-  constructor(private readonly supabase: SupabaseService) {}
+export class EventsService implements OnModuleInit {
+  private readonly logger = new Logger(EventsService.name);
+
+  constructor(
+    private readonly supabase: SupabaseService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache
+  ) {}
+
+  onModuleInit() {
+    this.archiveExpiredEvents().catch((err) => this.logger.error('Startup archive sweep failed', err));
+  }
 
   async list(query: QueryEventsDto) {
     let q = this.supabase.client.from('events').select('*').eq('archived', false);
@@ -51,5 +65,37 @@ export class EventsService {
     if (error) throw error;
     if (!data) throw new NotFoundException('Event not found');
     return mapEvent(data as EventRow);
+  }
+
+  /**
+   * Archives events the day after their registration deadline — or, if none is set,
+   * the day after the event's (end) date. Runs nightly plus once on boot to catch up
+   * after any downtime.
+   */
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, { timeZone: EVENT_TIMEZONE })
+  async archiveExpiredEvents() {
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: EVENT_TIMEZONE });
+    const base = () => this.supabase.client.from('events').update({ archived: true }).eq('archived', false);
+
+    const [byDeadline, byEventEnd, byEventDate] = await Promise.all([
+      base().not('deadline_date', 'is', null).lt('deadline_date', today).select('id'),
+      base().is('deadline_date', null).not('event_date_end', 'is', null).lt('event_date_end', today).select('id'),
+      base()
+        .is('deadline_date', null)
+        .is('event_date_end', null)
+        .not('event_date', 'is', null)
+        .lt('event_date', today)
+        .select('id')
+    ]);
+
+    for (const r of [byDeadline, byEventEnd, byEventDate]) {
+      if (r.error) throw r.error;
+    }
+
+    const archivedCount = (byDeadline.data?.length ?? 0) + (byEventEnd.data?.length ?? 0) + (byEventDate.data?.length ?? 0);
+    if (archivedCount > 0) {
+      await this.cache.clear();
+      this.logger.log(`Auto-archived ${archivedCount} event(s) past their registration/event date`);
+    }
   }
 }
