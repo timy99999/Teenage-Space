@@ -1240,6 +1240,7 @@
 }
 .ts-card-foot {
   margin-top: auto;
+  min-height: 56px;
   padding: 10px 12px 12px;
   display: flex;
   align-items: center;
