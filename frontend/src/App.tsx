@@ -9,6 +9,8 @@ import { NewsModal } from './components/NewsModal';
 import { PolicyGate } from './components/PolicyGate';
 import { useIsMobile } from './hooks/useIsMobile';
 import { useEducationTracks } from './hooks/useEducation';
+import { useTrackPageView } from './hooks/useTrackPageView';
+import { useHeartbeat } from './hooks/useHeartbeat';
 import { useAuth } from './contexts/AuthContext';
 import { HomePage } from './pages/HomePage';
 import { GridPage } from './pages/GridPage';
@@ -28,6 +30,8 @@ function AppLayout() {
   const location = useLocation();
   const path = location.pathname;
   const noSidebar = path === '/publish' || path.startsWith('/article') || path === '/privacy';
+  useTrackPageView();
+  useHeartbeat();
 
   return (
     <div className="ts-shell">

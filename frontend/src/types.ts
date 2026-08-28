@@ -168,6 +168,23 @@ export interface Capacity {
   };
 }
 
+export interface TrafficSummary {
+  today: {
+    pageViews: number;
+    cardViews: number;
+    linkClicks: number;
+    uniqueSessions: number;
+    loggedInSessions: number;
+    guestSessions: number;
+  };
+  hourlyToday: { hour: number; views: number }[];
+  peakHour: number | null;
+  dailyTrend: { day: string; pageViews: number; cardViews: number; linkClicks: number; uniqueSessions: number }[];
+  topCards: { targetType: 'event' | 'news'; targetId: string; title: string; views: number }[];
+  deviceBreakdown: { deviceType: string; sessions: number }[];
+  topLinks: { linkKind: string; clicks: number }[];
+}
+
 /**
  * One shared shape for "create/publish an event" — used identically by the
  * public submission form (PublishPage) and the admin's direct-publish/edit

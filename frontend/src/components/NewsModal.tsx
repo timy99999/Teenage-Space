@@ -1,13 +1,25 @@
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useNews } from '../hooks/useNews';
+import { useAuth } from '../contexts/AuthContext';
 import { fmtDate } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
+import { trackCardView, trackLinkClick } from '../lib/tracking';
 
 export function NewsModal() {
   const [params, setParams] = useSearchParams();
   const newsId = params.get('news');
   const { news } = useNews();
   const item = newsId ? news.find((n) => n.id === newsId) : null;
+  const { session } = useAuth();
+  const trackedId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!item || trackedId.current === item.id) return;
+    trackedId.current = item.id;
+    trackCardView('news', item.id, !!session);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item?.id]);
 
   if (!newsId || !item) return null;
 
@@ -34,7 +46,13 @@ export function NewsModal() {
             <p className="ts-modal-desc">{item.short}</p>
             {item.linkUrl && (
               <div className="ts-modal-actions">
-                <a href={item.linkUrl} target="_blank" rel="noreferrer" className="ts-pill-link">
+                <a
+                  href={item.linkUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ts-pill-link"
+                  onClick={() => trackLinkClick('news_link', !!session, { targetType: 'news', targetId: item.id })}
+                >
                   {item.linkTitle || 'Подробнее'}
                 </a>
               </div>

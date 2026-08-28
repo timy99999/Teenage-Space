@@ -1,8 +1,11 @@
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useEvent } from '../hooks/useEvents';
 import { useFavorites } from '../hooks/useFavorites';
+import { useAuth } from '../contexts/AuthContext';
 import { CATS, THEMES, fmtDate, fmtEventWhen } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
+import { trackCardView, trackLinkClick } from '../lib/tracking';
 
 function telegramUrl(handle: string): string {
   if (handle.startsWith('http')) return handle;
@@ -19,6 +22,15 @@ export function EventModal() {
   const eventId = params.get('event');
   const event = useEvent(eventId);
   const { favorites, toggle } = useFavorites();
+  const { session } = useAuth();
+  const trackedId = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!event || trackedId.current === event.id) return;
+    trackedId.current = event.id;
+    trackCardView('event', event.id, !!session);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [event?.id]);
 
   if (!eventId || !event) return null;
 
@@ -75,22 +87,46 @@ export function EventModal() {
                 ★
               </button>
               {event.registrationUrl && (
-                <a href={event.registrationUrl} target="_blank" rel="noreferrer" className="ts-pill-link">
+                <a
+                  href={event.registrationUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ts-pill-link"
+                  onClick={() => trackLinkClick('registration', !!session, { targetType: 'event', targetId: event.id })}
+                >
                   Регистрация
                 </a>
               )}
               {event.instagram && (
-                <a href={instagramUrl(event.instagram)} target="_blank" rel="noreferrer" className="ts-pill-link ghost insta">
+                <a
+                  href={instagramUrl(event.instagram)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ts-pill-link ghost insta"
+                  onClick={() => trackLinkClick('instagram', !!session, { targetType: 'event', targetId: event.id })}
+                >
                   Instagram
                 </a>
               )}
               {event.telegram && (
-                <a href={telegramUrl(event.telegram)} target="_blank" rel="noreferrer" className="ts-pill-link ghost">
+                <a
+                  href={telegramUrl(event.telegram)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ts-pill-link ghost"
+                  onClick={() => trackLinkClick('telegram', !!session, { targetType: 'event', targetId: event.id })}
+                >
                   Telegram
                 </a>
               )}
               {event.extraLinkUrl && (
-                <a href={event.extraLinkUrl} target="_blank" rel="noreferrer" className="ts-pill-link ghost">
+                <a
+                  href={event.extraLinkUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ts-pill-link ghost"
+                  onClick={() => trackLinkClick('extra_link', !!session, { targetType: 'event', targetId: event.id })}
+                >
                   {event.extraLinkTitle || 'Ссылка'}
                 </a>
               )}

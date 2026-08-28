@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import type { EventItem } from '../types';
 import { fmtEventWhen } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
+import { useAuth } from '../contexts/AuthContext';
+import { trackLinkClick } from '../lib/tracking';
 
 function instagramUrl(handle: string): string {
   if (handle.startsWith('http')) return handle;
@@ -28,6 +30,7 @@ interface EventCardProps {
 
 export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, admin }: EventCardProps) {
   const priceLabel = event.price === 'free' ? 'Бесплатно' : event.cost ?? '';
+  const { session } = useAuth();
 
   return (
     <article className="ts-card">
@@ -85,7 +88,10 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
               rel="noreferrer"
               title="Instagram"
               className="ts-icon-link"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                trackLinkClick('instagram', !!session, { targetType: 'event', targetId: event.id });
+              }}
             >
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <rect x="3" y="3" width="18" height="18" rx="5"></rect>
