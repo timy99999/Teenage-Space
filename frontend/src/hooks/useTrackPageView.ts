@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { trackPageView } from '../lib/tracking';
 
-const EXCLUDED_PREFIXES = ['/admin', '/analytics'];
+const EXCLUDED_PREFIXES = ['/admin', '/analytics', '/users'];
 
 export function useTrackPageView() {
   const { pathname } = useLocation();

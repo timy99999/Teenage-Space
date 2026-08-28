@@ -2,10 +2,12 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Unauthor
 import type { Request } from 'express';
 import type { User } from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase/supabase.service';
+import type { AdminPerms } from '../common/mappers';
 
 export interface RequestProfile {
   role: 'user' | 'admin' | 'super_admin';
   is_banned: boolean;
+  adminPerms: AdminPerms;
 }
 
 export interface AuthedRequest extends Request {
@@ -28,14 +30,27 @@ export class SupabaseAuthGuard implements CanActivate {
 
     const { data: profileRow } = await this.supabase.client
       .from('profiles')
-      .select('role, is_banned')
+      .select('role, is_banned, ban_expires_at, admin_perms')
       .eq('id', data.user.id)
       .maybeSingle();
 
-    if (profileRow?.is_banned) throw new ForbiddenException('Аккаунт заблокирован');
+    let banned = !!profileRow?.is_banned;
+    if (banned && profileRow?.ban_expires_at && new Date(profileRow.ban_expires_at as string).getTime() <= Date.now()) {
+      // Timed ban has elapsed — lift it and let the request through.
+      await this.supabase.client
+        .from('profiles')
+        .update({ is_banned: false, ban_expires_at: null, ban_reason: null, banned_at: null })
+        .eq('id', data.user.id);
+      banned = false;
+    }
+    if (banned) throw new ForbiddenException('Аккаунт заблокирован');
 
     req.user = data.user;
-    req.profile = { role: profileRow?.role ?? 'user', is_banned: profileRow?.is_banned ?? false };
+    req.profile = {
+      role: profileRow?.role ?? 'user',
+      is_banned: false,
+      adminPerms: (profileRow?.admin_perms as AdminPerms) ?? {}
+    };
     return true;
   }
 }

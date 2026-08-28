@@ -75,6 +75,37 @@ export interface CategoryDef {
 
 export type Role = 'user' | 'admin' | 'super_admin';
 
+export type AdminPermKey =
+  | 'moderation'
+  | 'publish_event'
+  | 'publish_news'
+  | 'archive'
+  | 'education'
+  | 'users'
+  | 'analytics'
+  | 'card_edit';
+
+export const ADMIN_PERMS: { key: AdminPermKey; label: string }[] = [
+  { key: 'moderation', label: 'Модерация' },
+  { key: 'publish_event', label: 'Опубликовать возможность' },
+  { key: 'publish_news', label: 'Опубликовать новость' },
+  { key: 'archive', label: 'Архив' },
+  { key: 'education', label: 'Образование' },
+  { key: 'users', label: 'Пользователи' },
+  { key: 'analytics', label: 'Аналитика' },
+  { key: 'card_edit', label: 'Редактирование карточек' }
+];
+
+export type AdminPerms = Partial<Record<AdminPermKey, boolean>>;
+
+export type BanDuration = 'day' | 'week' | 'month' | 'forever';
+
+export interface BanInfo {
+  isBanned: boolean;
+  banExpiresAt: string | null;
+  banReason: string | null;
+}
+
 export interface Profile {
   id: string;
   username: string;
@@ -90,6 +121,7 @@ export interface Profile {
   policyAcceptedAt: string | null;
   role: Role;
   isBanned: boolean;
+  adminPerms: AdminPerms;
 }
 
 export type SubmissionStatus = 'pending' | 'approved' | 'rejected';
@@ -139,8 +171,19 @@ export interface AdminUser {
   name: string;
   lastName: string;
   email: string | null;
+  avatarUrl: string | null;
+  birthDate: string | null;
+  createdAt: string;
   role: Role;
   isBanned: boolean;
+  adminPerms: AdminPerms;
+  banExpiresAt: string | null;
+  banReason: string | null;
+  bannedAt: string | null;
+}
+
+export interface AdminUserDetail extends AdminUser {
+  submissions: AdminSubmission[];
 }
 
 export interface Analytics {

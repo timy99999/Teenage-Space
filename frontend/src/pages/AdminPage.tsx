@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { useAdminSubmissions } from '../hooks/useAdminSubmissions';
-import { useAdminUsers } from '../hooks/useAdminUsers';
 import { useAdminAnalytics } from '../hooks/useAdminAnalytics';
 import { useAdminArchivedEvents } from '../hooks/useAdminArchivedEvents';
 import { useNews } from '../hooks/useNews';
@@ -16,16 +15,17 @@ import { ImageUploadField } from '../components/ImageUploadField';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { TrashIcon } from '../components/TrashIcon';
 import { EditEventModal } from '../components/EditEventModal';
-import type { AdminSubmission, AdminUser, EducationTrack, EventItem, MaterialItem, NewsItem, PostFormValue, SubmissionStatus } from '../types';
+import { UsersManager } from '../components/UsersManager';
+import type { AdminPermKey, AdminSubmission, EducationTrack, EventItem, MaterialItem, NewsItem, PostFormValue, SubmissionStatus } from '../types';
 
 const TABS = [
-  { key: 'moderation', label: 'Модерация' },
-  { key: 'publish-event', label: 'Опубликовать в Возможности' },
-  { key: 'publish-news', label: 'Опубликовать новость' },
-  { key: 'archive', label: 'Архив' },
-  { key: 'education', label: 'Образование' },
-  { key: 'users', label: 'Пользователи' },
-  { key: 'analytics', label: 'Аналитика' }
+  { key: 'moderation', label: 'Модерация', perm: 'moderation' },
+  { key: 'publish-event', label: 'Опубликовать в Возможности', perm: 'publish_event' },
+  { key: 'publish-news', label: 'Опубликовать новость', perm: 'publish_news' },
+  { key: 'archive', label: 'Архив', perm: 'archive' },
+  { key: 'education', label: 'Образование', perm: 'education' },
+  { key: 'users', label: 'Пользователи', perm: 'users' },
+  { key: 'analytics', label: 'Аналитика', perm: 'analytics' }
 ] as const;
 
 type TabKey = (typeof TABS)[number]['key'];
@@ -65,7 +65,7 @@ function buildFormFromSubmission(s: AdminSubmission): PostFormValue {
 }
 
 export function AdminPage() {
-  const { profile, isAdmin } = useAuth();
+  const { profile, isAdmin, hasPerm } = useAuth();
   const navigate = useNavigate();
   const [tab, setTab] = useState<TabKey>('moderation');
 
@@ -75,23 +75,35 @@ export function AdminPage() {
 
   if (profile && !isAdmin) return null;
 
+  const current = TABS.find((t) => t.key === tab)!;
+  const allowed = hasPerm(current.perm as AdminPermKey);
+
   return (
     <div className="ts-page">
       <h1 className="ts-page-title">Админ-панель</h1>
       <div className="ts-theme-btns ts-admin-tabs" style={{ marginTop: 18, marginBottom: 8 }}>
-        {TABS.map((t) => (
-          <button key={t.key} className={`ts-theme-btn${tab === t.key ? ' on' : ''}`} onClick={() => setTab(t.key)}>
-            {t.label}
-          </button>
-        ))}
+        {TABS.map((t) => {
+          const locked = !hasPerm(t.perm as AdminPermKey);
+          return (
+            <button
+              key={t.key}
+              className={`ts-theme-btn${tab === t.key ? ' on' : ''}${locked ? ' locked' : ''}`}
+              onClick={() => setTab(t.key)}
+            >
+              {locked && '🔒 '}
+              {t.label}
+            </button>
+          );
+        })}
       </div>
-      {tab === 'moderation' && <ModerationTab />}
-      {tab === 'publish-event' && <PublishEventTab />}
-      {tab === 'publish-news' && <PublishNewsTab />}
-      {tab === 'archive' && <ArchiveTab />}
-      {tab === 'education' && <EducationTab />}
-      {tab === 'users' && <UsersTab />}
-      {tab === 'analytics' && <AnalyticsTab />}
+      {!allowed && <div className="ts-center-note">Нет доступа</div>}
+      {allowed && tab === 'moderation' && <ModerationTab />}
+      {allowed && tab === 'publish-event' && <PublishEventTab />}
+      {allowed && tab === 'publish-news' && <PublishNewsTab />}
+      {allowed && tab === 'archive' && <ArchiveTab />}
+      {allowed && tab === 'education' && <EducationTab />}
+      {allowed && tab === 'users' && <UsersManager />}
+      {allowed && tab === 'analytics' && <AnalyticsTab />}
     </div>
   );
 }
@@ -819,48 +831,6 @@ function MaterialFormRow({
         </div>
       </div>
     </div>
-  );
-}
-
-function UsersTab() {
-  const { flash } = useUI();
-  const { profile } = useAuth();
-  const { users, reload } = useAdminUsers();
-
-  async function toggleBan(u: AdminUser) {
-    try {
-      await api.post(`/admin/users/${u.id}/${u.isBanned ? 'unban' : 'ban'}`);
-      flash(u.isBanned ? 'Пользователь разбанен' : 'Пользователь забанен');
-      reload();
-    } catch (e) {
-      flash(e instanceof Error ? e.message : 'Не удалось изменить статус');
-    }
-  }
-
-  return (
-    <section className="ts-account-section">
-      {users.map((u) => (
-        <div className="ts-settings-row" key={u.id}>
-          <span className="label">
-            {u.name} {u.lastName} <span style={{ opacity: 0.6 }}>@{u.username}</span>
-            {u.role === 'admin' && (
-              <span className="ts-badge approved" style={{ marginLeft: 8 }}>
-                Админ
-              </span>
-            )}
-          </span>
-          <button
-            className={`ts-switch${u.isBanned ? ' on' : ''}`}
-            onClick={() => toggleBan(u)}
-            disabled={u.id === profile?.id}
-            title={u.id === profile?.id ? 'Нельзя забанить себя' : u.isBanned ? 'Разбанить' : 'Забанить'}
-          >
-            <span className="ts-switch-knob" />
-          </button>
-        </div>
-      ))}
-      {users.length === 0 && <div className="ts-center-note">Пользователей нет</div>}
-    </section>
   );
 }
 

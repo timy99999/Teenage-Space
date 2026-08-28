@@ -10,11 +10,9 @@ import {
   mapEvent,
   mapMaterial,
   mapNews,
-  mapProfile,
   mapSubmissionAdmin,
   MaterialRow,
   NewsRow,
-  ProfileRow,
   SubmissionAdminRow
 } from '../common/mappers';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
@@ -336,26 +334,6 @@ export class AdminService {
       .single();
     if (error) throw error;
     return mapSubmissionAdmin(data as SubmissionAdminRow);
-  }
-
-  async listUsers() {
-    const { data, error } = await this.supabase.client
-      .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-    return (data as ProfileRow[]).map(mapProfile);
-  }
-
-  async setBanned(id: string, banned: boolean) {
-    const { data, error } = await this.supabase.client
-      .from('profiles')
-      .update({ is_banned: banned })
-      .eq('id', id)
-      .select('*')
-      .single();
-    if (error) throw error;
-    return mapProfile(data as ProfileRow);
   }
 
   async analytics() {

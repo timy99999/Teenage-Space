@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { BottomNav } from './components/BottomNav';
+import { BannedGate } from './components/BannedGate';
 import { Loader } from './components/Loader';
 import { Toast } from './components/Toast';
 import { EventModal } from './components/EventModal';
@@ -24,6 +25,8 @@ const PublishPage = lazy(() => import('./pages/PublishPage').then((m) => ({ defa
 const AuthPage = lazy(() => import('./pages/AuthPage').then((m) => ({ default: m.AuthPage })));
 const AdminPage = lazy(() => import('./pages/AdminPage').then((m) => ({ default: m.AdminPage })));
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage').then((m) => ({ default: m.AnalyticsPage })));
+const UsersPage = lazy(() => import('./pages/UsersPage').then((m) => ({ default: m.UsersPage })));
+const UserAccountPage = lazy(() => import('./pages/UserAccountPage').then((m) => ({ default: m.UserAccountPage })));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })));
 
 function AppLayout() {
@@ -67,9 +70,10 @@ function EducationIndex() {
 }
 
 export default function App() {
-  const { loading } = useAuth();
+  const { loading, banInfo } = useAuth();
 
   if (loading) return <Loader />;
+  if (banInfo) return <BannedGate info={banInfo} />;
 
   return (
     <Suspense fallback={<Loader />}>
@@ -91,6 +95,8 @@ export default function App() {
           <Route path="publish" element={<PublishPage />} />
           <Route path="admin" element={<AdminPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="users/:id" element={<UserAccountPage />} />
           <Route path="privacy" element={<PrivacyPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

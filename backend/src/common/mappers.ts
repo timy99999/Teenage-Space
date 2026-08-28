@@ -121,6 +121,8 @@ export function mapMaterial(row: MaterialRow) {
   };
 }
 
+export type AdminPerms = Record<string, boolean>;
+
 export interface ProfileRow {
   id: string;
   username: string;
@@ -134,8 +136,13 @@ export interface ProfileRow {
   name_changed_at: string | null;
   username_changed_at: string | null;
   policy_accepted_at: string | null;
+  created_at: string;
   role: 'user' | 'admin' | 'super_admin';
   is_banned: boolean;
+  admin_perms: AdminPerms | null;
+  ban_expires_at: string | null;
+  ban_reason: string | null;
+  banned_at: string | null;
 }
 
 export function mapProfile(row: ProfileRow) {
@@ -153,7 +160,27 @@ export function mapProfile(row: ProfileRow) {
     usernameChangedAt: row.username_changed_at,
     policyAcceptedAt: row.policy_accepted_at,
     role: row.role,
-    isBanned: row.is_banned
+    isBanned: row.is_banned,
+    adminPerms: row.admin_perms ?? {}
+  };
+}
+
+export function mapAdminUser(row: ProfileRow) {
+  return {
+    id: row.id,
+    username: row.username,
+    name: row.name,
+    lastName: row.last_name,
+    email: row.email,
+    avatarUrl: row.avatar_url,
+    birthDate: row.birth_date,
+    createdAt: row.created_at,
+    role: row.role,
+    isBanned: row.is_banned,
+    adminPerms: row.admin_perms ?? {},
+    banExpiresAt: row.ban_expires_at,
+    banReason: row.ban_reason,
+    bannedAt: row.banned_at
   };
 }
 

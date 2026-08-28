@@ -18,6 +18,7 @@ export function Sidebar() {
   const isVote = path === '/vote';
   const isAdminPage = path === '/admin';
   const isAnalyticsPage = path === '/analytics';
+  const isUsersPage = path === '/users' || path.startsWith('/users/');
   const isOppsRoot = path.startsWith('/opportunities');
   const isEdu = path.startsWith('/education');
   const activeCategory = isOppsRoot ? params.category : undefined;
@@ -110,6 +111,12 @@ export function Sidebar() {
       <div className="ts-sidebar-spacer" />
 
       <nav className="ts-nav ts-sidebar-foot">
+        {isSuperAdmin && (
+          <button className="ts-nav-item" onClick={() => navigate('/users')}>
+            {isUsersPage && <span className="ts-nav-dot" />}
+            <span>Пользователи</span>
+          </button>
+        )}
         {isSuperAdmin && (
           <button className="ts-nav-item" onClick={() => navigate('/analytics')}>
             {isAnalyticsPage && <span className="ts-nav-dot" />}

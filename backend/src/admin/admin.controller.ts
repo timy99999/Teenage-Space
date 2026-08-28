@@ -118,21 +118,6 @@ export class AdminController {
     return this.admin.deleteMaterial(id);
   }
 
-  @Get('users')
-  listUsers() {
-    return this.admin.listUsers();
-  }
-
-  @Post('users/:id/ban')
-  banUser(@Param('id') id: string) {
-    return this.admin.setBanned(id, true);
-  }
-
-  @Post('users/:id/unban')
-  unbanUser(@Param('id') id: string) {
-    return this.admin.setBanned(id, false);
-  }
-
   @Get('analytics')
   analytics() {
     return this.admin.analytics();

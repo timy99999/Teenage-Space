@@ -63,7 +63,8 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const [editedEvents, setEditedEvents] = useState<Record<string, EventItem>>({});
   const [confirmTarget, setConfirmTarget] = useState<{ event: EventItem; kind: ConfirmKind } | null>(null);
   const [editTarget, setEditTarget] = useState<EventItem | null>(null);
-  const { isAdmin, isSuperAdmin } = useAuth();
+  const { isSuperAdmin, hasPerm } = useAuth();
+  const canEditCards = hasPerm('card_edit');
   const { flash } = useUI();
   const cardViewCounts = useCardViewCounts();
 
@@ -390,7 +391,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
               onRate={(n) => rate(e.id, n)}
               viewCount={isSuperAdmin ? cardViewCounts[cardViewKey('event', e.id)] : undefined}
               admin={
-                isAdmin
+                canEditCards
                   ? {
                       onEdit: () => setEditTarget(e),
                       onArchive: () => setConfirmTarget({ event: e, kind: 'archive' }),
