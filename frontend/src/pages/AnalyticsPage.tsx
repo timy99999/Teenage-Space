@@ -25,8 +25,15 @@ const DEVICE_LABELS: Record<string, string> = {
 
 const TABS = [
   { key: 'capacity', label: 'Хранилище' },
+  { key: 'users', label: 'Пользователи' },
   { key: 'traffic', label: 'Посещаемость' }
 ] as const;
+
+const LIMITED_BY_LABELS: Record<string, string> = {
+  database: 'место в базе данных',
+  'avatar-storage': 'место под аватары в файловом хранилище',
+  'auth-plan': 'лимит тарифа авторизации (MAU)'
+};
 
 type TabKey = (typeof TABS)[number]['key'];
 
@@ -109,6 +116,103 @@ function CapacityTab() {
         ) : (
           <div className="desc">Недостаточно данных для оценки — пока не загружено ни одной картинки поста.</div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function UsersTab() {
+  const { capacity } = useCapacity();
+
+  if (!capacity) return <p className="ts-center-note">Загрузка...</p>;
+  if (!capacity.users) {
+    return <p className="ts-center-note">Статистика по пользователям станет доступна после обновления базы.</p>;
+  }
+
+  const u = capacity.users;
+
+  return (
+    <div className="ts-publish-col" style={{ marginTop: 20 }}>
+      <div className="ts-card-panel">
+        <div className="ts-admin-stats">
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{u.registeredTotal}</div>
+            <div className="desc">зарегистрировано</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{u.onlineNow}</div>
+            <div className="desc">сейчас на сайте</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{u.peakConcurrentToday}</div>
+            <div className="desc">пик за час сегодня</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{u.bannedTotal}</div>
+            <div className="desc">забанено</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Сколько места занимают пользователи</h2>
+        <div className="ts-admin-stats">
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{formatBytes(u.dataUsedBytes)}</div>
+            <div className="desc">в базе данных суммарно</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">≈ {formatBytes(u.bytesPerUserEstimate)}</div>
+            <div className="desc">на одного пользователя (оценка)</div>
+          </div>
+        </div>
+        <div className="desc" style={{ marginTop: 14 }}>
+          Считаются таблицы профилей, избранного, оценок и заявок на публикацию. Аватары хранятся отдельно —
+          в файловом хранилище (вкладка «Хранилище»). Данные посещаемости не входят: они автоматически
+          чистятся и не растут вместе с числом пользователей.
+        </div>
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Сколько ещё регистраций выдержит</h2>
+        <div className="ts-admin-stats">
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">≈ {u.estimatedRemainingUsers.toLocaleString('ru-RU')}</div>
+            <div className="desc">ещё можно зарегистрировать</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">≈ {u.estimatedMaxUsers.toLocaleString('ru-RU')}</div>
+            <div className="desc">всего до потолка</div>
+          </div>
+        </div>
+        <div className="desc" style={{ marginTop: 14 }}>
+          Первым упрётся: <strong>{LIMITED_BY_LABELS[u.limitedBy] ?? u.limitedBy}</strong>. Отдельный лимит
+          бесплатного тарифа авторизации — {u.mauPlanLimit.toLocaleString('ru-RU')} активных пользователей в
+          месяц. Оценка приблизительная и уточняется по мере роста базы.
+        </div>
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Одновременная нагрузка</h2>
+        <div className="ts-admin-stats">
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{u.onlineNow}</div>
+            <div className="desc">онлайн прямо сейчас</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">≈ {u.concurrentSoftLimit.toLocaleString('ru-RU')}</div>
+            <div className="desc">комфортный потолок</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">≈ {u.concurrentHardLimit.toLocaleString('ru-RU')}</div>
+            <div className="desc">предел до апгрейда</div>
+          </div>
+        </div>
+        <div className="desc" style={{ marginTop: 14 }}>
+          «Комфортный потолок» — сколько активно кликающих пользователей сайт обслуживает без роста задержек
+          на текущем тарифе Supabase. Просто открытых вкладок (без действий) выдержит в несколько раз больше.
+          Дальше нужен платный тариф Supabase и второй инстанс бэкенда.
+        </div>
       </div>
     </div>
   );
@@ -243,6 +347,7 @@ export function AnalyticsPage() {
         ))}
       </div>
       {tab === 'capacity' && <CapacityTab />}
+      {tab === 'users' && <UsersTab />}
       {tab === 'traffic' && <TrafficTab />}
     </div>
   );

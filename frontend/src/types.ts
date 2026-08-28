@@ -209,6 +209,22 @@ export interface Capacity {
     avgPostBytes: number | null;
     estimatedRemainingPosts: number | null;
   };
+  users: CapacityUsers | null;
+}
+
+export interface CapacityUsers {
+  registeredTotal: number;
+  bannedTotal: number;
+  dataUsedBytes: number;
+  bytesPerUserEstimate: number;
+  estimatedMaxUsers: number;
+  estimatedRemainingUsers: number;
+  limitedBy: 'database' | 'avatar-storage' | 'auth-plan';
+  mauPlanLimit: number;
+  onlineNow: number;
+  peakConcurrentToday: number;
+  concurrentSoftLimit: number;
+  concurrentHardLimit: number;
 }
 
 export interface CardViewCount {
