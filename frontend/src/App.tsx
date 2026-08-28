@@ -4,6 +4,7 @@ import { Sidebar } from './components/Sidebar';
 import { BottomNav } from './components/BottomNav';
 import { BannedGate } from './components/BannedGate';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { NetTroubleToast } from './components/NetTroubleToast';
 import { Loader } from './components/Loader';
 import { Toast } from './components/Toast';
 import { EventModal } from './components/EventModal';
@@ -58,6 +59,7 @@ function AppLayout() {
         <NewsModal />
       </ErrorBoundary>
       <PolicyGate />
+      <NetTroubleToast />
       <Toast />
       <BottomNav />
     </div>
@@ -121,6 +123,7 @@ function AuthShell() {
         </button>
         <AuthPage />
       </main>
+      <NetTroubleToast />
       <Toast />
     </div>
   );

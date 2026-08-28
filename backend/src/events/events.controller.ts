@@ -3,7 +3,10 @@ import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { EventsService } from './events.service';
 import { QueryEventsDto } from './query-events.dto';
 
-const CACHE_CONTROL = 'public, max-age=60, stale-while-revalidate=300';
+// s-maxage lets any shared cache / CDN in front of the API hold it too; the long
+// stale-while-revalidate means a client or proxy keeps serving the last good copy
+// for up to a day while the backend is briefly unreachable.
+const CACHE_CONTROL = 'public, max-age=60, s-maxage=60, stale-while-revalidate=86400';
 
 @Controller('events')
 @UseInterceptors(CacheInterceptor)

@@ -9,7 +9,7 @@ export class NewsController {
   constructor(private readonly news: NewsService) {}
 
   @Get()
-  @Header('Cache-Control', 'public, max-age=60, stale-while-revalidate=300')
+  @Header('Cache-Control', 'public, max-age=60, s-maxage=60, stale-while-revalidate=86400')
   list() {
     return this.news.list();
   }
