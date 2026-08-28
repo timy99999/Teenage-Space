@@ -13,3 +13,10 @@ build/
 supabase/.temp/
 
 graphify-out/cost.json
+
+# Python (bot/)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/

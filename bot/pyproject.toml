@@ -1,0 +1,24 @@
+[project]
+name = "bars"
+version = "0.1.0"
+description = "Барс — Telegram RAG agent for Teenage Space"
+requires-python = ">=3.12"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools]
+packages = ["bars", "bars.graph"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+
+[tool.ruff.lint.per-file-ignores]
+# Message copy sent verbatim to Telegram: wrapping a line here would put a real
+# newline in the middle of a sentence the user reads.
+"bars/persona.py" = ["E501"]

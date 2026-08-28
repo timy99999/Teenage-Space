@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
@@ -6,6 +6,15 @@ import { useSubmissions } from '../hooks/useSubmissions';
 import { api } from '../lib/api';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import type { Profile } from '../types';
+
+/** Shape of GET/POST /api/profile/telegram-link — the deep link that hands this
+ *  account over to the Telegram agent ("Барс"). */
+interface TelegramLinkStatus {
+  /** false until the bot is configured server-side — the row stays hidden then. */
+  available: boolean;
+  linked: boolean;
+  telegramUsername?: string | null;
+}
 
 const STATUS_LABEL: Record<string, string> = {
   pending: 'На проверке',
@@ -28,6 +37,9 @@ export function ProfilePage() {
   const { theme, setTheme } = useUI();
   const { submissions } = useSubmissions();
   const [confirmLogout, setConfirmLogout] = useState(false);
+  const [telegram, setTelegram] = useState<TelegramLinkStatus | null>(null);
+  const [telegramBusy, setTelegramBusy] = useState(false);
+  const [telegramError, setTelegramError] = useState('');
 
   if (!session) return <Navigate to="/auth" replace />;
 
@@ -39,6 +51,45 @@ export function ProfilePage() {
   async function toggleNotif() {
     if (!profile) return;
     await api.patch<Profile>('/profile', { notifOptIn: !profile.notifOptIn }).then(refreshProfile).catch(() => {});
+  }
+
+  const loadTelegram = useCallback(async () => {
+    // A missing/misconfigured bot must not break the profile page, so failures here
+    // just leave the row hidden.
+    await api
+      .get<TelegramLinkStatus>('/profile/telegram-link', { noCache: true })
+      .then(setTelegram)
+      .catch(() => setTelegram(null));
+  }, []);
+
+  useEffect(() => {
+    if (session) void loadTelegram();
+  }, [session, loadTelegram]);
+
+  async function linkTelegram() {
+    setTelegramBusy(true);
+    setTelegramError('');
+    try {
+      const { deepLink } = await api.post<{ deepLink: string }>('/profile/telegram-link');
+      // Opened rather than shown: on mobile this hands straight over to the Telegram app.
+      window.open(deepLink, '_blank', 'noopener');
+    } catch (err) {
+      setTelegramError(err instanceof Error ? err.message : 'Не удалось создать ссылку');
+    } finally {
+      setTelegramBusy(false);
+    }
+  }
+
+  async function unlinkTelegram() {
+    setTelegramBusy(true);
+    try {
+      await api.del('/profile/telegram-link');
+      await loadTelegram();
+    } catch (err) {
+      setTelegramError(err instanceof Error ? err.message : 'Не удалось отвязать');
+    } finally {
+      setTelegramBusy(false);
+    }
   }
 
   async function onLogout() {
@@ -119,6 +170,22 @@ export function ProfilePage() {
             <span className="ts-switch-knob" />
           </button>
         </div>
+        {telegram?.available && (
+          <div className="ts-settings-row">
+            <span className="label">
+              Telegram-бот Барс
+              {telegram.linked && telegram.telegramUsername ? ` (@${telegram.telegramUsername})` : ''}
+            </span>
+            <button
+              className="open-link"
+              disabled={telegramBusy}
+              onClick={telegram.linked ? unlinkTelegram : linkTelegram}
+            >
+              {telegram.linked ? 'отвязать' : 'привязать →'}
+            </button>
+          </div>
+        )}
+        {telegramError && <div className="ts-center-note">{telegramError}</div>}
         <div className="ts-settings-row">
           <span className="label">Политика конфиденциальности</span>
           <button className="open-link" onClick={() => navigate('/privacy')}>
