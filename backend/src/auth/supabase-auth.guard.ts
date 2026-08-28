@@ -28,9 +28,12 @@ export class SupabaseAuthGuard implements CanActivate {
     const { data, error } = await this.supabase.client.auth.getUser(token);
     if (error || !data.user) throw new UnauthorizedException('Invalid or expired session');
 
+    // select('*') keeps this resilient if a new column (admin_perms,
+    // ban_expires_at) has not been migrated onto the live DB yet — a named
+    // select of a missing column errors and would strip everyone's role.
     const { data: profileRow } = await this.supabase.client
       .from('profiles')
-      .select('role, is_banned, ban_expires_at, admin_perms')
+      .select('*')
       .eq('id', data.user.id)
       .maybeSingle();
 

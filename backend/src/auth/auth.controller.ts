@@ -27,7 +27,7 @@ export class AuthController {
   async banStatus(@CurrentUser() user: User) {
     const { data } = await this.supabase.client
       .from('profiles')
-      .select('is_banned, ban_expires_at, ban_reason')
+      .select('*')
       .eq('id', user.id)
       .maybeSingle();
     return {
