@@ -1,10 +1,44 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
-import type { TrafficSummary } from '../types';
+import type { CardViewCount, TrafficSummary } from '../types';
 
 const SUMMARY_INTERVAL_MS = 30000;
 const ONLINE_INTERVAL_MS = 12000;
+const CARD_VIEWS_INTERVAL_MS = 60000;
+
+export function cardViewKey(targetType: string, targetId: string): string {
+  return `${targetType}:${targetId}`;
+}
+
+/** Unique-view count per card (event/news), keyed by `cardViewKey(targetType, targetId)`. Super-admin only — used to badge cards across the site, not just the Analytics page. */
+export function useCardViewCounts() {
+  const { isSuperAdmin } = useAuth();
+  const [counts, setCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    if (!isSuperAdmin) {
+      setCounts({});
+      return;
+    }
+    let cancelled = false;
+    const reload = async () => {
+      const data = await api.get<CardViewCount[]>('/admin/traffic/card-views', { noCache: true }).catch(() => null);
+      if (cancelled || !data) return;
+      const map: Record<string, number> = {};
+      for (const row of data) map[cardViewKey(row.targetType, row.targetId)] = row.uniqueViews;
+      setCounts(map);
+    };
+    reload();
+    const interval = window.setInterval(reload, CARD_VIEWS_INTERVAL_MS);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, [isSuperAdmin]);
+
+  return counts;
+}
 
 export function useTrafficSummary(days: number, enabled: boolean) {
   const { isSuperAdmin } = useAuth();

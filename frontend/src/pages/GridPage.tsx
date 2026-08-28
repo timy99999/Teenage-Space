@@ -4,6 +4,7 @@ import { useEvents } from '../hooks/useEvents';
 import { useNews } from '../hooks/useNews';
 import { useFavorites } from '../hooks/useFavorites';
 import { useRatings } from '../hooks/useRatings';
+import { useCardViewCounts, cardViewKey } from '../hooks/useTraffic';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { api } from '../lib/api';
@@ -62,8 +63,9 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const [editedEvents, setEditedEvents] = useState<Record<string, EventItem>>({});
   const [confirmTarget, setConfirmTarget] = useState<{ event: EventItem; kind: ConfirmKind } | null>(null);
   const [editTarget, setEditTarget] = useState<EventItem | null>(null);
-  const { isAdmin } = useAuth();
+  const { isAdmin, isSuperAdmin } = useAuth();
   const { flash } = useUI();
+  const cardViewCounts = useCardViewCounts();
 
   const isOpps = mode === 'opps';
   const isFav = mode === 'fav';
@@ -365,7 +367,11 @@ export function GridPage({ mode }: { mode: GridMode }) {
       {!isEmpty && isNews && (
         <div className="ts-card-grid">
           {news.map((n) => (
-            <NewsCard key={n.id} item={n} />
+            <NewsCard
+              key={n.id}
+              item={n}
+              viewCount={isSuperAdmin ? cardViewCounts[cardViewKey('news', n.id)] : undefined}
+            />
           ))}
         </div>
       )}
@@ -382,6 +388,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
               onToggleFav={() => toggle(e.id)}
               rating={ratings[e.id] ?? 0}
               onRate={(n) => rate(e.id, n)}
+              viewCount={isSuperAdmin ? cardViewCounts[cardViewKey('event', e.id)] : undefined}
               admin={
                 isAdmin
                   ? {

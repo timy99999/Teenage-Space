@@ -39,9 +39,25 @@ interface TopLinkRow {
   clicks: number;
 }
 
+interface CardUniqueViewsRow {
+  target_type: string;
+  target_id: string;
+  unique_views: number;
+}
+
 @Injectable()
 export class TrafficAdminService {
   constructor(private readonly supabase: SupabaseService) {}
+
+  async getCardViews() {
+    const { data, error } = await this.supabase.client.rpc('get_card_unique_views');
+    if (error) throw error;
+    return (data as CardUniqueViewsRow[]).map((r) => ({
+      targetType: r.target_type,
+      targetId: r.target_id,
+      uniqueViews: Number(r.unique_views)
+    }));
+  }
 
   async getOnlineNow() {
     const cutoff = new Date(Date.now() - ONLINE_WINDOW_MS).toISOString();

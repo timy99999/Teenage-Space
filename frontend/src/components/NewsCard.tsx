@@ -3,7 +3,13 @@ import type { NewsItem } from '../types';
 import { fmtDate } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
 
-export function NewsCard({ item }: { item: NewsItem }) {
+interface NewsCardProps {
+  item: NewsItem;
+  /** Unique-view count, super_admin only — shown as a badge on the card. */
+  viewCount?: number;
+}
+
+export function NewsCard({ item, viewCount }: NewsCardProps) {
   const [params, setParams] = useSearchParams();
   const open = () => {
     const next = new URLSearchParams(params);
@@ -18,6 +24,11 @@ export function NewsCard({ item }: { item: NewsItem }) {
           <EventPhoto src={item.imageUrl} alt={item.title} />
         </button>
         <span className="ts-card-cat-badge">Новость</span>
+        {viewCount !== undefined && (
+          <span className="ts-card-views-badge" title="Уникальных просмотров">
+            👁 {viewCount}
+          </span>
+        )}
       </div>
       <button className="ts-card-body" onClick={open}>
         <h3 className="ts-card-title">{item.title}</h3>

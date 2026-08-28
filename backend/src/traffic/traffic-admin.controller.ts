@@ -16,6 +16,11 @@ export class TrafficAdminController {
     return this.trafficAdmin.getOnlineNow();
   }
 
+  @Get('card-views')
+  getCardViews() {
+    return this.trafficAdmin.getCardViews();
+  }
+
   @Get('summary')
   getSummary(@Query() query: TrafficQueryDto) {
     return this.trafficAdmin.getSummary(query.days ?? DEFAULT_DAYS);

@@ -26,9 +26,11 @@ interface EventCardProps {
   rating: number;
   onRate: (n: number) => void;
   admin?: EventCardAdminActions;
+  /** Unique-view count, super_admin only — shown as a badge on the card. */
+  viewCount?: number;
 }
 
-export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, admin }: EventCardProps) {
+export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, admin, viewCount }: EventCardProps) {
   const priceLabel = event.price === 'free' ? 'Бесплатно' : event.cost ?? '';
   const { session } = useAuth();
 
@@ -44,6 +46,11 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
           </span>
         )}
         {admin && <CardMenu isVoteMode={isVoteMode} {...admin} />}
+        {viewCount !== undefined && (
+          <span className="ts-card-views-badge" title="Уникальных просмотров">
+            👁 {viewCount}
+          </span>
+        )}
       </div>
       <button className="ts-card-body" onClick={onOpen}>
         <h3 className="ts-card-title">{event.title}</h3>

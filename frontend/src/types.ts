@@ -168,6 +168,12 @@ export interface Capacity {
   };
 }
 
+export interface CardViewCount {
+  targetType: 'event' | 'news';
+  targetId: string;
+  uniqueViews: number;
+}
+
 export interface TrafficSummary {
   today: {
     pageViews: number;

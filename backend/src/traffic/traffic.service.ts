@@ -41,6 +41,26 @@ export class TrafficService {
       device_type: dto.deviceType,
       is_logged_in: dto.isLoggedIn
     });
+    await this.recordUniqueCardView(dto);
+  }
+
+  // Deduped by (target_type, target_id, session_id), so a plain row count of this table
+  // is already an exact unique-visitor count per card — and unlike traffic_events, it's
+  // never pruned by the retention cron, so the count never decays over time.
+  private async recordUniqueCardView(dto: TrackCardViewDto) {
+    try {
+      const { error } = await this.supabase.client.from('traffic_card_views').upsert(
+        {
+          target_type: dto.targetType,
+          target_id: dto.targetId,
+          session_id: dto.sessionId
+        },
+        { onConflict: 'target_type,target_id,session_id', ignoreDuplicates: true }
+      );
+      if (error) throw error;
+    } catch (err) {
+      this.logger.warn(`Failed to record unique card view: ${describeError(err)}`);
+    }
   }
 
   async recordLinkClick(dto: TrackLinkClickDto) {
