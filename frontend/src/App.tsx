@@ -3,6 +3,7 @@ import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { BottomNav } from './components/BottomNav';
 import { BannedGate } from './components/BannedGate';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Loader } from './components/Loader';
 import { Toast } from './components/Toast';
 import { EventModal } from './components/EventModal';
@@ -45,11 +46,17 @@ function AppLayout() {
             ←
           </button>
         )}
-        <Outlet />
+        <ErrorBoundary label="page" resetKey={path}>
+          <Outlet />
+        </ErrorBoundary>
         {!(path === '/' || path === '/news') && <div className="ts-footer" />}
       </main>
-      <EventModal />
-      <NewsModal />
+      <ErrorBoundary label="event-modal" resetKey={path} fallback={() => null}>
+        <EventModal />
+      </ErrorBoundary>
+      <ErrorBoundary label="news-modal" resetKey={path} fallback={() => null}>
+        <NewsModal />
+      </ErrorBoundary>
       <PolicyGate />
       <Toast />
       <BottomNav />

@@ -4,6 +4,14 @@ import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
+// A rejected promise nobody awaited (a background job, a fire-and-forget call) would
+// otherwise crash the whole process on newer Node. Log it and keep serving — one
+// broken task must not take the API down.
+process.on('unhandledRejection', (reason) => {
+  // eslint-disable-next-line no-console
+  console.error('Unhandled promise rejection:', reason);
+});
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(helmet());
