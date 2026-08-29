@@ -1068,9 +1068,9 @@
     "semantic_hash": ""
   },
   "bot/bars/handlers.py": {
-    "mtime": 1787977738.7014947,
-    "seen": 1787978158.8833137,
-    "ast_hash": "890ac7f17daffb297fe57dafd654f51c",
+    "mtime": 1788006782.4429858,
+    "seen": 1788006843.6960294,
+    "ast_hash": "01f0fcdf01ba1a1fe6c9a7c9f17d3b0d",
     "semantic_hash": ""
   },
   "bot/bars/indexer.py": {
@@ -1080,9 +1080,9 @@
     "semantic_hash": ""
   },
   "bot/bars/main.py": {
-    "mtime": 1787978115.9925058,
-    "seen": 1787978158.8848407,
-    "ast_hash": "704ef958da7f35c35624b4d47c7a6c8d",
+    "mtime": 1787996498.265932,
+    "seen": 1788006329.4799821,
+    "ast_hash": "fa04b6981509a170c28940c9a4750eeb",
     "semantic_hash": ""
   },
   "bot/bars/persona.py": {
@@ -1098,9 +1098,9 @@
     "semantic_hash": ""
   },
   "bot/bars/probe.py": {
-    "mtime": 1787926339.3435817,
-    "seen": 1787931780.6012785,
-    "ast_hash": "5b2901c8e1168bda4729e45ecfdf4d3e",
+    "mtime": 1787996316.3394222,
+    "seen": 1788006329.4799821,
+    "ast_hash": "c701269b54d5804d89e85e19a55493b3",
     "semantic_hash": ""
   },
   "bot/bars/queue.py": {

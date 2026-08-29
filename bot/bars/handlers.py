@@ -30,13 +30,13 @@ TYPING_INTERVAL_SECONDS = 4
 FALLBACK_REPLY = "Что-то пошло не так на моей стороне. Попробуй, пожалуйста, ещё раз через минуту."
 
 LINK_INSTRUCTIONS = (
-    "Привязка аккаунта даёт две вещи: я запоминаю твой возраст из профиля и могу "
-    "складывать мероприятия в избранное на сайте.\n\n"
+    "Я работаю только с привязанными аккаунтами Teenage Space — так я вижу твой "
+    "возраст из профиля и могу сохранять избранное и планы.\n\n"
     "Как привязать:\n"
     '1. Открой <a href="{site}/profile">Профиль</a> на Teenage Space.\n'
     "2. Нажми «Привязать Telegram».\n"
     "3. Перейди по ссылке, которую он покажет — она откроет этот чат.\n\n"
-    "Без привязки я тоже работаю: подбираю мероприятия и составляю планы."
+    "После этого пиши мне что угодно — например «хакатон по IT для 15 лет»."
 )
 
 
@@ -75,6 +75,23 @@ async def chat_context(chat_id: int, *, refresh: bool = False) -> dict[str, Any]
     }
     runtime.cache_context(chat_id, context)
     return context
+
+
+async def _require_linked(message: Message) -> dict[str, Any] | None:
+    """Gate: Барс only talks to accounts linked from the Teenage Space site.
+
+    Returns the chat context when linked, None (having already replied with
+    instructions) otherwise -- callers just check truthiness and return early.
+    """
+    context = await chat_context(message.chat.id)
+    if context["linked"]:
+        return context
+    await message.answer(
+        LINK_INSTRUCTIONS.format(site=get_settings().site_url.rstrip("/")),
+        parse_mode="HTML",
+        disable_web_page_preview=True,
+    )
+    return None
 
 
 async def _keep_typing(message: Message) -> None:
@@ -172,6 +189,8 @@ async def start_with_token(message: Message, command: CommandObject) -> None:
 
 @router.message(CommandStart())
 async def start(message: Message) -> None:
+    if not await _require_linked(message):
+        return
     await sessions.reset(message.chat.id)
     await message.answer(GREETING)
 
@@ -202,6 +221,8 @@ async def link_command(message: Message) -> None:
 
 @router.message(Command("plan"))
 async def plan_command(message: Message) -> None:
+    if not await _require_linked(message):
+        return
     plan = await plans.get_plan(message.chat.id)
     if not plan:
         await message.answer(
@@ -219,6 +240,8 @@ async def plan_command(message: Message) -> None:
 
 @router.message(F.text & ~F.text.startswith("/"))
 async def on_text(message: Message) -> None:
+    if not await _require_linked(message):
+        return
     if runtime.queues is None:
         return
     await runtime.queues.submit(message.chat.id, Job(message=message, text=message.text or ""))
@@ -226,11 +249,15 @@ async def on_text(message: Message) -> None:
 
 @router.message(F.text.startswith("/"))
 async def on_unknown_command(message: Message) -> None:
+    if not await _require_linked(message):
+        return
     await message.answer("Такой команды у меня нет.\n\n" + HELP_TEXT)
 
 
 @router.message()
 async def on_other(message: Message) -> None:
+    if not await _require_linked(message):
+        return
     await message.answer(
         "Я понимаю только текст. Напиши словами, что ищешь — например «хакатон по IT для 15 лет»."
     )
@@ -256,6 +283,11 @@ async def on_favorite(callback: CallbackQuery) -> None:
 async def on_step(callback: CallbackQuery) -> None:
     step_no = int((callback.data or "step:0").split(":", 1)[1])
     chat_id = callback.message.chat.id if callback.message else callback.from_user.id
+
+    context = await chat_context(chat_id)
+    if not context["linked"]:
+        await callback.answer("Сначала привяжи аккаунт: /link", show_alert=True)
+        return
 
     plan = await plans.get_plan(chat_id)
     if not plan:
