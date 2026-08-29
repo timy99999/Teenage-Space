@@ -150,10 +150,20 @@ async def process(job: Job) -> None:
             result = await runtime.graph.ainvoke(state, config=config)
         usage = dict(usage_cb.usage_metadata)
 
+        # ainvoke returns the full checkpointed history; this turn's output is
+        # everything after the last human message. Looking at the whole history
+        # would resend a stale answer whenever this turn produced none.
+        messages = result["messages"]
+        turn_start = next(
+            (i for i in range(len(messages) - 1, -1, -1) if isinstance(messages[i], HumanMessage)),
+            -1,
+        )
+        turn_messages = messages[turn_start + 1 :]
+
         answer = next(
             (
                 m
-                for m in reversed(result["messages"])
+                for m in reversed(turn_messages)
                 if isinstance(m, AIMessage) and not getattr(m, "tool_calls", None)
             ),
             None,
@@ -169,7 +179,7 @@ async def process(job: Job) -> None:
         answer_text = text
         tools_used = [
             call["name"]
-            for m in result["messages"]
+            for m in turn_messages
             if isinstance(m, AIMessage)
             for call in (getattr(m, "tool_calls", None) or [])
         ]

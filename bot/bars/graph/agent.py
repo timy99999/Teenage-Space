@@ -28,6 +28,20 @@ logger = logging.getLogger(__name__)
 # A ReAct loop that keeps calling tools forever is a bill, not a feature.
 MAX_TOOL_ROUNDS = 6
 
+# The 3-day memory bounds a conversation by time, not size. Cap what the agent
+# actually reads to the last few user turns so a long day of chatting doesn't turn
+# into a growing prompt (and a model that just parrots its own history back).
+MAX_TURNS_IN_CONTEXT = 8
+
+
+def _recent_history(messages: list) -> list:
+    """Last MAX_TURNS_IN_CONTEXT user turns, sliced at a HumanMessage so a
+    tool_call and its result are never separated."""
+    human_indices = [i for i, m in enumerate(messages) if isinstance(m, HumanMessage)]
+    if len(human_indices) <= MAX_TURNS_IN_CONTEXT:
+        return messages
+    return messages[human_indices[-MAX_TURNS_IN_CONTEXT] :]
+
 
 class GuardVerdict(BaseModel):
     in_scope: bool = Field(description="true, если запрос про мероприятия и подготовку к ним")
@@ -86,7 +100,7 @@ def build_graph(pool: AsyncConnectionPool):
 
     async def agent(state: BarsState) -> dict:
         prompt = SystemMessage(content=system_prompt(bishkek_today().isoformat()))
-        response = await llm.ainvoke([prompt, *state["messages"]])
+        response = await llm.ainvoke([prompt, *_recent_history(state["messages"])])
         return {"messages": [response]}
 
     def after_guard(state: BarsState) -> str:
@@ -96,7 +110,16 @@ def build_graph(pool: AsyncConnectionPool):
         last = state["messages"][-1]
         if not getattr(last, "tool_calls", None):
             return END
-        rounds = sum(1 for m in state["messages"] if getattr(m, "tool_calls", None))
+        # Count tool rounds in THIS turn only — since the last human message.
+        # Counting the whole checkpointed history would freeze a long conversation:
+        # once its lifetime tool-calls pass the budget, every later turn ends here
+        # before the agent can answer, and the user gets a stale reply resent.
+        rounds = 0
+        for message in reversed(state["messages"]):
+            if isinstance(message, HumanMessage):
+                break
+            if getattr(message, "tool_calls", None):
+                rounds += 1
         if rounds > MAX_TOOL_ROUNDS:
             logger.warning("Tool-call budget exhausted; answering with what we have")
             return END
