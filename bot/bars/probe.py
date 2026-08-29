@@ -57,6 +57,9 @@ def main() -> None:
     args = parser.parse_args()
 
     get_settings()
+    if sys.platform == "win32":
+        # psycopg's async mode refuses Windows' default ProactorEventLoop outright.
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(_run(args.query, args.age, args.reindex))
 
 

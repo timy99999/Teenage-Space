@@ -59,23 +59,27 @@ async def _safe(name: str, coro) -> None:
 def build_scheduler(bot: Bot) -> AsyncIOScheduler:
     settings = get_settings()
     scheduler = AsyncIOScheduler()
+
+    # AsyncIOScheduler only awaits a job on the loop when the job itself is a
+    # coroutine function. A plain lambda gets punted to a worker thread instead,
+    # where `asyncio.create_task` has no running loop to attach to.
+    async def run_reindex() -> None:
+        await _safe("reindex", reindex())
+
+    async def run_reminders() -> None:
+        await _safe("reminders", reminders.dispatch(bot))
+
+    async def run_session_sweep() -> None:
+        await _safe("session-sweep", sessions.sweep())
+
     scheduler.add_job(
-        lambda: asyncio.create_task(_safe("reindex", reindex())),
-        "interval",
-        minutes=settings.index_interval_minutes,
-        id="reindex",
+        run_reindex, "interval", minutes=settings.index_interval_minutes, id="reindex"
     )
     scheduler.add_job(
-        lambda: asyncio.create_task(_safe("reminders", reminders.dispatch(bot))),
-        "interval",
-        seconds=settings.reminder_poll_seconds,
-        id="reminders",
+        run_reminders, "interval", seconds=settings.reminder_poll_seconds, id="reminders"
     )
     scheduler.add_job(
-        lambda: asyncio.create_task(_safe("session-sweep", sessions.sweep())),
-        "interval",
-        hours=SESSION_SWEEP_HOURS,
-        id="session-sweep",
+        run_session_sweep, "interval", hours=SESSION_SWEEP_HOURS, id="session-sweep"
     )
     return scheduler
 
@@ -178,6 +182,10 @@ def main() -> None:
     args = parser.parse_args()
 
     configure_logging()
+    if sys.platform == "win32":
+        # psycopg's async mode refuses Windows' default ProactorEventLoop outright.
+        # Railway runs Linux, so this only matters for --polling during local dev.
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     runner = run_polling() if args.polling else run_webhook()
     with contextlib.suppress(KeyboardInterrupt, SystemExit):
         asyncio.run(runner)
