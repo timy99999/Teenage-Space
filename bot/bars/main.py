@@ -42,6 +42,10 @@ def configure_logging() -> None:
         format="%(asctime)s %(levelname)-8s %(name)s: %(message)s",
     )
     logging.getLogger("aiogram.event").setLevel(logging.WARNING)
+    # The SDK warns about automatic function calling on every tool-bound request.
+    # We drive the tool loop ourselves through LangGraph, so it is noise -- and at
+    # one line per user message it would be most of the log.
+    logging.getLogger("google_genai.models").setLevel(logging.ERROR)
 
 
 async def _safe(name: str, coro) -> None:

@@ -21,8 +21,8 @@ class Settings(BaseSettings):
 
     # Gemini
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.5-flash"
-    gemini_router_model: str = "gemini-2.5-flash-lite"
+    gemini_model: str = "gemini-3.6-flash"
+    gemini_router_model: str = "gemini-3.5-flash-lite"
     gemini_embed_model: str = "models/gemini-embedding-001"
     embed_dim: int = 768
 

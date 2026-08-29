@@ -3,7 +3,7 @@
 RAG-агент в Telegram: находит мероприятия в каталоге Teenage Space, доводит до
 регистрации, составляет план подготовки и напоминает о дедлайнах.
 
-- **LLM** — Gemini (`gemini-2.5-flash` для диалога, `gemini-2.5-flash-lite` для
+- **LLM** — Gemini (`gemini-3.6-flash` для диалога, `gemini-3.5-flash-lite` для
   классификатора темы).
 - **Оркестрация** — LangGraph: `guard → agent ⇄ tools`.
 - **Поиск** — эмбеддинги Gemini в pgvector (таблица `bot_event_embeddings`) ранжируют,

@@ -51,8 +51,10 @@ def _router_model() -> ChatGoogleGenerativeAI:
         google_api_key=settings.gemini_api_key,
         temperature=0.0,
         max_output_tokens=64,
-        # Classification needs no deliberation; thinking here is pure latency.
-        thinking_budget=0,
+        # Classification needs no deliberation; thinking here is pure latency. Gemini 3
+        # replaced 2.x's thinking_budget with a discrete level -- "minimal" is the one
+        # that actually bills zero reasoning tokens.
+        reasoning_effort="minimal",
     )
 
 
@@ -69,7 +71,7 @@ def build_graph(pool: AsyncConnectionPool):
             return {"in_scope": True}
         try:
             verdict: GuardVerdict = await guard_llm.ainvoke(
-                [SystemMessage(content=GUARD_PROMPT), HumanMessage(content=str(last.content))]
+                [SystemMessage(content=GUARD_PROMPT), HumanMessage(content=last.text)]
             )
             in_scope = bool(verdict.in_scope)
         except Exception:

@@ -660,6 +660,19 @@
       "source_location": "L11"
     },
     {
+      "id": "backend_src_traffic_traffic_module_trafficmodule",
+      "label": "TrafficModule",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "app.module.ts",
+      "file_type": "code",
+      "norm_label": "trafficmodule",
+      "source_file": "backend/src/traffic/traffic.module.ts",
+      "source_location": "L14"
+    },
+    {
       "id": "backend_src_bot_bot_auth_guard_botauthguard",
       "label": "BotAuthGuard",
       "_callable": true,
@@ -943,19 +956,6 @@
       "file_type": "code",
       "norm_label": "updateeducationtrackdto",
       "source_file": "backend/src/admin/dto/update-education-track.dto.ts",
-      "source_location": "L3"
-    },
-    {
-      "id": "backend_src_admin_dto_update_material_dto_updatematerialdto",
-      "label": "UpdateMaterialDto",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 32,
-      "community_name": "admin.service.ts",
-      "file_type": "code",
-      "norm_label": "updatematerialdto",
-      "source_file": "backend/src/admin/dto/update-material.dto.ts",
       "source_location": "L3"
     },
     {
@@ -1472,7 +1472,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 49,
-      "community_name": "traffic.module.ts",
+      "community_name": "traffic-admin.service.ts",
       "file_type": "code",
       "norm_label": "carduniqueviewsrow",
       "source_file": "backend/src/traffic/traffic-admin.service.ts",
@@ -1485,7 +1485,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 49,
-      "community_name": "traffic.module.ts",
+      "community_name": "traffic-admin.service.ts",
       "file_type": "code",
       "norm_label": "dailytrendrow",
       "source_file": "backend/src/traffic/traffic-admin.service.ts",
@@ -1498,7 +1498,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 49,
-      "community_name": "traffic.module.ts",
+      "community_name": "traffic-admin.service.ts",
       "file_type": "code",
       "norm_label": "devicerow",
       "source_file": "backend/src/traffic/traffic-admin.service.ts",
@@ -1511,7 +1511,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 49,
-      "community_name": "traffic.module.ts",
+      "community_name": "traffic-admin.service.ts",
       "file_type": "code",
       "norm_label": "hourlyrow",
       "source_file": "backend/src/traffic/traffic-admin.service.ts",
@@ -1524,7 +1524,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 49,
-      "community_name": "traffic.module.ts",
+      "community_name": "traffic-admin.service.ts",
       "file_type": "code",
       "norm_label": "loginsplitrow",
       "source_file": "backend/src/traffic/traffic-admin.service.ts",
@@ -1537,7 +1537,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 49,
-      "community_name": "traffic.module.ts",
+      "community_name": "traffic-admin.service.ts",
       "file_type": "code",
       "norm_label": "topcardrow",
       "source_file": "backend/src/traffic/traffic-admin.service.ts",
@@ -1550,37 +1550,11 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 49,
-      "community_name": "traffic.module.ts",
+      "community_name": "traffic-admin.service.ts",
       "file_type": "code",
       "norm_label": "toplinkrow",
       "source_file": "backend/src/traffic/traffic-admin.service.ts",
       "source_location": "L37"
-    },
-    {
-      "id": "backend_src_traffic_traffic_cleanup_service_trafficcleanupservice",
-      "label": "TrafficCleanupService",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": "trafficcleanupservice",
-      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
-      "source_location": "L26"
-    },
-    {
-      "id": "backend_src_traffic_traffic_module_trafficmodule",
-      "label": "TrafficModule",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": "trafficmodule",
-      "source_file": "backend/src/traffic/traffic.module.ts",
-      "source_location": "L14"
     },
     {
       "id": "backend_src_profile_profile_controller_profilecontroller",
@@ -1620,6 +1594,19 @@
       "norm_label": "updateprofiledto",
       "source_file": "backend/src/profile/update-profile.dto.ts",
       "source_location": "L3"
+    },
+    {
+      "id": "backend_src_traffic_traffic_cleanup_service_trafficcleanupservice",
+      "label": "TrafficCleanupService",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 50,
+      "community_name": "TrafficCleanupService",
+      "file_type": "code",
+      "norm_label": "trafficcleanupservice",
+      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
+      "source_location": "L26"
     },
     {
       "id": "backend_src_admin_admin_service_adminservice",
@@ -1841,6 +1828,19 @@
       "norm_label": "supabaseauthguard",
       "source_file": "backend/src/auth/supabase-auth.guard.ts",
       "source_location": "L57"
+    },
+    {
+      "id": "backend_src_admin_dto_update_material_dto_updatematerialdto",
+      "label": "UpdateMaterialDto",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "UpdateMaterialDto",
+      "file_type": "code",
+      "norm_label": "updatematerialdto",
+      "source_file": "backend/src/admin/dto/update-material.dto.ts",
+      "source_location": "L3"
     },
     {
       "id": "frontend_src_pages_privacypage_block",
@@ -2559,6 +2559,18 @@
       "source_location": "L94"
     },
     {
+      "id": "backend_src_admin_admin_controller_admincontroller_archiveevent",
+      "label": ".archiveEvent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": ".archiveevent()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L56"
+    },
+    {
       "id": "backend_src_admin_admin_controller_admincontroller_constructor",
       "label": ".constructor()",
       "_callable": true,
@@ -2571,16 +2583,52 @@
       "source_location": "L17"
     },
     {
-      "id": "backend_src_admin_admin_controller_admincontroller_createeducationtrack",
-      "label": ".createEducationTrack()",
+      "id": "backend_src_admin_admin_controller_admincontroller_deleteeducationtrack",
+      "label": ".deleteEducationTrack()",
       "_callable": true,
       "_origin": "ast",
       "community": 1,
       "community_name": "AdminController",
       "file_type": "code",
-      "norm_label": ".createeducationtrack()",
+      "norm_label": ".deleteeducationtrack()",
       "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L90"
+      "source_location": "L101"
+    },
+    {
+      "id": "backend_src_admin_admin_controller_admincontroller_deleteevent",
+      "label": ".deleteEvent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": ".deleteevent()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L74"
+    },
+    {
+      "id": "backend_src_admin_admin_controller_admincontroller_deletematerial",
+      "label": ".deleteMaterial()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": ".deletematerial()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L117"
+    },
+    {
+      "id": "backend_src_admin_admin_controller_admincontroller_deletenews",
+      "label": ".deleteNews()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": ".deletenews()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L85"
     },
     {
       "id": "backend_src_admin_admin_controller_admincontroller_moveeventtovoting",
@@ -2593,18 +2641,6 @@
       "norm_label": ".moveeventtovoting()",
       "source_file": "backend/src/admin/admin.controller.ts",
       "source_location": "L68"
-    },
-    {
-      "id": "backend_src_admin_admin_controller_admincontroller_publishsubmission",
-      "label": ".publishSubmission()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "AdminController",
-      "file_type": "code",
-      "norm_label": ".publishsubmission()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L30"
     },
     {
       "id": "backend_src_admin_admin_controller_admincontroller_rejectsubmission",
@@ -2631,64 +2667,64 @@
       "source_location": "L62"
     },
     {
-      "id": "backend_src_admin_admin_controller_admincontroller_updateeducationtrack",
-      "label": ".updateEducationTrack()",
+      "id": "backend_src_admin_admin_service_adminservice_archiveevent",
+      "label": ".archiveEvent()",
       "_callable": true,
       "_origin": "ast",
       "community": 1,
       "community_name": "AdminController",
       "file_type": "code",
-      "norm_label": ".updateeducationtrack()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L95"
-    },
-    {
-      "id": "backend_src_admin_admin_controller_admincontroller_updateevent",
-      "label": ".updateEvent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "AdminController",
-      "file_type": "code",
-      "norm_label": ".updateevent()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L50"
-    },
-    {
-      "id": "backend_src_admin_admin_controller_admincontroller_updatematerial",
-      "label": ".updateMaterial()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "AdminController",
-      "file_type": "code",
-      "norm_label": ".updatematerial()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L111"
-    },
-    {
-      "id": "backend_src_admin_admin_controller_admincontroller_updatesubmission",
-      "label": ".updateSubmission()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "AdminController",
-      "file_type": "code",
-      "norm_label": ".updatesubmission()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L25"
-    },
-    {
-      "id": "backend_src_admin_admin_service_adminservice_createeducationtrack",
-      "label": ".createEducationTrack()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "AdminController",
-      "file_type": "code",
-      "norm_label": ".createeducationtrack()",
+      "norm_label": ".archiveevent()",
       "source_file": "backend/src/admin/admin.service.ts",
-      "source_location": "L231"
+      "source_location": "L206"
+    },
+    {
+      "id": "backend_src_admin_admin_service_adminservice_deleteeducationtrack",
+      "label": ".deleteEducationTrack()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": ".deleteeducationtrack()",
+      "source_file": "backend/src/admin/admin.service.ts",
+      "source_location": "L258"
+    },
+    {
+      "id": "backend_src_admin_admin_service_adminservice_deleteevent",
+      "label": ".deleteEvent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": ".deleteevent()",
+      "source_file": "backend/src/admin/admin.service.ts",
+      "source_location": "L224"
+    },
+    {
+      "id": "backend_src_admin_admin_service_adminservice_deletematerial",
+      "label": ".deleteMaterial()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": ".deletematerial()",
+      "source_file": "backend/src/admin/admin.service.ts",
+      "source_location": "L297"
+    },
+    {
+      "id": "backend_src_admin_admin_service_adminservice_deletenews",
+      "label": ".deleteNews()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": ".deletenews()",
+      "source_file": "backend/src/admin/admin.service.ts",
+      "source_location": "L322"
     },
     {
       "id": "backend_src_admin_admin_service_adminservice_moveeventtovoting",
@@ -4488,7 +4524,7 @@
       "file_type": "code",
       "norm_label": "help_command()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L180"
+      "source_location": "L178"
     },
     {
       "id": "bot_bars_handlers_keep_typing",
@@ -4512,7 +4548,7 @@
       "file_type": "code",
       "norm_label": "link_command()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L191"
+      "source_location": "L189"
     },
     {
       "id": "bot_bars_handlers_on_favorite",
@@ -4524,7 +4560,7 @@
       "file_type": "code",
       "norm_label": "on_favorite()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L243"
+      "source_location": "L241"
     },
     {
       "id": "bot_bars_handlers_on_other",
@@ -4536,7 +4572,7 @@
       "file_type": "code",
       "norm_label": "on_other()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L233"
+      "source_location": "L231"
     },
     {
       "id": "bot_bars_handlers_on_step",
@@ -4548,7 +4584,7 @@
       "file_type": "code",
       "norm_label": "on_step()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L256"
+      "source_location": "L254"
     },
     {
       "id": "bot_bars_handlers_on_text",
@@ -4560,7 +4596,7 @@
       "file_type": "code",
       "norm_label": "on_text()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L221"
+      "source_location": "L219"
     },
     {
       "id": "bot_bars_handlers_on_unknown_command",
@@ -4572,7 +4608,7 @@
       "file_type": "code",
       "norm_label": "on_unknown_command()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L228"
+      "source_location": "L226"
     },
     {
       "id": "bot_bars_handlers_plan_command",
@@ -4584,7 +4620,7 @@
       "file_type": "code",
       "norm_label": "plan_command()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L204"
+      "source_location": "L202"
     },
     {
       "id": "bot_bars_handlers_process",
@@ -4608,7 +4644,7 @@
       "file_type": "code",
       "norm_label": "reset_command()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L185"
+      "source_location": "L183"
     },
     {
       "id": "bot_bars_handlers_start",
@@ -4620,7 +4656,7 @@
       "file_type": "code",
       "norm_label": "start()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L174"
+      "source_location": "L172"
     },
     {
       "id": "bot_bars_handlers_start_with_token",
@@ -4632,7 +4668,7 @@
       "file_type": "code",
       "norm_label": "start_with_token()",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L153"
+      "source_location": "L151"
     },
     {
       "id": "bot_bars_sessions_reset",
@@ -4731,6 +4767,78 @@
       "source_location": "L14"
     },
     {
+      "id": "backend_src_admin_admin_controller_admincontroller_createeducationtrack",
+      "label": ".createEducationTrack()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": ".createeducationtrack()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L90"
+    },
+    {
+      "id": "backend_src_admin_admin_controller_admincontroller_updateeducationtrack",
+      "label": ".updateEducationTrack()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": ".updateeducationtrack()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L95"
+    },
+    {
+      "id": "backend_src_admin_admin_controller_admincontroller_updateevent",
+      "label": ".updateEvent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": ".updateevent()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L50"
+    },
+    {
+      "id": "backend_src_admin_admin_controller_admincontroller_updatesubmission",
+      "label": ".updateSubmission()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": ".updatesubmission()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L25"
+    },
+    {
+      "id": "backend_src_admin_admin_service_adminservice_createeducationtrack",
+      "label": ".createEducationTrack()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": ".createeducationtrack()",
+      "source_file": "backend/src/admin/admin.service.ts",
+      "source_location": "L231"
+    },
+    {
+      "id": "backend_src_admin_admin_service_adminservice_updateeducationtrack",
+      "label": ".updateEducationTrack()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": ".updateeducationtrack()",
+      "source_file": "backend/src/admin/admin.service.ts",
+      "source_location": "L242"
+    },
+    {
       "id": "backend_src_admin_admin_service_adminservice_updatesubmission",
       "label": ".updateSubmission()",
       "_callable": true,
@@ -4741,6 +4849,30 @@
       "norm_label": ".updatesubmission()",
       "source_file": "backend/src/admin/admin.service.ts",
       "source_location": "L55"
+    },
+    {
+      "id": "backend_src_common_mappers_mapeducationtrack",
+      "label": "mapEducationTrack()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": "mapeducationtrack()",
+      "source_file": "backend/src/common/mappers.ts",
+      "source_location": "L95"
+    },
+    {
+      "id": "backend_src_education_education_service_educationservice_listtracks",
+      "label": ".listTracks()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": ".listtracks()",
+      "source_file": "backend/src/education/education.service.ts",
+      "source_location": "L9"
     },
     {
       "id": "backend_src_capacity_capacity_controller_capacitycontroller_constructor",
@@ -4827,42 +4959,6 @@
       "source_location": "L265"
     },
     {
-      "id": "backend_src_admin_admin_service_adminservice_updateeducationtrack",
-      "label": ".updateEducationTrack()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "CreateMaterialDto",
-      "file_type": "code",
-      "norm_label": ".updateeducationtrack()",
-      "source_file": "backend/src/admin/admin.service.ts",
-      "source_location": "L242"
-    },
-    {
-      "id": "backend_src_admin_admin_service_adminservice_updatematerial",
-      "label": ".updateMaterial()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "CreateMaterialDto",
-      "file_type": "code",
-      "norm_label": ".updatematerial()",
-      "source_file": "backend/src/admin/admin.service.ts",
-      "source_location": "L283"
-    },
-    {
-      "id": "backend_src_common_mappers_mapeducationtrack",
-      "label": "mapEducationTrack()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "CreateMaterialDto",
-      "file_type": "code",
-      "norm_label": "mapeducationtrack()",
-      "source_file": "backend/src/common/mappers.ts",
-      "source_location": "L95"
-    },
-    {
       "id": "backend_src_common_mappers_mapmaterial",
       "label": "mapMaterial()",
       "_callable": true,
@@ -4897,18 +4993,6 @@
       "norm_label": ".bytrack()",
       "source_file": "backend/src/education/education.service.ts",
       "source_location": "L15"
-    },
-    {
-      "id": "backend_src_education_education_service_educationservice_listtracks",
-      "label": ".listTracks()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "CreateMaterialDto",
-      "file_type": "code",
-      "norm_label": ".listtracks()",
-      "source_file": "backend/src/education/education.service.ts",
-      "source_location": "L9"
     },
     {
       "id": "backend_src_traffic_traffic_admin_controller_trafficadmincontroller_constructor",
@@ -5355,6 +5439,18 @@
       "source_location": "L40"
     },
     {
+      "id": "backend_src_admin_admin_controller_admincontroller_publishsubmission",
+      "label": ".publishSubmission()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 42,
+      "community_name": "CreateEventDto",
+      "file_type": "code",
+      "norm_label": ".publishsubmission()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L30"
+    },
+    {
       "id": "backend_src_admin_admin_service_adminservice_createevent",
       "label": ".createEvent()",
       "_callable": true,
@@ -5664,7 +5760,7 @@
       "file_type": "code",
       "norm_label": "build_scheduler()",
       "source_file": "bot/bars/main.py",
-      "source_location": "L59"
+      "source_location": "L55"
     },
     {
       "id": "bot_bars_main_configure_logging",
@@ -5688,7 +5784,7 @@
       "file_type": "code",
       "norm_label": "health()",
       "source_file": "bot/bars/main.py",
-      "source_location": "L119"
+      "source_location": "L115"
     },
     {
       "id": "bot_bars_main_main",
@@ -5700,7 +5796,7 @@
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "bot/bars/main.py",
-      "source_location": "L175"
+      "source_location": "L171"
     },
     {
       "id": "bot_bars_main_run_polling",
@@ -5712,7 +5808,7 @@
       "file_type": "code",
       "norm_label": "run_polling()",
       "source_file": "bot/bars/main.py",
-      "source_location": "L165"
+      "source_location": "L161"
     },
     {
       "id": "bot_bars_main_run_webhook",
@@ -5724,7 +5820,7 @@
       "file_type": "code",
       "norm_label": "run_webhook()",
       "source_file": "bot/bars/main.py",
-      "source_location": "L123"
+      "source_location": "L119"
     },
     {
       "id": "bot_bars_main_safe",
@@ -5736,7 +5832,7 @@
       "file_type": "code",
       "norm_label": "_safe()",
       "source_file": "bot/bars/main.py",
-      "source_location": "L51"
+      "source_location": "L47"
     },
     {
       "id": "bot_bars_main_shutdown",
@@ -5748,7 +5844,7 @@
       "file_type": "code",
       "norm_label": "shutdown()",
       "source_file": "bot/bars/main.py",
-      "source_location": "L110"
+      "source_location": "L106"
     },
     {
       "id": "bot_bars_main_startup",
@@ -5760,7 +5856,7 @@
       "file_type": "code",
       "norm_label": "startup()",
       "source_file": "bot/bars/main.py",
-      "source_location": "L83"
+      "source_location": "L79"
     },
     {
       "id": "bot_bars_probe_main",
@@ -6207,54 +6303,6 @@
       "source_location": "L41"
     },
     {
-      "id": "backend_src_traffic_traffic_cleanup_service_trafficcleanupservice_constructor",
-      "label": ".constructor()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": ".constructor()",
-      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
-      "source_location": "L29"
-    },
-    {
-      "id": "backend_src_traffic_traffic_cleanup_service_trafficcleanupservice_onmoduleinit",
-      "label": ".onModuleInit()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": ".onmoduleinit()",
-      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
-      "source_location": "L31"
-    },
-    {
-      "id": "backend_src_traffic_traffic_cleanup_service_trafficcleanupservice_rollupandprunetraffic",
-      "label": ".rollupAndPruneTraffic()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": ".rollupandprunetraffic()",
-      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
-      "source_location": "L37"
-    },
-    {
-      "id": "backend_src_traffic_traffic_cleanup_service_yesterdayinbishkek",
-      "label": "yesterdayInBishkek()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": "yesterdayinbishkek()",
-      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
-      "source_location": "L13"
-    },
-    {
       "id": "backend_src_bot_telegram_link_service_telegramlinkservice_createtoken",
       "label": ".createToken()",
       "_callable": true,
@@ -6435,6 +6483,54 @@
       "source_location": "L14"
     },
     {
+      "id": "backend_src_traffic_traffic_cleanup_service_trafficcleanupservice_constructor",
+      "label": ".constructor()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 50,
+      "community_name": "TrafficCleanupService",
+      "file_type": "code",
+      "norm_label": ".constructor()",
+      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
+      "source_location": "L29"
+    },
+    {
+      "id": "backend_src_traffic_traffic_cleanup_service_trafficcleanupservice_onmoduleinit",
+      "label": ".onModuleInit()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 50,
+      "community_name": "TrafficCleanupService",
+      "file_type": "code",
+      "norm_label": ".onmoduleinit()",
+      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
+      "source_location": "L31"
+    },
+    {
+      "id": "backend_src_traffic_traffic_cleanup_service_trafficcleanupservice_rollupandprunetraffic",
+      "label": ".rollupAndPruneTraffic()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 50,
+      "community_name": "TrafficCleanupService",
+      "file_type": "code",
+      "norm_label": ".rollupandprunetraffic()",
+      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
+      "source_location": "L37"
+    },
+    {
+      "id": "backend_src_traffic_traffic_cleanup_service_yesterdayinbishkek",
+      "label": "yesterdayInBishkek()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 50,
+      "community_name": "TrafficCleanupService",
+      "file_type": "code",
+      "norm_label": "yesterdayinbishkek()",
+      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
+      "source_location": "L13"
+    },
+    {
       "id": "backend_src_admin_admin_controller_admincontroller_analytics",
       "label": ".analytics()",
       "_callable": true,
@@ -6445,66 +6541,6 @@
       "norm_label": ".analytics()",
       "source_file": "backend/src/admin/admin.controller.ts",
       "source_location": "L122"
-    },
-    {
-      "id": "backend_src_admin_admin_controller_admincontroller_archiveevent",
-      "label": ".archiveEvent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".archiveevent()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L56"
-    },
-    {
-      "id": "backend_src_admin_admin_controller_admincontroller_deleteeducationtrack",
-      "label": ".deleteEducationTrack()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".deleteeducationtrack()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L101"
-    },
-    {
-      "id": "backend_src_admin_admin_controller_admincontroller_deleteevent",
-      "label": ".deleteEvent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".deleteevent()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L74"
-    },
-    {
-      "id": "backend_src_admin_admin_controller_admincontroller_deletematerial",
-      "label": ".deleteMaterial()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".deletematerial()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L117"
-    },
-    {
-      "id": "backend_src_admin_admin_controller_admincontroller_deletenews",
-      "label": ".deleteNews()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".deletenews()",
-      "source_file": "backend/src/admin/admin.controller.ts",
-      "source_location": "L85"
     },
     {
       "id": "backend_src_admin_admin_controller_admincontroller_listarchivedevents",
@@ -6543,18 +6579,6 @@
       "source_location": "L339"
     },
     {
-      "id": "backend_src_admin_admin_service_adminservice_archiveevent",
-      "label": ".archiveEvent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".archiveevent()",
-      "source_file": "backend/src/admin/admin.service.ts",
-      "source_location": "L206"
-    },
-    {
       "id": "backend_src_admin_admin_service_adminservice_constructor",
       "label": ".constructor()",
       "_callable": true,
@@ -6577,54 +6601,6 @@
       "norm_label": ".count()",
       "source_file": "backend/src/admin/admin.service.ts",
       "source_location": "L367"
-    },
-    {
-      "id": "backend_src_admin_admin_service_adminservice_deleteeducationtrack",
-      "label": ".deleteEducationTrack()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".deleteeducationtrack()",
-      "source_file": "backend/src/admin/admin.service.ts",
-      "source_location": "L258"
-    },
-    {
-      "id": "backend_src_admin_admin_service_adminservice_deleteevent",
-      "label": ".deleteEvent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".deleteevent()",
-      "source_file": "backend/src/admin/admin.service.ts",
-      "source_location": "L224"
-    },
-    {
-      "id": "backend_src_admin_admin_service_adminservice_deletematerial",
-      "label": ".deleteMaterial()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".deletematerial()",
-      "source_file": "backend/src/admin/admin.service.ts",
-      "source_location": "L297"
-    },
-    {
-      "id": "backend_src_admin_admin_service_adminservice_deletenews",
-      "label": ".deleteNews()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": ".deletenews()",
-      "source_file": "backend/src/admin/admin.service.ts",
-      "source_location": "L322"
     },
     {
       "id": "backend_src_admin_admin_service_adminservice_listarchivedevents",
@@ -7071,6 +7047,30 @@
       "source_location": "L93"
     },
     {
+      "id": "backend_src_admin_admin_controller_admincontroller_updatematerial",
+      "label": ".updateMaterial()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "UpdateMaterialDto",
+      "file_type": "code",
+      "norm_label": ".updatematerial()",
+      "source_file": "backend/src/admin/admin.controller.ts",
+      "source_location": "L111"
+    },
+    {
+      "id": "backend_src_admin_admin_service_adminservice_updatematerial",
+      "label": ".updateMaterial()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "UpdateMaterialDto",
+      "file_type": "code",
+      "norm_label": ".updatematerial()",
+      "source_file": "backend/src/admin/admin.service.ts",
+      "source_location": "L283"
+    },
+    {
       "id": "frontend_src_pages_privacypage_privacypage",
       "label": "PrivacyPage()",
       "_callable": true,
@@ -7092,7 +7092,7 @@
       "file_type": "code",
       "norm_label": "build_graph()",
       "source_file": "bot/bars/graph/agent.py",
-      "source_location": "L61"
+      "source_location": "L59"
     },
     {
       "id": "bot_bars_graph_agent_chat_model",
@@ -8518,17 +8518,6 @@
       "source_location": "L22"
     },
     {
-      "id": "backend_src_admin_admin_controller_ts_body",
-      "label": "Body",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "AdminController",
-      "file_type": "code",
-      "norm_label": "body",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "backend_src_admin_admin_controller_ts_controller",
       "label": "Controller",
       "_origin": "ast",
@@ -8540,6 +8529,28 @@
       "source_location": ""
     },
     {
+      "id": "backend_src_admin_admin_controller_ts_delete",
+      "label": "Delete",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": "delete",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "backend_src_admin_admin_controller_ts_httpcode",
+      "label": "HttpCode",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "AdminController",
+      "file_type": "code",
+      "norm_label": "httpcode",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "backend_src_admin_admin_controller_ts_param",
       "label": "Param",
       "_origin": "ast",
@@ -8547,17 +8558,6 @@
       "community_name": "AdminController",
       "file_type": "code",
       "norm_label": "param",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "backend_src_admin_admin_controller_ts_patch",
-      "label": "Patch",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "AdminController",
-      "file_type": "code",
-      "norm_label": "patch",
       "source_file": "",
       "source_location": ""
     },
@@ -10278,6 +10278,28 @@
       "source_location": ""
     },
     {
+      "id": "backend_src_traffic_traffic_module",
+      "label": "traffic.module.ts",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "app.module.ts",
+      "file_type": "code",
+      "norm_label": "traffic.module.ts",
+      "source_file": "backend/src/traffic/traffic.module.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "backend_src_traffic_traffic_module_ts_module",
+      "label": "Module",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "app.module.ts",
+      "file_type": "code",
+      "norm_label": "module",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "backend_src_bot_bot_auth_guard",
       "label": "bot-auth.guard.ts",
       "_origin": "ast",
@@ -11165,6 +11187,28 @@
       "community_name": "UpdateEventDto",
       "file_type": "code",
       "norm_label": "min",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "backend_src_admin_admin_controller_ts_body",
+      "label": "Body",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": "body",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "backend_src_admin_admin_controller_ts_patch",
+      "label": "Patch",
+      "_origin": "ast",
+      "community": 28,
+      "community_name": "UpdateSubmissionDto",
+      "file_type": "code",
+      "norm_label": "patch",
       "source_file": "",
       "source_location": ""
     },
@@ -12124,50 +12168,6 @@
       "norm_label": "update-material.dto.ts",
       "source_file": "backend/src/admin/dto/update-material.dto.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "backend_src_admin_dto_update_material_dto_ts_isarray",
-      "label": "IsArray",
-      "_origin": "ast",
-      "community": 32,
-      "community_name": "admin.service.ts",
-      "file_type": "code",
-      "norm_label": "isarray",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "backend_src_admin_dto_update_material_dto_ts_isint",
-      "label": "IsInt",
-      "_origin": "ast",
-      "community": 32,
-      "community_name": "admin.service.ts",
-      "file_type": "code",
-      "norm_label": "isint",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "backend_src_admin_dto_update_material_dto_ts_isoptional",
-      "label": "IsOptional",
-      "_origin": "ast",
-      "community": 32,
-      "community_name": "admin.service.ts",
-      "file_type": "code",
-      "norm_label": "isoptional",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "backend_src_admin_dto_update_material_dto_ts_isstring",
-      "label": "IsString",
-      "_origin": "ast",
-      "community": 32,
-      "community_name": "admin.service.ts",
-      "file_type": "code",
-      "norm_label": "isstring",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "backend_src_admin_dto_update_submission_dto",
@@ -13171,7 +13171,7 @@
       "source_location": "L1"
     },
     {
-      "id": "bot_bars_main_rationale_52",
+      "id": "bot_bars_main_rationale_48",
       "label": "Scheduler jobs must never die quietly, and must never take the loop down.",
       "_origin": "ast",
       "community": 44,
@@ -13179,7 +13179,7 @@
       "file_type": "rationale",
       "norm_label": "scheduler jobs must never die quietly, and must never take the loop down.",
       "source_file": "bot/bars/main.py",
-      "source_location": "L52"
+      "source_location": "L48"
     },
     {
       "id": "bot_bars_probe_rationale_1",
@@ -13560,66 +13560,11 @@
       "label": "traffic-admin.service.ts",
       "_origin": "ast",
       "community": 49,
-      "community_name": "traffic.module.ts",
+      "community_name": "traffic-admin.service.ts",
       "file_type": "code",
       "norm_label": "traffic-admin.service.ts",
       "source_file": "backend/src/traffic/traffic-admin.service.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "backend_src_traffic_traffic_cleanup_service",
-      "label": "traffic-cleanup.service.ts",
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": "traffic-cleanup.service.ts",
-      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "backend_src_traffic_traffic_cleanup_service_ts_cron",
-      "label": "Cron",
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": "cron",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "backend_src_traffic_traffic_cleanup_service_ts_injectable",
-      "label": "Injectable",
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": "injectable",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "backend_src_traffic_traffic_module",
-      "label": "traffic.module.ts",
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": "traffic.module.ts",
-      "source_file": "backend/src/traffic/traffic.module.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "backend_src_traffic_traffic_module_ts_module",
-      "label": "Module",
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "traffic.module.ts",
-      "file_type": "code",
-      "norm_label": "module",
-      "source_file": "",
-      "source_location": ""
     },
     {
       "id": "backend_src_auth_supabase_user_decorator_currentuser",
@@ -13831,13 +13776,35 @@
       "source_location": ""
     },
     {
-      "id": "backend_src_admin_admin_controller_ts_delete",
-      "label": "Delete",
+      "id": "backend_src_traffic_traffic_cleanup_service",
+      "label": "traffic-cleanup.service.ts",
       "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
+      "community": 50,
+      "community_name": "TrafficCleanupService",
       "file_type": "code",
-      "norm_label": "delete",
+      "norm_label": "traffic-cleanup.service.ts",
+      "source_file": "backend/src/traffic/traffic-cleanup.service.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "backend_src_traffic_traffic_cleanup_service_ts_cron",
+      "label": "Cron",
+      "_origin": "ast",
+      "community": 50,
+      "community_name": "TrafficCleanupService",
+      "file_type": "code",
+      "norm_label": "cron",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "backend_src_traffic_traffic_cleanup_service_ts_injectable",
+      "label": "Injectable",
+      "_origin": "ast",
+      "community": 50,
+      "community_name": "TrafficCleanupService",
+      "file_type": "code",
+      "norm_label": "injectable",
       "source_file": "",
       "source_location": ""
     },
@@ -13849,17 +13816,6 @@
       "community_name": "AdminService",
       "file_type": "code",
       "norm_label": "get",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "backend_src_admin_admin_controller_ts_httpcode",
-      "label": "HttpCode",
-      "_origin": "ast",
-      "community": 51,
-      "community_name": "AdminService",
-      "file_type": "code",
-      "norm_label": "httpcode",
       "source_file": "",
       "source_location": ""
     },
@@ -14432,6 +14388,50 @@
       "community_name": "SupabaseAuthGuard",
       "file_type": "code",
       "norm_label": "injectable",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "backend_src_admin_dto_update_material_dto_ts_isarray",
+      "label": "IsArray",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "UpdateMaterialDto",
+      "file_type": "code",
+      "norm_label": "isarray",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "backend_src_admin_dto_update_material_dto_ts_isint",
+      "label": "IsInt",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "UpdateMaterialDto",
+      "file_type": "code",
+      "norm_label": "isint",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "backend_src_admin_dto_update_material_dto_ts_isoptional",
+      "label": "IsOptional",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "UpdateMaterialDto",
+      "file_type": "code",
+      "norm_label": "isoptional",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "backend_src_admin_dto_update_material_dto_ts_isstring",
+      "label": "IsString",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "UpdateMaterialDto",
+      "file_type": "code",
+      "norm_label": "isstring",
       "source_file": "",
       "source_location": ""
     },
@@ -18045,7 +18045,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/graph/agent.py",
-      "source_location": "L62",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -18057,7 +18057,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/graph/agent.py",
-      "source_location": "L63",
+      "source_location": "L61",
       "weight": 1.0
     },
     {
@@ -18069,7 +18069,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/graph/agent.py",
-      "source_location": "L88",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -18081,7 +18081,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/graph/agent.py",
-      "source_location": "L88",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -18333,7 +18333,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L192",
+      "source_location": "L190",
       "weight": 1.0
     },
     {
@@ -18345,7 +18345,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L197",
+      "source_location": "L195",
       "weight": 1.0
     },
     {
@@ -18357,7 +18357,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L247",
+      "source_location": "L245",
       "weight": 1.0
     },
     {
@@ -18369,7 +18369,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L260",
+      "source_location": "L258",
       "weight": 1.0
     },
     {
@@ -18381,7 +18381,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L265",
+      "source_location": "L263",
       "weight": 1.0
     },
     {
@@ -18393,7 +18393,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L271",
+      "source_location": "L269",
       "weight": 1.0
     },
     {
@@ -18405,7 +18405,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L273",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -18417,7 +18417,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L224",
+      "source_location": "L222",
       "weight": 1.0
     },
     {
@@ -18429,7 +18429,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L205",
+      "source_location": "L203",
       "weight": 1.0
     },
     {
@@ -18441,7 +18441,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L213",
+      "source_location": "L211",
       "weight": 1.0
     },
     {
@@ -18453,7 +18453,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L213",
+      "source_location": "L211",
       "weight": 1.0
     },
     {
@@ -18465,7 +18465,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L127",
+      "source_location": "L125",
       "weight": 1.0
     },
     {
@@ -18477,7 +18477,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L129",
+      "source_location": "L127",
       "weight": 1.0
     },
     {
@@ -18489,7 +18489,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L131",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
@@ -18501,7 +18501,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L131",
+      "source_location": "L129",
       "weight": 1.0
     },
     {
@@ -18549,7 +18549,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L186",
+      "source_location": "L184",
       "weight": 1.0
     },
     {
@@ -18561,7 +18561,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L175",
+      "source_location": "L173",
       "weight": 1.0
     },
     {
@@ -18573,7 +18573,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L157",
+      "source_location": "L155",
       "weight": 1.0
     },
     {
@@ -18669,7 +18669,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L60",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -18681,7 +18681,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L61",
+      "source_location": "L57",
       "weight": 1.0
     },
     {
@@ -18693,7 +18693,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L63",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -18705,7 +18705,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L63",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -18717,7 +18717,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L69",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -18729,7 +18729,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L75",
+      "source_location": "L71",
       "weight": 1.0
     },
     {
@@ -18753,7 +18753,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L180",
+      "source_location": "L176",
       "weight": 1.0
     },
     {
@@ -18765,7 +18765,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L181",
+      "source_location": "L177",
       "weight": 1.0
     },
     {
@@ -18777,7 +18777,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L181",
+      "source_location": "L177",
       "weight": 1.0
     },
     {
@@ -18789,7 +18789,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L166",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -18801,7 +18801,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L172",
+      "source_location": "L168",
       "weight": 1.0
     },
     {
@@ -18813,7 +18813,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L126",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -18825,7 +18825,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L132",
+      "source_location": "L128",
       "weight": 1.0
     },
     {
@@ -18837,7 +18837,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L162",
+      "source_location": "L158",
       "weight": 1.0
     },
     {
@@ -18849,7 +18849,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L114",
+      "source_location": "L110",
       "weight": 1.0
     },
     {
@@ -18861,19 +18861,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L115",
-      "weight": 1.0
-    },
-    {
-      "source": "bot_bars_main_startup",
-      "target": "bot_bars_main_build_scheduler",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "bot/bars/main.py",
-      "source_location": "L100",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -18885,7 +18873,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L105",
+      "source_location": "L101",
       "weight": 1.0
     },
     {
@@ -18897,7 +18885,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L105",
+      "source_location": "L101",
       "weight": 1.0
     },
     {
@@ -18909,7 +18897,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L84",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -18921,7 +18909,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L87",
+      "source_location": "L83",
       "weight": 1.0
     },
     {
@@ -18933,7 +18921,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L89",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -18945,7 +18933,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L94",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -18957,7 +18945,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L96",
+      "source_location": "L92",
       "weight": 1.0
     },
     {
@@ -18969,7 +18957,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L97",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
+      "source": "bot_bars_main_startup",
+      "target": "bot_bars_main_build_scheduler",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "bot/bars/main.py",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -26109,7 +26109,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L242",
+      "source_location": "L240",
       "weight": 1.0
     },
     {
@@ -26121,7 +26121,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L255",
+      "source_location": "L253",
       "weight": 1.0
     },
     {
@@ -26517,7 +26517,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "bot/bars/main.py",
-      "source_location": "L83",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -39717,7 +39717,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/graph/agent.py",
-      "source_location": "L61",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -39813,7 +39813,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L180",
+      "source_location": "L178",
       "weight": 1.0
     },
     {
@@ -39837,7 +39837,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L191",
+      "source_location": "L189",
       "weight": 1.0
     },
     {
@@ -39849,7 +39849,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L243",
+      "source_location": "L241",
       "weight": 1.0
     },
     {
@@ -39861,7 +39861,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L233",
+      "source_location": "L231",
       "weight": 1.0
     },
     {
@@ -39873,7 +39873,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L256",
+      "source_location": "L254",
       "weight": 1.0
     },
     {
@@ -39885,7 +39885,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L221",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -39897,7 +39897,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L228",
+      "source_location": "L226",
       "weight": 1.0
     },
     {
@@ -39909,7 +39909,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L204",
+      "source_location": "L202",
       "weight": 1.0
     },
     {
@@ -39933,7 +39933,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L185",
+      "source_location": "L183",
       "weight": 1.0
     },
     {
@@ -39945,7 +39945,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L174",
+      "source_location": "L172",
       "weight": 1.0
     },
     {
@@ -39957,7 +39957,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L153",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -39969,7 +39969,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L153",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -39981,7 +39981,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/main.py",
-      "source_location": "L59",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -39993,7 +39993,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/main.py",
-      "source_location": "L119",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -40005,7 +40005,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/main.py",
-      "source_location": "L110",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -40017,7 +40017,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "bot/bars/main.py",
-      "source_location": "L110",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -40161,7 +40161,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "bot/bars/main.py",
-      "source_location": "L119",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -42809,7 +42809,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/graph/agent.py",
-      "source_location": "L61",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -42853,7 +42853,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L153",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -42864,7 +42864,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L174",
+      "source_location": "L172",
       "weight": 1.0
     },
     {
@@ -42875,7 +42875,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L180",
+      "source_location": "L178",
       "weight": 1.0
     },
     {
@@ -42886,7 +42886,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L185",
+      "source_location": "L183",
       "weight": 1.0
     },
     {
@@ -42897,7 +42897,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L191",
+      "source_location": "L189",
       "weight": 1.0
     },
     {
@@ -42908,7 +42908,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L204",
+      "source_location": "L202",
       "weight": 1.0
     },
     {
@@ -42919,7 +42919,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L221",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -42930,7 +42930,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L228",
+      "source_location": "L226",
       "weight": 1.0
     },
     {
@@ -42941,7 +42941,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L233",
+      "source_location": "L231",
       "weight": 1.0
     },
     {
@@ -42952,7 +42952,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L243",
+      "source_location": "L241",
       "weight": 1.0
     },
     {
@@ -42963,7 +42963,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L256",
+      "source_location": "L254",
       "weight": 1.0
     },
     {
@@ -43051,7 +43051,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/main.py",
-      "source_location": "L110",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -43062,7 +43062,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/main.py",
-      "source_location": "L119",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -43073,7 +43073,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/main.py",
-      "source_location": "L123",
+      "source_location": "L119",
       "weight": 1.0
     },
     {
@@ -43084,7 +43084,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/main.py",
-      "source_location": "L165",
+      "source_location": "L161",
       "weight": 1.0
     },
     {
@@ -43095,7 +43095,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/main.py",
-      "source_location": "L175",
+      "source_location": "L171",
       "weight": 1.0
     },
     {
@@ -43117,7 +43117,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/main.py",
-      "source_location": "L51",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -43128,7 +43128,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/main.py",
-      "source_location": "L59",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -43139,7 +43139,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/main.py",
-      "source_location": "L83",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -50005,14 +50005,14 @@
       "weight": 1.0
     },
     {
-      "source": "bot_bars_main_rationale_52",
+      "source": "bot_bars_main_rationale_48",
       "target": "bot_bars_main_safe",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "bot/bars/main.py",
-      "source_location": "L52",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -51016,7 +51016,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "bot/bars/main.py",
-      "source_location": "L135",
+      "source_location": "L131",
       "weight": 1.0
     },
     {
@@ -51112,7 +51112,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "bot/bars/main.py",
-      "source_location": "L130",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -51267,7 +51267,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "bot/bars/graph/agent.py",
-      "source_location": "L65",
+      "source_location": "L63",
       "weight": 0.8
     },
     {
@@ -51289,7 +51289,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L248",
+      "source_location": "L246",
       "weight": 0.8
     },
     {
@@ -51300,7 +51300,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "bot/bars/handlers.py",
-      "source_location": "L158",
+      "source_location": "L156",
       "weight": 0.8
     },
     {
@@ -51887,5 +51887,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "606bc5890b173bbee2977daf11908087e0eb3446"
+  "built_at_commit": "bb8c3b734849ab627a6d6e34f18c1ae27b74935d"
 }

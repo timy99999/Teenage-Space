@@ -118,7 +118,9 @@ async def process(job: Job) -> None:
             ),
             None,
         )
-        text = str(answer.content).strip() if answer and answer.content else ""
+        # .content is a list of blocks on langchain-core 1.x; .text flattens both
+        # that and the plain-string shape, so neither leaks its repr into Telegram.
+        text = answer.text.strip() if answer else ""
         if not text:
             text = "Не смог собрать ответ. Попробуй переформулировать?"
 
