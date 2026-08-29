@@ -1,8 +1,9 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query, UseGuards } from '@nestjs/common';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 import { SuperAdminGuard } from '../auth/super-admin.guard';
 import { BarsAdminService } from './bars-admin.service';
 import { BarsQueryDto } from './dto/bars-query.dto';
+import { BarsCreditDto } from './dto/bars-credit.dto';
 
 const DEFAULT_DAYS = 14;
 
@@ -26,5 +27,11 @@ export class BarsAdminController {
   @Get('chats/:chatId/messages')
   getMessages(@Param('chatId') chatId: string) {
     return this.bars.getMessages(chatId);
+  }
+
+  /** Record a Gemini prepaid top-up (amount + date) for the balance estimate. */
+  @Put('credit')
+  setCredit(@Body() dto: BarsCreditDto) {
+    return this.bars.setCredit(dto);
   }
 }

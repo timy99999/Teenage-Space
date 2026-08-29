@@ -7,11 +7,14 @@ exact text we embed means an unchanged catalogue costs zero Gemini calls.
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import logging
 
+from . import analytics
 from .api_client import api
 from .catalog import catalog, embedding_text
+from .config import get_settings
 from .db import execute, fetch_all, to_vector_literal
 from .embeddings import embed_documents
 
@@ -41,9 +44,11 @@ async def reindex() -> dict[str, int]:
         if existing.get(event_id) != digest:
             stale.append((event_id, text, digest))
 
+    embedded_chars = 0
     for start in range(0, len(stale), BATCH_SIZE):
         batch = stale[start : start + BATCH_SIZE]
         vectors = await embed_documents([text for _, text, _ in batch])
+        embedded_chars += sum(len(text) for _, text, _ in batch)
         for (event_id, _, digest), vector in zip(batch, vectors, strict=True):
             await execute(
                 """
@@ -61,6 +66,10 @@ async def reindex() -> dict[str, int]:
     dropped = [event_id for event_id in existing if event_id not in live]
     if dropped:
         await execute("delete from bot_event_embeddings where event_id = any(%s)", (dropped,))
+
+    if embedded_chars:
+        with contextlib.suppress(Exception):
+            await analytics.record_embedding_usage(get_settings().gemini_embed_model, embedded_chars)
 
     # A fresh index is only useful next to a fresh catalogue.
     await catalog().snapshot(force=True)

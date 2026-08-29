@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
-import type { BarsAnalytics, BarsChatRow, BarsMessage } from '../types';
+import type { BarsAnalytics, BarsChatRow, BarsCredit, BarsMessage } from '../types';
+
+/** Record a Gemini prepaid top-up (amount + date). Returns the recomputed estimate. */
+export function setBarsCredit(input: { toppedUpUsd: number; toppedUpAt?: string; note?: string }) {
+  return api.put<BarsCredit | null>('/admin/bars/credit', input);
+}
 
 const CHATS_INTERVAL_MS = 30000;
 

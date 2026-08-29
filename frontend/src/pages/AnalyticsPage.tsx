@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCapacity } from '../hooks/useCapacity';
 import { useTrafficSummary, useTrafficOnline } from '../hooks/useTraffic';
-import { useBarsAnalytics } from '../hooks/useBars';
+import { useBarsAnalytics, setBarsCredit } from '../hooks/useBars';
+import type { BarsCredit } from '../types';
 import { BarChart } from '../components/BarChart';
 
 const BUCKET_LABELS: Record<string, string> = {
@@ -331,8 +332,98 @@ function TrafficTab() {
   );
 }
 
+function BarsCreditCard({ credit, onSaved }: { credit: BarsCredit | null; onSaved: () => void }) {
+  const [editing, setEditing] = useState(false);
+  const [amount, setAmount] = useState(credit ? String(credit.toppedUpUsd) : '');
+  const [date, setDate] = useState(credit?.toppedUpAt ?? new Date().toISOString().slice(0, 10));
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const save = async () => {
+    const value = Number(amount.replace(',', '.'));
+    if (!Number.isFinite(value) || value < 0) {
+      setError('Введите сумму пополнения в долларах');
+      return;
+    }
+    setSaving(true);
+    setError(null);
+    try {
+      await setBarsCredit({ toppedUpUsd: value, toppedUpAt: date });
+      setEditing(false);
+      onSaved();
+    } catch {
+      setError('Не удалось сохранить');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const percent = credit && credit.toppedUpUsd > 0
+    ? Math.min(100, (credit.remainingUsd / credit.toppedUpUsd) * 100)
+    : 0;
+  const low = percent <= 20;
+
+  return (
+    <div className="ts-card-panel">
+      <h2>Баланс Gemini (оценка)</h2>
+      {credit && !editing ? (
+        <>
+          <div className="desc">
+            ≈ ${credit.remainingUsd.toFixed(2)} из ${credit.toppedUpUsd.toFixed(2)} · потрачено с{' '}
+            {credit.toppedUpAt}: ${credit.spentSinceUsd.toFixed(2)}
+          </div>
+          <div className="ts-usage-bar">
+            <div className={`ts-usage-bar-fill${low ? ' warn' : ''}`} style={{ width: `${percent}%` }} />
+          </div>
+          <div className="desc" style={{ marginTop: 12 }}>
+            Оценка по нашему подсчёту токенов, не реальный баланс Google. Настоящий — в AI Studio →
+            Billing. Не учитывает эмбеддинги поисковых запросов и возможный free tier.
+          </div>
+          <button className="ts-theme-btn" style={{ marginTop: 12 }} onClick={() => setEditing(true)}>
+            Изменить пополнение
+          </button>
+        </>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 320 }}>
+          <label className="desc">
+            Сумма пополнения, $
+            <input
+              className="ts-input"
+              inputMode="decimal"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              style={{ width: '100%', marginTop: 4 }}
+            />
+          </label>
+          <label className="desc">
+            Дата пополнения
+            <input
+              className="ts-input"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              style={{ width: '100%', marginTop: 4 }}
+            />
+          </label>
+          {error && <div className="desc" style={{ color: 'var(--ts-danger, #d33)' }}>{error}</div>}
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button className="ts-theme-btn on" onClick={save} disabled={saving}>
+              {saving ? 'Сохранение...' : 'Сохранить'}
+            </button>
+            {credit && (
+              <button className="ts-theme-btn" onClick={() => setEditing(false)} disabled={saving}>
+                Отмена
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function BarsTab() {
-  const { analytics } = useBarsAnalytics(BARS_WINDOW_DAYS, true);
+  const { analytics, reload } = useBarsAnalytics(BARS_WINDOW_DAYS, true);
 
   if (!analytics) return <p className="ts-center-note">Загрузка...</p>;
 
@@ -341,7 +432,9 @@ function BarsTab() {
 
   return (
     <div className="ts-publish-col" style={{ marginTop: 20 }}>
-      <div className="desc">За последние {BARS_WINDOW_DAYS} дней.</div>
+      <BarsCreditCard credit={analytics.credit} onSaved={reload} />
+
+      <div className="desc">Статистика ниже — за последние {BARS_WINDOW_DAYS} дней.</div>
 
       <div className="ts-card-panel">
         <div className="ts-admin-stats">

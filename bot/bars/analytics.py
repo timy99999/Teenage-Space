@@ -27,6 +27,15 @@ logger = logging.getLogger(__name__)
 # not forensics.
 MAX_TEXT = 4000
 
+# bot_usage_daily rows for non-chat spend (catalogue embeddings) are booked against
+# this sentinel chat id. The admin aggregates exclude it from per-chat views.
+SYSTEM_CHAT_ID = 0
+
+# Embeddings are billed on input tokens and the LangChain wrapper does not report a
+# count, so estimate from text length. Rough, but embeddings are a small slice of a
+# prepaid balance and this only feeds an estimate.
+CHARS_PER_TOKEN = 4
+
 
 def _clip(text: str | None) -> str:
     text = text or ""
@@ -95,6 +104,12 @@ async def record_usage(chat_id: int, usage_by_model: dict[str, dict]) -> None:
             )
         except Exception:
             logger.warning("Could not record usage for chat %s", chat_id, exc_info=True)
+
+
+async def record_embedding_usage(model: str, total_chars: int) -> None:
+    """Book a catalogue re-embed against the system chat, for the balance estimate."""
+    est_tokens = max(total_chars // CHARS_PER_TOKEN, 1)
+    await record_usage(SYSTEM_CHAT_ID, {model: {"input_tokens": est_tokens, "output_tokens": 0}})
 
 
 async def sweep_transcripts(ttl_days: int) -> int:

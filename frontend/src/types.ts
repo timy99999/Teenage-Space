@@ -271,7 +271,17 @@ export interface BarsMessage {
   createdAt: string;
 }
 
+export interface BarsCredit {
+  toppedUpUsd: number;
+  toppedUpAt: string;
+  note: string | null;
+  updatedAt: string;
+  spentSinceUsd: number;
+  remainingUsd: number;
+}
+
 export interface BarsAnalytics {
+  credit: BarsCredit | null;
   summary: {
     messages: number;
     userMessages: number;
