@@ -1,16 +1,16 @@
-# Graph Report - Teenage Space  (2026-08-28)
+# Graph Report - Teenage Space  (2026-08-29)
 
 ## Corpus Check
-- 194 files · ~58,472 words
+- 194 files · ~58,560 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1435 nodes · 2997 edges · 74 communities (69 shown, 5 thin omitted)
+- 1435 nodes · 2997 edges · 72 communities (67 shown, 5 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 100 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bb8c3b73`
+- Built from commit: `606bc589`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -63,15 +63,13 @@
 - get_settings
 - HealthController
 - ErrorBoundary
-- traffic-admin.service.ts
-- TrafficCleanupService
+- traffic.module.ts
 - AdminService
 - deploy
 - tools.py
 - HomePage.tsx
 - mappers.ts
 - SupabaseAuthGuard
-- UpdateMaterialDto
 - PrivacyPage.tsx
 - traffic.service.ts
 - agent.py
@@ -121,15 +119,15 @@
 - **TS Brand Logo Asset Usage** — frontend_public_favicon_tslogomark, frontend_src_assets_logo_ts_tslogomark, frontend_index_htmlentrypoint, frontend_index_seometatags [INFERRED 0.80]
 - **Push-to-Main Auto-Deploy Pipeline** — claude_autopushagreement, github_workflows_ci_buildcheckworkflow, github_workflows_supabase_migrations_migratejob, readme_migrationsautomation [INFERRED 0.85]
 
-## Communities (74 total, 5 thin omitted)
+## Communities (72 total, 5 thin omitted)
 
 ### Community 0 - "useAuth"
 Cohesion: 0.10
 Nodes (37): Chip(), ChipProps, CardMenu(), EventCard(), EventCardAdminActions, instagramUrl(), EventModal(), instagramUrl() (+29 more)
 
 ### Community 1 - "AdminController"
-Cohesion: 0.15
-Nodes (7): AdminController, Controller, Delete, HttpCode, Param, Post, UseGuards
+Cohesion: 0.19
+Nodes (7): AdminController, Body, Controller, Param, Patch, Post, UseGuards
 
 ### Community 2 - "TelegramLinkService"
 Cohesion: 0.07
@@ -200,8 +198,8 @@ Cohesion: 0.13
 Nodes (13): EditAccountPage, ProfilePage, ConfirmDialog(), ConfirmDialogProps, ImageUploadField(), onPick(), ImageUploadFieldProps, anonKey (+5 more)
 
 ### Community 19 - "app.module.ts"
-Cohesion: 0.13
-Nodes (18): AdminModule, Module, AppModule, Module, AuthModule, Module, BotModule, Module (+10 more)
+Cohesion: 0.14
+Nodes (16): AdminModule, Module, AppModule, Module, AuthModule, Module, BotModule, Module (+8 more)
 
 ### Community 20 - "CreateNewsDto"
 Cohesion: 0.40
@@ -236,24 +234,24 @@ Cohesion: 0.20
 Nodes (10): IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, IsUrl, Max (+2 more)
 
 ### Community 28 - "UpdateSubmissionDto"
-Cohesion: 0.11
-Nodes (13): Body, Patch, IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString (+5 more)
+Cohesion: 0.18
+Nodes (10): IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, IsUrl, Max (+2 more)
 
 ### Community 29 - "CapacityService"
 Cohesion: 0.16
 Nodes (8): CapacityController, Controller, Get, UseGuards, CapacityService, StorageStatRow, Injectable, UserStatRow
 
 ### Community 30 - "CreateMaterialDto"
-Cohesion: 0.22
-Nodes (6): CreateMaterialDto, IsArray, IsInt, IsOptional, IsString, mapMaterial()
+Cohesion: 0.15
+Nodes (7): CreateMaterialDto, IsArray, IsInt, IsOptional, IsString, mapEducationTrack(), mapMaterial()
 
 ### Community 31 - "nest-cli.json"
 Cohesion: 0.33
 Nodes (5): collection, compilerOptions, deleteOutDir, $schema, sourceRoot
 
 ### Community 32 - "admin.service.ts"
-Cohesion: 0.16
-Nodes (10): CreateEducationTrackDto, IsOptional, IsString, URL_OPTS, URL_OPTS, IsOptional, IsString, UpdateEducationTrackDto (+2 more)
+Cohesion: 0.13
+Nodes (15): CreateEducationTrackDto, IsOptional, IsString, URL_OPTS, URL_OPTS, IsOptional, IsString, UpdateEducationTrackDto (+7 more)
 
 ### Community 33 - "tsconfig.build.json"
 Cohesion: 0.33
@@ -276,7 +274,7 @@ Cohesion: 0.13
 Nodes (28): api(), bishkek_now(), bishkek_today(), Catalog, deadline_in_days(), embedding_text(), is_open(), matches() (+20 more)
 
 ### Community 42 - "CreateEventDto"
-Cohesion: 0.14
+Cohesion: 0.15
 Nodes (12): deriveAgeLabel(), deriveShortDesc(), CreateEventDto, IsArray, IsBoolean, IsIn, IsInt, IsOptional (+4 more)
 
 ### Community 43 - "types.ts"
@@ -303,17 +301,13 @@ Nodes (6): HealthController, Controller, Get, SkipThrottle, HealthModule, Module
 Cohesion: 0.22
 Nodes (3): ErrorBoundary, Props, State
 
-### Community 49 - "traffic-admin.service.ts"
-Cohesion: 0.25
-Nodes (7): CardUniqueViewsRow, DailyTrendRow, DeviceRow, HourlyRow, LoginSplitRow, TopCardRow, TopLinkRow
-
-### Community 50 - "TrafficCleanupService"
-Cohesion: 0.32
-Nodes (4): TrafficCleanupService, Cron, Injectable, yesterdayInBishkek()
+### Community 49 - "traffic.module.ts"
+Cohesion: 0.12
+Nodes (13): CardUniqueViewsRow, DailyTrendRow, DeviceRow, HourlyRow, LoginSplitRow, TopCardRow, TopLinkRow, TrafficCleanupService (+5 more)
 
 ### Community 51 - "AdminService"
-Cohesion: 0.19
-Nodes (5): Get, Query, AdminService, Inject, Injectable
+Cohesion: 0.11
+Nodes (7): Delete, Get, HttpCode, Query, AdminService, Inject, Injectable
 
 ### Community 52 - "deploy"
 Cohesion: 0.29
@@ -334,10 +328,6 @@ Nodes (13): BAN_MS, EducationTrackRow, EventRow, mapProfile(), mapSubmissionAdmi
 ### Community 56 - "SupabaseAuthGuard"
 Cohesion: 0.31
 Nodes (4): jwtExpiryMs(), SupabaseAuthGuard, Inject, Injectable
-
-### Community 57 - "UpdateMaterialDto"
-Cohesion: 0.33
-Nodes (5): IsArray, IsInt, IsOptional, IsString, UpdateMaterialDto
 
 ### Community 58 - "PrivacyPage.tsx"
 Cohesion: 0.33
@@ -403,7 +393,7 @@ Nodes (5): AuthProvider(), checkBanStatus(), hasPerm(), isActiveBan(), AdminPage
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SupabaseService` connect `SupabaseService` to `TelegramLinkService`, `CurrentUser`, `events.service.ts`, `CreateSubmissionDto`, `TrafficService`, `news.service.ts`, `ratings.controller.ts`, `supabase-auth.guard.ts`, `CapacityService`, `admin.service.ts`, `TrafficAdminService`, `HealthController`, `traffic-admin.service.ts`, `TrafficCleanupService`, `AdminService`, `mappers.ts`, `SupabaseAuthGuard`, `traffic.service.ts`, `UsersAdminService`, `AuthController`?**
+- **Why does `SupabaseService` connect `SupabaseService` to `TelegramLinkService`, `CurrentUser`, `events.service.ts`, `CreateSubmissionDto`, `TrafficService`, `news.service.ts`, `ratings.controller.ts`, `supabase-auth.guard.ts`, `CapacityService`, `admin.service.ts`, `TrafficAdminService`, `HealthController`, `traffic.module.ts`, `AdminService`, `mappers.ts`, `SupabaseAuthGuard`, `traffic.service.ts`, `UsersAdminService`, `AuthController`?**
   _High betweenness centrality (0.047) - this node is a cross-community bridge._
 - **Why does `CurrentUser` connect `CurrentUser` to `AuthController`, `CreateSubmissionDto`, `ratings.controller.ts`, `supabase-auth.guard.ts`, `SupabaseService`, `UsersAdminController`, `favorites.controller.ts`?**
   _High betweenness centrality (0.016) - this node is a cross-community bridge._
