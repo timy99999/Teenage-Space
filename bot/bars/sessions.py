@@ -83,12 +83,31 @@ async def touch(chat_id: int) -> tuple[str, bool]:
     return thread_id, True
 
 
-async def reset(chat_id: int) -> None:
-    """/reset — forget now instead of waiting three days."""
+async def reset(chat_id: int) -> str:
+    """/reset and /start — forget the current conversation and start a clean thread.
+
+    Rotates the thread in place: the bot_sessions row stays, repointed at a fresh
+    (empty) thread with the clock reset, and the new thread_id is returned. Deleting
+    the row instead would make the very next message look like a brand-new chat and
+    trigger a second greeting.
+    """
     row = await fetch_one("select thread_id from bot_sessions where chat_id = %s", (chat_id,))
     if row:
         await _drop_thread(row["thread_id"])
-    await execute("delete from bot_sessions where chat_id = %s", (chat_id,))
+
+    thread_id = _new_thread_id(chat_id)
+    await execute(
+        """
+        insert into bot_sessions (chat_id, thread_id, started_at, last_activity_at)
+        values (%s, %s, now(), now())
+        on conflict (chat_id) do update
+          set thread_id = excluded.thread_id,
+              started_at = now(),
+              last_activity_at = now()
+        """,
+        (chat_id, thread_id),
+    )
+    return thread_id
 
 
 async def sweep() -> int:
@@ -115,4 +134,5 @@ async def sweep() -> int:
     if purged:
         logger.info("Purged %d journalled message(s) past retention", purged)
 
+    runtime.prune_chat_locks()
     return len(threads)

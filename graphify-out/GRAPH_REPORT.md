@@ -1,21 +1,21 @@
 # Graph Report - Teenage Space  (2026-08-29)
 
 ## Corpus Check
-- 245 files · ~75,014 words
+- 245 files · ~75,389 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1678 nodes · 3301 edges · 111 communities (74 shown, 37 thin omitted)
+- 1688 nodes · 3318 edges · 117 communities (80 shown, 37 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 104 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c92334fb`
+- Built from commit: `f43cf565`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- GridPage.tsx
+- useUI
 - BarsQueryDto
 - get_settings
 - dependencies
@@ -25,7 +25,7 @@
 - AdminPage.tsx
 - EventsService
 - CreateSubmissionDto
-- traffic.service.ts
+- traffic.module.ts
 - news.service.ts
 - ratings.controller.ts
 - compilerOptions
@@ -36,12 +36,12 @@
 - execute
 - app.module.ts
 - CreateNewsDto
-- AuthPage
+- refreshProfile
 - UsersAdminService
 - PrivacyPage.tsx
-- types.ts
+- TelegramLinkService
 - handlers.py
-- AuthContext.tsx
+- useEvents.ts
 - UpdateEventDto
 - UpdateSubmissionDto
 - CapacityService
@@ -53,14 +53,14 @@
 - vite-env.d.ts
 - vercel.json
 - Graphify Query Workflow
-- traffic-admin.service.ts
+- TrafficAdminService
 - AnalyticsPage.tsx
 - catalog.py
 - CreateEventDto
-- api
+- ProfilePage.tsx
 - agent.py
 - plans.py
-- indexer.py
+- AuthPage
 - HealthController
 - UserAccountPage.tsx
 - SupabaseService
@@ -77,10 +77,10 @@
 - ErrorBoundary
 - ChatQueues
 - ApiClient
-- api.ts
+- tracking.ts
 - Section Definitions
 - SupabaseAuthGuard
-- AuthController
+- UpdateProfileDto
 - bot.controller.ts
 - deploy
 - Барс — Telegram-агент Teenage Space
@@ -89,6 +89,7 @@
 - graph/__init__.py
 - bars
 - BarsAdminController
+- TrackLinkClickDto
 - advanced-full-text-search.md
 - advanced-jsonb-indexing.md
 - conn-idle-timeout.md
@@ -124,7 +125,12 @@
 - bars-admin.service.ts
 - CreateMaterialDto
 - BarsCreditDto
+- TrafficController
 - TrafficCleanupService
+- TrafficService
+- TrackCardViewDto
+- traffic-admin.service.ts
+- TrafficQueryDto
 
 ## God Nodes (most connected - your core abstractions)
 1. `useAuth()` - 73 edges
@@ -158,19 +164,19 @@
 - **TS Brand Logo Asset Usage** — frontend_public_favicon_tslogomark, frontend_src_assets_logo_ts_tslogomark, frontend_index_htmlentrypoint, frontend_index_seometatags [INFERRED 0.80]
 - **Push-to-Main Auto-Deploy Pipeline** — claude_autopushagreement, github_workflows_ci_buildcheckworkflow, github_workflows_supabase_migrations_migratejob, readme_migrationsautomation [INFERRED 0.85]
 
-## Communities (111 total, 37 thin omitted)
+## Communities (117 total, 37 thin omitted)
 
-### Community 0 - "GridPage.tsx"
-Cohesion: 0.16
-Nodes (17): SettingsPage, CardSizeSlider(), Toast(), Theme, UIContext, UIContextValue, useUI(), plural() (+9 more)
+### Community 0 - "useUI"
+Cohesion: 0.10
+Nodes (17): App(), CardSizeSlider(), ImageUploadField(), onPick(), ImageUploadFieldProps, NetTroubleToast(), Toast(), Theme (+9 more)
 
 ### Community 1 - "BarsQueryDto"
 Cohesion: 0.20
 Nodes (8): Get, Query, BarsQueryDto, IsInt, IsOptional, Max, Min, Type
 
 ### Community 2 - "get_settings"
-Cohesion: 0.10
-Nodes (33): AsyncIOScheduler, BaseSettings, close_api(), Thin async client for the Teenage Space NestJS API. Public catalogue reads go…, get_settings(), All configuration in one place, loaded from the environment (or bot/.env…, Railway injects RAILWAY_PUBLIC_DOMAIN; a custom domain overrides it via env., Settings (+25 more)
+Cohesion: 0.08
+Nodes (47): AsyncIOScheduler, BaseSettings, close_api(), Thin async client for the Teenage Space NestJS API. Public catalogue reads go…, get_settings(), All configuration in one place, loaded from the environment (or bot/.env…, Railway injects RAILWAY_PUBLIC_DOMAIN; a custom domain overrides it via env., Settings (+39 more)
 
 ### Community 3 - "dependencies"
 Cohesion: 0.04
@@ -181,8 +187,8 @@ Cohesion: 0.08
 Nodes (33): Auto-Push Working Agreement, Backend Build Job, Build Check Workflow, Frontend Build Job, Check Required Secrets Step, Link Project Step, Migrate Job, Push Migrations Step (+25 more)
 
 ### Community 5 - "FavoritesService"
-Cohesion: 0.17
-Nodes (7): FavoritesController, Controller, Param, Post, UseGuards, FavoritesService, Injectable
+Cohesion: 0.24
+Nodes (5): FavoritesController, Controller, UseGuards, FavoritesService, Injectable
 
 ### Community 6 - "frontend/package.json"
 Cohesion: 0.07
@@ -190,26 +196,26 @@ Nodes (28): dependencies, react, react-dom, react-router-dom, @supabase/supabase
 
 ### Community 7 - "AdminPage.tsx"
 Cohesion: 0.06
-Nodes (44): AdminPage, Chip(), ChipProps, EditEventModal(), save(), EditEventModalProps, emptyPostForm(), eventToPostForm() (+36 more)
+Nodes (48): AdminPage, Chip(), ChipProps, EditEventModal(), save(), EditEventModalProps, EventCardProps, emptyPostForm() (+40 more)
 
 ### Community 8 - "EventsService"
 Cohesion: 0.09
 Nodes (19): EventsController, CacheTTL, Controller, Get, Header, Param, Query, UseInterceptors (+11 more)
 
 ### Community 9 - "CreateSubmissionDto"
-Cohesion: 0.10
-Nodes (21): mapSubmission(), CreateSubmissionDto, IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString (+13 more)
+Cohesion: 0.09
+Nodes (22): mapSubmission(), CreateSubmissionDto, IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString (+14 more)
 
-### Community 10 - "traffic.service.ts"
-Cohesion: 0.06
-Nodes (40): DEVICE_TYPES, HeartbeatDto, IsBoolean, IsIn, IsUUID, DEVICE_TYPES, TARGET_TYPES, TrackCardViewDto (+32 more)
+### Community 10 - "traffic.module.ts"
+Cohesion: 0.14
+Nodes (15): DEVICE_TYPES, HeartbeatDto, IsBoolean, IsIn, IsUUID, DEVICE_TYPES, TrackViewDto, IsBoolean (+7 more)
 
 ### Community 11 - "news.service.ts"
 Cohesion: 0.14
 Nodes (12): mapNews(), NewsRow, NewsController, CacheTTL, Controller, Get, Header, UseInterceptors (+4 more)
 
 ### Community 12 - "ratings.controller.ts"
-Cohesion: 0.12
+Cohesion: 0.13
 Nodes (14): RateEventDto, IsInt, Max, Min, RatingsController, Body, Controller, Param (+6 more)
 
 ### Community 13 - "compilerOptions"
@@ -222,31 +228,31 @@ Nodes (20): compilerOptions, isolatedModules, jsx, lib, module, moduleResolution
 
 ### Community 15 - "supabase-auth.guard.ts"
 Cohesion: 0.11
-Nodes (16): ADMIN_PERM_KEYS, AdminPermKey, SetPermsDto, AdminGuard, Injectable, PermissionGuard, Injectable, PERM_KEY (+8 more)
+Nodes (14): AdminGuard, Injectable, BanStatusGuard, Injectable, PermissionGuard, Injectable, PERM_KEY, AuthedRequest (+6 more)
 
 ### Community 16 - "tools.py"
-Cohesion: 0.17
-Nodes (20): _ctx(), get_event(), link_hint(), PlanStep, Any, BaseModel, What Барс can actually do. Every tool is read-only against the catalogue or…, Сохранить план подготовки и включить напоминания. Вызывай, только когда… (+12 more)
+Cohesion: 0.19
+Nodes (18): _ctx(), link_hint(), PlanStep, Any, BaseModel, What Барс can actually do. Every tool is read-only against the catalogue or…, Сохранить план подготовки и включить напоминания. Вызывай, только когда…, Показать текущий сохранённый план подготовки пользователя. (+10 more)
 
 ### Community 17 - "App.tsx"
-Cohesion: 0.12
-Nodes (21): AnalyticsPage, AppLayout(), EducationIndex(), EducationPage, HomeGate(), PublishPage, UsersPage, Loader() (+13 more)
+Cohesion: 0.09
+Nodes (22): ArticlePage, AuthPage, EditAccountPage, EducationIndex(), EducationPage, HomeGate(), SettingsPage, UsersPage (+14 more)
 
 ### Community 18 - "execute"
 Cohesion: 0.13
-Nodes (26): _clip(), log_turn(), Quality-control journal and token accounting for Барс. Two bot-owned tables…, Book a catalogue re-embed against the system chat, for the balance estimate., Drop journalled turns past the retention window. Called from sessions.sweep()., Append one exchange — the user's line and the assistant's — to the journal., Fold this turn's Gemini token counts into the daily rollup. `usage_by_model` is…, record_embedding_usage() (+18 more)
+Nodes (25): _clip(), log_turn(), Quality-control journal and token accounting for Барс. Two bot-owned tables…, Book a catalogue re-embed against the system chat, for the balance estimate., Drop journalled turns past the retention window. Called from sessions.sweep()., Append one exchange — the user's line and the assistant's — to the journal., Fold this turn's Gemini token counts into the daily rollup. `usage_by_model` is…, record_embedding_usage() (+17 more)
 
 ### Community 19 - "app.module.ts"
-Cohesion: 0.11
-Nodes (21): AdminModule, Module, AppModule, Module, AuthModule, Module, BarsModule, Module (+13 more)
+Cohesion: 0.12
+Nodes (19): AdminModule, Module, AppModule, Module, AuthModule, Module, BarsModule, Module (+11 more)
 
 ### Community 20 - "CreateNewsDto"
 Cohesion: 0.40
 Nodes (4): CreateNewsDto, IsOptional, IsString, IsUrl
 
-### Community 21 - "AuthPage"
-Cohesion: 0.10
-Nodes (29): onLogout(), onAccept(), refreshProfile(), signOut(), AuthPage(), finishSignIn(), onForgot1(), onForgot2() (+21 more)
+### Community 21 - "refreshProfile"
+Cohesion: 0.11
+Nodes (21): onLogout(), onAccept(), AuthProvider(), checkBanStatus(), hasPerm(), refreshProfile(), signOut(), isActiveBan() (+13 more)
 
 ### Community 22 - "UsersAdminService"
 Cohesion: 0.10
@@ -256,17 +262,17 @@ Nodes (20): BanUserDto, IsIn, IsOptional, IsString, MaxLength, SetRoleDto, IsIn,
 Cohesion: 0.33
 Nodes (4): PrivacyPage, Block, Section, SECTIONS
 
-### Community 24 - "types.ts"
-Cohesion: 0.12
-Nodes (23): BarsPage, useBarsChat(), useBarsChats(), BarsPage(), chatTitle(), fmtWhen(), STATUS_LABELS, Transcript() (+15 more)
+### Community 24 - "TelegramLinkService"
+Cohesion: 0.17
+Nodes (4): BotService, Injectable, TelegramLinkService, Injectable
 
 ### Community 25 - "handlers.py"
-Cohesion: 0.10
-Nodes (41): ApiError, chunks(), event_ids(), event_keyboard(), plan_keyboard(), Any, Turning the model's answer into a Telegram message. The model never emits URLs…, Referenced ids, in the order the model mentioned them, deduplicated. (+33 more)
+Cohesion: 0.08
+Nodes (47): api(), Catalog, chunks(), event_ids(), event_keyboard(), plan_keyboard(), Any, Turning the model's answer into a Telegram message. The model never emits URLs… (+39 more)
 
-### Community 26 - "AuthContext.tsx"
-Cohesion: 0.15
-Nodes (14): App(), BannedGate(), periodText(), AuthContext, AuthContextValue, AuthProvider(), checkBanStatus(), hasPerm() (+6 more)
+### Community 26 - "useEvents.ts"
+Cohesion: 0.21
+Nodes (13): buildQuery(), EventFilters, useEvents(), useNews(), CacheEntry, getCached(), getEntry(), getOrFetch() (+5 more)
 
 ### Community 27 - "UpdateEventDto"
 Cohesion: 0.20
@@ -281,8 +287,8 @@ Cohesion: 0.16
 Nodes (8): CapacityController, Controller, Get, UseGuards, CapacityService, StorageStatRow, Injectable, UserStatRow
 
 ### Community 30 - "CurrentUser"
-Cohesion: 0.06
-Nodes (25): CurrentUser, TelegramLinkService, Injectable, Get, ProfileController, Body, Controller, Delete (+17 more)
+Cohesion: 0.07
+Nodes (20): AuthController, Controller, Get, Query, Throttle, UseGuards, CurrentUser, Get (+12 more)
 
 ### Community 31 - "nest-cli.json"
 Cohesion: 0.33
@@ -300,49 +306,49 @@ Nodes (5): exclude, extends, dist, node_modules, ./tsconfig.json
 Cohesion: 0.50
 Nodes (5): Google Fonts Integration, HTML Entry Point (index.html), SEO / Open Graph Meta Tags, TS Logo Mark (Favicon), TS Logo Mark (Source Asset)
 
-### Community 39 - "traffic-admin.service.ts"
-Cohesion: 0.08
-Nodes (20): TrafficQueryDto, IsInt, IsOptional, Max, Min, Type, TrafficAdminController, Controller (+12 more)
+### Community 39 - "TrafficAdminService"
+Cohesion: 0.18
+Nodes (7): TrafficAdminController, Controller, Get, Query, UseGuards, TrafficAdminService, Injectable
 
 ### Community 40 - "AnalyticsPage.tsx"
-Cohesion: 0.11
-Nodes (24): BarChart(), BarChartProps, setBarsCredit(), useBarsAnalytics(), useCapacity(), useTrafficOnline(), useTrafficSummary(), AnalyticsPage() (+16 more)
+Cohesion: 0.08
+Nodes (34): AnalyticsPage, BarsPage, BarChart(), BarChartProps, setBarsCredit(), useBarsAnalytics(), useBarsChat(), useBarsChats() (+26 more)
 
 ### Community 41 - "catalog.py"
-Cohesion: 0.16
-Nodes (26): bishkek_now(), bishkek_today(), deadline_in_days(), embedding_text(), is_open(), matches(), parse_date(), Any (+18 more)
+Cohesion: 0.14
+Nodes (28): bishkek_now(), bishkek_today(), deadline_in_days(), embedding_text(), is_open(), matches(), parse_date(), Any (+20 more)
 
 ### Community 42 - "CreateEventDto"
 Cohesion: 0.14
 Nodes (12): deriveAgeLabel(), deriveShortDesc(), CreateEventDto, IsArray, IsBoolean, IsIn, IsInt, IsOptional (+4 more)
 
-### Community 43 - "api"
-Cohesion: 0.18
-Nodes (10): EditAccountPage, ProfilePage, ConfirmDialog(), ConfirmDialogProps, useSubmissions(), api, STATUS_LABEL, TelegramLinkStatus (+2 more)
+### Community 43 - "ProfilePage.tsx"
+Cohesion: 0.23
+Nodes (7): ProfilePage, PublishPage, useSubmissions(), STATUS_LABEL, TelegramLinkStatus, PublishPage(), Submission
 
 ### Community 44 - "agent.py"
 Cohesion: 0.16
 Nodes (15): build_graph(), _chat_model(), GuardVerdict, AsyncConnectionPool, BaseModel, The graph itself: guard -> agent -> tools -> agent -> end. Hand-rolled rather…, Last MAX_TURNS_IN_CONTEXT user turns, sliced at a HumanMessage so a tool_call…, _recent_history() (+7 more)
 
 ### Community 45 - "plans.py"
-Cohesion: 0.21
-Nodes (18): site_url(), _add_reminder(), create_plan(), due_reminders(), _fire_at(), mark_failed(), mark_sent(), Any (+10 more)
+Cohesion: 0.20
+Nodes (19): site_url(), _add_reminder(), create_plan(), due_reminders(), _fire_at(), get_plan(), mark_failed(), mark_sent() (+11 more)
 
-### Community 46 - "indexer.py"
-Cohesion: 0.13
-Nodes (16): api(), Catalog, pgvector accepts its text form, so no extra type-registration dependency is…, to_vector_literal(), embed_documents(), embed_query(), _embedder(), Gemini embeddings, wrapped so the rest of the code never touches the SDK… (+8 more)
+### Community 46 - "AuthPage"
+Cohesion: 0.28
+Nodes (14): AuthPage(), finishSignIn(), onForgot1(), onForgot2(), onForgot3(), onLogin(), onPrimary(), onReg1() (+6 more)
 
 ### Community 47 - "HealthController"
 Cohesion: 0.22
 Nodes (6): HealthController, Controller, Get, SkipThrottle, HealthModule, Module
 
 ### Community 48 - "UserAccountPage.tsx"
-Cohesion: 0.16
-Nodes (10): UserAccountPage, BanModal(), BanModalProps, OPTIONS, useAdminUser(), banPeriodText(), STATUS_LABEL, UserAccountPage() (+2 more)
+Cohesion: 0.13
+Nodes (12): UserAccountPage, BanModal(), BanModalProps, OPTIONS, ConfirmDialog(), ConfirmDialogProps, banPeriodText(), STATUS_LABEL (+4 more)
 
 ### Community 49 - "SupabaseService"
-Cohesion: 0.12
-Nodes (15): BAN_DURATIONS, BanDuration, BAN_MS, BanStatusGuard, Injectable, TelegramLinkRow, EventRow, mapEvent() (+7 more)
+Cohesion: 0.13
+Nodes (17): BAN_DURATIONS, BanDuration, ADMIN_PERM_KEYS, AdminPermKey, SetPermsDto, BAN_MS, TelegramLinkRow, EventRow (+9 more)
 
 ### Community 50 - "Supabase"
 Cohesion: 0.11
@@ -357,12 +363,12 @@ Cohesion: 0.29
 Nodes (6): deploy, healthcheckPath, healthcheckTimeout, restartPolicyMaxRetries, restartPolicyType, $schema
 
 ### Community 53 - "useAuth"
-Cohesion: 0.12
-Nodes (14): BottomNav(), NAV_ITEMS, ROLE_BADGE, UsersManager(), UsersManagerProps, useAuth(), useAdmins(), useAdminUsers() (+6 more)
+Cohesion: 0.08
+Nodes (44): BannedGate(), periodText(), PolicyGate(), ROLE_BADGE, UsersManager(), UsersManagerProps, AuthContext, AuthContextValue (+36 more)
 
 ### Community 54 - "constants.ts"
-Cohesion: 0.05
-Nodes (59): ArticlePage, CardMenu(), EventCard(), EventCardAdminActions, EventCardProps, instagramUrl(), EventModal(), instagramUrl() (+51 more)
+Cohesion: 0.08
+Nodes (36): CardMenu(), EventCard(), EventCardAdminActions, instagramUrl(), EventModal(), instagramUrl(), telegramUrl(), EventPhoto() (+28 more)
 
 ### Community 55 - "education.service.ts"
 Cohesion: 0.12
@@ -389,16 +395,16 @@ Cohesion: 0.22
 Nodes (3): ErrorBoundary, Props, State
 
 ### Community 61 - "ChatQueues"
-Cohesion: 0.17
-Nodes (7): ChatQueues, Any, Per-chat ordering, cross-chat parallelism. One worker per active chat means a…, Any, Process-wide singletons wired up at boot by main.py. Kept in one small module…, Runtime, Queue
+Cohesion: 0.12
+Nodes (10): ChatQueues, Any, Per-chat ordering, cross-chat parallelism. One worker per active chat means a…, Any, Process-wide singletons wired up at boot by main.py. Kept in one small module…, Serialises conversation-state changes for one chat across *every* handler — the…, Drop idle locks so the map does not grow without bound. Called from the sweep., Runtime (+2 more)
 
 ### Community 62 - "ApiClient"
-Cohesion: 0.27
-Nodes (3): ApiClient, Any, Full snapshot including archived rows — used by the embedding indexer.
+Cohesion: 0.25
+Nodes (4): ApiClient, ApiError, Any, Full snapshot including archived rows — used by the embedding indexer.
 
-### Community 63 - "api.ts"
-Cohesion: 0.15
-Nodes (14): AuthPage, ImageUploadField(), onPick(), ImageUploadFieldProps, NetTroubleToast(), authHeader(), NET_TROUBLE_EVENT, reportNetworkTrouble() (+6 more)
+### Community 63 - "tracking.ts"
+Cohesion: 0.24
+Nodes (11): AppLayout(), useHeartbeat(), EXCLUDED_PREFIXES, useTrackPageView(), base(), DeviceType, getDeviceType(), getSessionId() (+3 more)
 
 ### Community 64 - "Section Definitions"
 Cohesion: 0.20
@@ -408,13 +414,13 @@ Nodes (9): 1. Query Performance (query), 2. Connection Management (conn), 3. Sec
 Cohesion: 0.31
 Nodes (4): jwtExpiryMs(), SupabaseAuthGuard, Inject, Injectable
 
-### Community 66 - "AuthController"
-Cohesion: 0.25
-Nodes (6): AuthController, Controller, Get, Query, Throttle, UseGuards
+### Community 66 - "UpdateProfileDto"
+Cohesion: 0.18
+Nodes (10): Body, Patch, assertCooldownElapsed(), IsBoolean, IsIn, IsOptional, IsString, IsUrl (+2 more)
 
 ### Community 67 - "bot.controller.ts"
-Cohesion: 0.08
-Nodes (24): BotAuthGuard, secretsMatch(), Injectable, BotController, Body, Controller, Delete, Get (+16 more)
+Cohesion: 0.09
+Nodes (22): BotAuthGuard, secretsMatch(), Injectable, BotController, Body, Controller, Delete, Get (+14 more)
 
 ### Community 68 - "deploy"
 Cohesion: 0.25
@@ -436,6 +442,10 @@ Nodes (3): BarsAdminService, bishkekDayKeys(), Injectable
 Cohesion: 0.20
 Nodes (6): BarsAdminController, Body, Controller, Param, UseGuards, Put
 
+### Community 75 - "TrackLinkClickDto"
+Cohesion: 0.18
+Nodes (10): DEVICE_TYPES, LINK_KINDS, TARGET_TYPES, TrackLinkClickDto, IsBoolean, IsIn, IsOptional, IsString (+2 more)
+
 ### Community 108 - "bars-admin.service.ts"
 Cohesion: 0.20
 Nodes (9): ChatListRow, CreditRow, DailyUsageRow, MessageRow, ModelPrice, SummaryRow, ToolRow, TopChatRow (+1 more)
@@ -448,9 +458,29 @@ Nodes (5): CreateMaterialDto, IsArray, IsInt, IsOptional, IsString
 Cohesion: 0.20
 Nodes (9): BarsCreditDto, IsOptional, IsString, Max, MaxLength, Min, Type, IsISO8601 (+1 more)
 
+### Community 111 - "TrafficController"
+Cohesion: 0.40
+Nodes (6): TrafficController, Body, Controller, HttpCode, Post, Throttle
+
 ### Community 112 - "TrafficCleanupService"
-Cohesion: 0.33
+Cohesion: 0.32
 Nodes (4): TrafficCleanupService, Cron, Injectable, yesterdayInBishkek()
+
+### Community 113 - "TrafficService"
+Cohesion: 0.33
+Nodes (3): describeError(), TrafficService, Injectable
+
+### Community 114 - "TrackCardViewDto"
+Cohesion: 0.22
+Nodes (8): DEVICE_TYPES, TARGET_TYPES, TrackCardViewDto, IsBoolean, IsIn, IsString, IsUUID, MaxLength
+
+### Community 115 - "traffic-admin.service.ts"
+Cohesion: 0.25
+Nodes (7): CardUniqueViewsRow, DailyTrendRow, DeviceRow, HourlyRow, LoginSplitRow, TopCardRow, TopLinkRow
+
+### Community 116 - "TrafficQueryDto"
+Cohesion: 0.29
+Nodes (6): TrafficQueryDto, IsInt, IsOptional, Max, Min, Type
 
 ## Knowledge Gaps
 - **310 isolated node(s):** `$schema`, `collection`, `sourceRoot`, `deleteOutDir`, `name` (+305 more)
@@ -460,17 +490,17 @@ Nodes (4): TrafficCleanupService, Cron, Injectable, yesterdayInBishkek()
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SupabaseService` connect `SupabaseService` to `FavoritesService`, `EventsService`, `CreateSubmissionDto`, `traffic.service.ts`, `news.service.ts`, `ratings.controller.ts`, `supabase-auth.guard.ts`, `UsersAdminService`, `CapacityService`, `CurrentUser`, `admin.service.ts`, `traffic-admin.service.ts`, `HealthController`, `AdminService`, `education.service.ts`, `SupabaseAuthGuard`, `AuthController`, `BarsAdminService`, `bars-admin.service.ts`, `TrafficCleanupService`?**
+- **Why does `SupabaseService` connect `SupabaseService` to `FavoritesService`, `EventsService`, `CreateSubmissionDto`, `traffic.module.ts`, `news.service.ts`, `ratings.controller.ts`, `supabase-auth.guard.ts`, `app.module.ts`, `UsersAdminService`, `TelegramLinkService`, `CapacityService`, `CurrentUser`, `admin.service.ts`, `TrafficAdminService`, `HealthController`, `AdminService`, `education.service.ts`, `SupabaseAuthGuard`, `BarsAdminService`, `bars-admin.service.ts`, `TrafficCleanupService`, `TrafficService`, `traffic-admin.service.ts`?**
   _High betweenness centrality (0.028) - this node is a cross-community bridge._
-- **Why does `CurrentUser` connect `CurrentUser` to `AuthController`, `FavoritesService`, `CreateSubmissionDto`, `ratings.controller.ts`, `supabase-auth.guard.ts`, `SupabaseService`, `UsersAdminService`?**
+- **Why does `CurrentUser` connect `CurrentUser` to `UpdateProfileDto`, `FavoritesService`, `CreateSubmissionDto`, `ratings.controller.ts`, `supabase-auth.guard.ts`, `SupabaseService`, `UsersAdminService`?**
   _High betweenness centrality (0.021) - this node is a cross-community bridge._
-- **Why does `SupabaseAuthGuard` connect `SupabaseAuthGuard` to `admin.service.ts`, `FavoritesService`, `traffic-admin.service.ts`, `CreateSubmissionDto`, `ratings.controller.ts`, `supabase-auth.guard.ts`, `SupabaseService`, `app.module.ts`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `useAuth()` connect `useAuth` to `useUI`, `AdminPage.tsx`, `AnalyticsPage.tsx`, `ProfilePage.tsx`, `AuthPage`, `UserAccountPage.tsx`, `App.tsx`, `refreshProfile`, `constants.ts`, `tracking.ts`?**
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **What connects `$schema`, `collection`, `sourceRoot` to the rest of the system?**
   _310 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `useUI` be split into smaller, more focused modules?**
+  _Cohesion score 0.0960591133004926 - nodes in this community are weakly interconnected._
 - **Should `get_settings` be split into smaller, more focused modules?**
-  _Cohesion score 0.10121951219512196 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07832080200501253 - nodes in this community are weakly interconnected._
 - **Should `dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.0425531914893617 - nodes in this community are weakly interconnected._
-- **Should `Platform Description (Privacy Policy Section 1)` be split into smaller, more focused modules?**
-  _Cohesion score 0.08143939393939394 - nodes in this community are weakly interconnected._

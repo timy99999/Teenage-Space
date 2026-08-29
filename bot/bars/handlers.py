@@ -114,6 +114,34 @@ async def _keep_typing(message: Message) -> None:
         await asyncio.sleep(TYPING_INTERVAL_SECONDS)
 
 
+async def _seed_greeting(thread_id: str, greeting: str) -> None:
+    """Record a greeting sent out of band into the conversation, so the agent picks
+    up from it instead of greeting the user a second time on their next message."""
+    with contextlib.suppress(Exception):
+        await runtime.graph.aupdate_state(
+            {"configurable": {"thread_id": thread_id}},
+            {"messages": [AIMessage(content=greeting)]},
+            as_node="agent",
+        )
+
+
+async def _thread_has_history(thread_id: str) -> bool:
+    try:
+        snapshot = await runtime.graph.aget_state({"configurable": {"thread_id": thread_id}})
+        return bool(snapshot.values.get("messages"))
+    except Exception:
+        return False
+
+
+async def _open_conversation(message: Message, greeting: str) -> None:
+    """Explicit restart (/reset, a freshly linked account): one clean thread, one
+    greeting, seeded so the next message continues rather than re-greets."""
+    async with runtime.chat_lock(message.chat.id):
+        thread_id = await sessions.reset(message.chat.id)
+        await message.answer(greeting)
+        await _seed_greeting(thread_id, greeting)
+
+
 async def process(job: Job) -> None:
     """One turn of the conversation. Runs inside the chat's own queue worker."""
     message = job.message
@@ -125,17 +153,22 @@ async def process(job: Job) -> None:
     answer_text = ""
     tools_used: list[str] = []
     usage: dict[str, dict] = {}
+    seed: list[AIMessage] = []
     try:
-        thread_id, fresh = await sessions.touch(chat_id)
+        # The chat lock keeps this in step with /start and /reset — otherwise both
+        # could see the chat as new and each send a greeting.
+        async with runtime.chat_lock(chat_id):
+            thread_id, fresh = await sessions.touch(chat_id)
+            if fresh:
+                # 3-day TTL lapsed (or first ever message): say hello rather than
+                # answering out of nowhere, and seed it so the agent won't re-greet.
+                await message.answer(GREETING)
+                seed = [AIMessage(content=GREETING)]
+
         context = await chat_context(chat_id)
         user_id = context.get("user_id")
 
-        if fresh:
-            # The 3-day TTL has lapsed (or this is a first message): say hello rather
-            # than answering out of nowhere with no shared history.
-            await message.answer(GREETING)
-
-        state = {"messages": [HumanMessage(content=job.text)]}
+        state = {"messages": [*seed, HumanMessage(content=job.text)]}
         config = {
             "configurable": {
                 "thread_id": thread_id,
@@ -234,9 +267,10 @@ async def start_with_token(message: Message, command: CommandObject) -> None:
 
     runtime.invalidate(chat_id)
     name = (profile or {}).get("name") or (profile or {}).get("username") or "друг"
-    await message.answer(
+    await _open_conversation(
+        message,
         f"Готово, {name}! Аккаунт привязан — теперь я подбираю по твоему профилю "
-        "и могу складывать мероприятия в избранное.\n\n" + GREETING
+        "и могу складывать мероприятия в избранное.\n\n" + GREETING,
     )
 
 
@@ -244,8 +278,15 @@ async def start_with_token(message: Message, command: CommandObject) -> None:
 async def start(message: Message) -> None:
     if not await _require_linked(message):
         return
-    await sessions.reset(message.chat.id)
-    await message.answer(GREETING)
+    async with runtime.chat_lock(message.chat.id):
+        thread_id, fresh = await sessions.touch(message.chat.id)
+        if not fresh and await _thread_has_history(thread_id):
+            # Already mid-conversation (e.g. the client auto-sends /start on reopen) —
+            # a short hello is enough, no need to repeat the full intro or wipe history.
+            await message.answer("Я на связи. Расскажи, что ищешь.")
+            return
+        await message.answer(GREETING)
+        await _seed_greeting(thread_id, GREETING)
 
 
 @router.message(Command("help"))
@@ -255,8 +296,7 @@ async def help_command(message: Message) -> None:
 
 @router.message(Command("reset"))
 async def reset_command(message: Message) -> None:
-    await sessions.reset(message.chat.id)
-    await message.answer("Забыл наш разговор. Начнём заново — что тебе интересно?")
+    await _open_conversation(message, "Забыл наш разговор. Начнём заново — что тебе интересно?")
 
 
 @router.message(Command("link"))

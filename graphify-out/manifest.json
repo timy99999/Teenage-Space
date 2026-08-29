@@ -1068,9 +1068,9 @@
     "semantic_hash": ""
   },
   "bot/bars/handlers.py": {
-    "mtime": 1788013246.944746,
-    "seen": 1788013325.5750763,
-    "ast_hash": "f9879672e4ed87f289291ff1da4bac9d",
+    "mtime": 1788014075.5513976,
+    "seen": 1788014170.3363812,
+    "ast_hash": "a23cb00f4532e420ccf829658630f65d",
     "semantic_hash": ""
   },
   "bot/bars/indexer.py": {
@@ -1122,15 +1122,15 @@
     "semantic_hash": ""
   },
   "bot/bars/runtime.py": {
-    "mtime": 1787931410.1141028,
-    "seen": 1787931780.602006,
-    "ast_hash": "d8882a6d0bb6f0978cdcd9d3a58de83a",
+    "mtime": 1788014030.3561323,
+    "seen": 1788014170.3403702,
+    "ast_hash": "254ed1996a3936c763f4cef44a27b263",
     "semantic_hash": ""
   },
   "bot/bars/sessions.py": {
-    "mtime": 1788009891.0806031,
-    "seen": 1788010451.5474455,
-    "ast_hash": "33308c38f79426c28d4b1c17ddd7a3c2",
+    "mtime": 1788014042.6054041,
+    "seen": 1788014170.3403702,
+    "ast_hash": "a84edc62ae060ba2b6beb08bd52c2fa3",
     "semantic_hash": ""
   },
   "bot/bars/vocab.py": {
