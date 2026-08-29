@@ -18,6 +18,7 @@ import { CapacityModule } from './capacity/capacity.module';
 import { TrafficModule } from './traffic/traffic.module';
 import { HealthModule } from './health/health.module';
 import { BotModule } from './bot/bot.module';
+import { BarsModule } from './bars/bars.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { BotModule } from './bot/bot.module';
     CapacityModule,
     TrafficModule,
     HealthModule,
-    BotModule
+    BotModule,
+    BarsModule
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }]
 })

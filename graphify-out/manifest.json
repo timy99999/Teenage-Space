@@ -78,9 +78,9 @@
     "semantic_hash": ""
   },
   "backend/src/app.module.ts": {
-    "mtime": 1787925614.6107655,
-    "seen": 1787931780.583765,
-    "ast_hash": "23544dd11bc97dbeac3df26ff0afa7aa",
+    "mtime": 1788010017.861807,
+    "seen": 1788010451.5214233,
+    "ast_hash": "dc75485e5a155fbe30e9ff31c3ce1961",
     "semantic_hash": ""
   },
   "backend/src/auth/admin.guard.ts": {
@@ -216,10 +216,10 @@
     "semantic_hash": ""
   },
   "backend/src/profile/profile.service.ts": {
-    "mtime": 1787307808.8634627,
-    "seen": 1787666027.1690547,
-    "ast_hash": "6cef4074b150e8f7bf70469a657d5554",
-    "semantic_hash": "6cef4074b150e8f7bf70469a657d5554"
+    "mtime": 1788010033.6576996,
+    "seen": 1788010451.5313966,
+    "ast_hash": "9f39afd9faea22259fa72d532220981a",
+    "semantic_hash": ""
   },
   "backend/src/profile/update-profile.dto.ts": {
     "mtime": 1787750604.8311524,
@@ -306,9 +306,9 @@
     "semantic_hash": ""
   },
   "frontend/src/App.tsx": {
-    "mtime": 1787922250.6015372,
-    "seen": 1787922366.7134328,
-    "ast_hash": "a902678a448c860d897de3e6b1b64080",
+    "mtime": 1788010118.363703,
+    "seen": 1788010451.5487592,
+    "ast_hash": "a44b7f94f1471485f4cb6f3a620aa3f8",
     "semantic_hash": ""
   },
   "frontend/src/components/BottomNav.tsx": {
@@ -396,9 +396,9 @@
     "semantic_hash": "d00c8cc8fa258c8145cd45d67551c4fa"
   },
   "frontend/src/components/Sidebar.tsx": {
-    "mtime": 1787917494.9090757,
-    "seen": 1787917839.5104704,
-    "ast_hash": "18f4b13f8103e0e4e00400dcb71492cf",
+    "mtime": 1788010127.838066,
+    "seen": 1788010451.5559144,
+    "ast_hash": "189a45814c5a99453e5af429924ebe83",
     "semantic_hash": ""
   },
   "frontend/src/components/Toast.tsx": {
@@ -594,10 +594,10 @@
     "semantic_hash": "cc0f09c7e54111ad3af496ba111911cf"
   },
   "frontend/src/pages/PrivacyPage.tsx": {
-    "mtime": 1787307881.5619135,
-    "seen": 1787666027.1690547,
-    "ast_hash": "65852cd1d1de83c14212b655b5b63860",
-    "semantic_hash": "65852cd1d1de83c14212b655b5b63860"
+    "mtime": 1788010206.0801065,
+    "seen": 1788010451.5698712,
+    "ast_hash": "09d250421a3b377b055024db7515d4b0",
+    "semantic_hash": ""
   },
   "frontend/src/pages/ProfilePage.tsx": {
     "mtime": 1787931518.4449015,
@@ -618,9 +618,9 @@
     "semantic_hash": "dcdf6edaee24d7a3176da39a3eb20eac"
   },
   "frontend/src/types.ts": {
-    "mtime": 1787920873.0325563,
-    "seen": 1787920962.9181366,
-    "ast_hash": "a53887c8ab6be312b69affffe4ee22b7",
+    "mtime": 1788010056.3639705,
+    "seen": 1788010451.5718656,
+    "ast_hash": "7fdd6d3eade974d46c2855deae4305e7",
     "semantic_hash": ""
   },
   "frontend/src/vite-env.d.ts": {
@@ -744,9 +744,9 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/AnalyticsPage.tsx": {
-    "mtime": 1787920908.9950664,
-    "seen": 1787920962.9151034,
-    "ast_hash": "98a6ea913263b238e3dcce236fb73fa8",
+    "mtime": 1788010166.1980505,
+    "seen": 1788010451.5688705,
+    "ast_hash": "48a5e4f3eacabf99197da8e80e035654",
     "semantic_hash": ""
   },
   "backend/src/admin/dto/ban-user.dto.ts": {
@@ -996,9 +996,9 @@
     "semantic_hash": ""
   },
   "backend/src/bot/telegram-link.service.ts": {
-    "mtime": 1787931518.444101,
-    "seen": 1787931780.5867581,
-    "ast_hash": "1c7eaa1dde686b6ffc4cb1c8e346f48e",
+    "mtime": 1788010023.8926387,
+    "seen": 1788010451.5254133,
+    "ast_hash": "20ee5054e7256ad73e347a4c91b496e2",
     "semantic_hash": ""
   },
   "bot/bars/__init__.py": {
@@ -1020,9 +1020,9 @@
     "semantic_hash": ""
   },
   "bot/bars/config.py": {
-    "mtime": 1787977428.349832,
-    "seen": 1787978158.8803523,
-    "ast_hash": "6929c64d9b4aaf0e30af14d39dc81858",
+    "mtime": 1788009864.8295677,
+    "seen": 1788010451.5414624,
+    "ast_hash": "e25f608665fe9ef0b7c9f9931114188d",
     "semantic_hash": ""
   },
   "bot/bars/db.py": {
@@ -1068,9 +1068,9 @@
     "semantic_hash": ""
   },
   "bot/bars/handlers.py": {
-    "mtime": 1788006782.4429858,
-    "seen": 1788006843.6960294,
-    "ast_hash": "01f0fcdf01ba1a1fe6c9a7c9f17d3b0d",
+    "mtime": 1788010388.4359713,
+    "seen": 1788010451.5444534,
+    "ast_hash": "5ebc71be4df467e6a65a5e3ba334065a",
     "semantic_hash": ""
   },
   "bot/bars/indexer.py": {
@@ -1128,9 +1128,9 @@
     "semantic_hash": ""
   },
   "bot/bars/sessions.py": {
-    "mtime": 1787931690.8278434,
-    "seen": 1787931780.602006,
-    "ast_hash": "67e3b1229fe343b5a02bb8dd62d30051",
+    "mtime": 1788009891.0806031,
+    "seen": 1788010451.5474455,
+    "ast_hash": "33308c38f79426c28d4b1c17ddd7a3c2",
     "semantic_hash": ""
   },
   "bot/bars/vocab.py": {
@@ -1407,6 +1407,48 @@
     "mtime": 1787978904.1112432,
     "seen": 1787979203.2143838,
     "ast_hash": "c9fa098e2ec8bdce9d6a0f8a64d2c6c0",
+    "semantic_hash": ""
+  },
+  "backend/src/bars/bars-admin.controller.ts": {
+    "mtime": 1788009954.8928325,
+    "seen": 1788010451.5236998,
+    "ast_hash": "70376a7116e5b80d553676fa8f813f5a",
+    "semantic_hash": ""
+  },
+  "backend/src/bars/bars-admin.service.ts": {
+    "mtime": 1788010011.3538988,
+    "seen": 1788010451.5236998,
+    "ast_hash": "fb2e6588a66dffc10f9fbe8f36d1ae3e",
+    "semantic_hash": ""
+  },
+  "backend/src/bars/bars.module.ts": {
+    "mtime": 1788009948.204656,
+    "seen": 1788010451.5236998,
+    "ast_hash": "06c04d82754717991f7696daec19aada",
+    "semantic_hash": ""
+  },
+  "backend/src/bars/dto/bars-query.dto.ts": {
+    "mtime": 1788009944.7552142,
+    "seen": 1788010451.5236998,
+    "ast_hash": "d9b28bca506d51619c51e4f91a30468d",
+    "semantic_hash": ""
+  },
+  "bot/bars/analytics.py": {
+    "mtime": 1788009880.8437705,
+    "seen": 1788010451.5404642,
+    "ast_hash": "bd95f0ec8868a6878e9c84cf9f98afa5",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/useBars.ts": {
+    "mtime": 1788010067.122875,
+    "seen": 1788010451.5605311,
+    "ast_hash": "98284714393075253713ff85dcda335b",
+    "semantic_hash": ""
+  },
+  "frontend/src/pages/BarsPage.tsx": {
+    "mtime": 1788010110.636052,
+    "seen": 1788010451.5688705,
+    "ast_hash": "504e8b2cd99b0f0a30a8c5e462c77362",
     "semantic_hash": ""
   }
 }

@@ -27,6 +27,7 @@ const PublishPage = lazy(() => import('./pages/PublishPage').then((m) => ({ defa
 const AuthPage = lazy(() => import('./pages/AuthPage').then((m) => ({ default: m.AuthPage })));
 const AdminPage = lazy(() => import('./pages/AdminPage').then((m) => ({ default: m.AdminPage })));
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage').then((m) => ({ default: m.AnalyticsPage })));
+const BarsPage = lazy(() => import('./pages/BarsPage').then((m) => ({ default: m.BarsPage })));
 const UsersPage = lazy(() => import('./pages/UsersPage').then((m) => ({ default: m.UsersPage })));
 const UserAccountPage = lazy(() => import('./pages/UserAccountPage').then((m) => ({ default: m.UserAccountPage })));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })));
@@ -104,6 +105,7 @@ export default function App() {
           <Route path="publish" element={<PublishPage />} />
           <Route path="admin" element={<AdminPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="bars" element={<BarsPage />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="users/:id" element={<UserAccountPage />} />
           <Route path="privacy" element={<PrivacyPage />} />

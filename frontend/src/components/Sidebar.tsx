@@ -18,6 +18,7 @@ export function Sidebar() {
   const isVote = path === '/vote';
   const isAdminPage = path === '/admin';
   const isAnalyticsPage = path === '/analytics';
+  const isBarsPage = path === '/bars';
   const isUsersPage = path === '/users' || path.startsWith('/users/');
   const isOppsRoot = path.startsWith('/opportunities');
   const isEdu = path.startsWith('/education');
@@ -121,6 +122,12 @@ export function Sidebar() {
           <button className="ts-nav-item" onClick={() => navigate('/analytics')}>
             {isAnalyticsPage && <span className="ts-nav-dot" />}
             <span>Аналитика</span>
+          </button>
+        )}
+        {isSuperAdmin && (
+          <button className="ts-nav-item" onClick={() => navigate('/bars')}>
+            {isBarsPage && <span className="ts-nav-dot" />}
+            <span>Барс</span>
           </button>
         )}
         {isAdmin && (

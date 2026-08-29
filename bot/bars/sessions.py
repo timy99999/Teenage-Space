@@ -13,6 +13,7 @@ from __future__ import annotations
 import logging
 import uuid
 
+from . import analytics
 from .config import get_settings
 from .db import execute, fetch_one
 from .runtime import runtime
@@ -107,4 +108,11 @@ async def sweep() -> int:
     if threads:
         await execute("delete from bot_sessions where thread_id = any(%s)", (threads,))
         logger.info("Expired %d conversation(s)", len(threads))
+
+    # The quality-control transcript has its own, longer retention and is not tied
+    # to session expiry — it outlives /reset on purpose. Trim it on the same pass.
+    purged = await analytics.sweep_transcripts(get_settings().transcript_ttl_days)
+    if purged:
+        logger.info("Purged %d journalled message(s) past retention", purged)
+
     return len(threads)

@@ -14,12 +14,24 @@ from aiogram.filters import Command, CommandObject, CommandStart
 from aiogram.types import CallbackQuery, Message
 from langchain_core.messages import AIMessage, HumanMessage
 
-from . import plans, sessions
+try:
+    from langchain_core.callbacks import get_usage_metadata_callback
+except ImportError:  # pragma: no cover - older langchain-core: skip token accounting
+    import contextlib as _contextlib
+
+    class _NoUsageCallback:
+        usage_metadata: dict = {}
+
+    @_contextlib.contextmanager
+    def get_usage_metadata_callback():
+        yield _NoUsageCallback()
+
+from . import analytics, plans, sessions
 from .api_client import ApiError, api
 from .catalog import bishkek_today, catalog, parse_date
 from .config import get_settings
 from .formatting import chunks, event_ids, event_keyboard, plan_keyboard, render_plan, to_html
-from .persona import GREETING, HELP_TEXT
+from .persona import GREETING, HELP_TEXT, OFF_TOPIC_REPLY
 from .runtime import runtime
 
 logger = logging.getLogger(__name__)
@@ -64,11 +76,12 @@ async def chat_context(chat_id: int, *, refresh: bool = False) -> dict[str, Any]
         me = await api().me(chat_id)
     except ApiError as error:
         logger.warning("Could not load chat context: %s", error)
-        return {"linked": False, "age": None, "favorites": set(), "name": None}
+        return {"linked": False, "user_id": None, "age": None, "favorites": set(), "name": None}
 
     profile = me.get("profile") or {}
     context = {
         "linked": bool(me.get("linked")),
+        "user_id": profile.get("id") or None,
         "age": _age_from(profile.get("birthDate")),
         "favorites": set(me.get("favorites") or []),
         "name": profile.get("name") or None,
@@ -107,9 +120,15 @@ async def process(job: Job) -> None:
     chat_id = message.chat.id
 
     typing = asyncio.create_task(_keep_typing(message))
+    user_id: str | None = None
+    status = "ok"
+    answer_text = ""
+    tools_used: list[str] = []
+    usage: dict[str, dict] = {}
     try:
         thread_id, fresh = await sessions.touch(chat_id)
         context = await chat_context(chat_id)
+        user_id = context.get("user_id")
 
         if fresh:
             # The 3-day TTL has lapsed (or this is a first message): say hello rather
@@ -125,7 +144,11 @@ async def process(job: Job) -> None:
                 "age": context["age"],
             }
         }
-        result = await runtime.graph.ainvoke(state, config=config)
+        # Aggregates token usage across every LLM call in the turn (guard, agent,
+        # each tool round), keyed by model. Feeds the admin analytics.
+        with get_usage_metadata_callback() as usage_cb:
+            result = await runtime.graph.ainvoke(state, config=config)
+        usage = dict(usage_cb.usage_metadata)
 
         answer = next(
             (
@@ -140,6 +163,16 @@ async def process(job: Job) -> None:
         text = answer.text.strip() if answer else ""
         if not text:
             text = "Не смог собрать ответ. Попробуй переформулировать?"
+            status = "fallback"
+        elif text == OFF_TOPIC_REPLY:
+            status = "off_topic"
+        answer_text = text
+        tools_used = [
+            call["name"]
+            for m in result["messages"]
+            if isinstance(m, AIMessage)
+            for call in (getattr(m, "tool_calls", None) or [])
+        ]
 
         referenced = event_ids(text)
         events = [e for e in [await catalog().get(eid) for eid in referenced] if e]
@@ -155,12 +188,22 @@ async def process(job: Job) -> None:
             )
     except Exception:
         logger.exception("Failed to answer chat %s", chat_id)
+        status = "error"
+        answer_text = FALLBACK_REPLY
         with contextlib.suppress(Exception):
             await message.answer(FALLBACK_REPLY)
     finally:
         typing.cancel()
         with contextlib.suppress(asyncio.CancelledError):
             await typing
+        # Journalling must never take a turn down — the user already has their reply.
+        with contextlib.suppress(Exception):
+            await analytics.log_turn(
+                chat_id, user_id, job.text, answer_text, status=status, tools=tools_used
+            )
+        if usage:
+            with contextlib.suppress(Exception):
+                await analytics.record_usage(chat_id, usage)
 
 
 # --- commands ---------------------------------------------------------------

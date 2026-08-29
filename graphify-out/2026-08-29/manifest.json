@@ -1020,9 +1020,9 @@
     "semantic_hash": ""
   },
   "bot/bars/config.py": {
-    "mtime": 1787977428.349832,
-    "seen": 1787978158.8803523,
-    "ast_hash": "6929c64d9b4aaf0e30af14d39dc81858",
+    "mtime": 1788007680.714917,
+    "seen": 1788007701.554733,
+    "ast_hash": "42a71cee7bf8ecc8055d89bbc663fbcc",
     "semantic_hash": ""
   },
   "bot/bars/db.py": {
@@ -1068,9 +1068,9 @@
     "semantic_hash": ""
   },
   "bot/bars/handlers.py": {
-    "mtime": 1787977738.7014947,
-    "seen": 1787978158.8833137,
-    "ast_hash": "890ac7f17daffb297fe57dafd654f51c",
+    "mtime": 1788006782.4429858,
+    "seen": 1788006843.6960294,
+    "ast_hash": "01f0fcdf01ba1a1fe6c9a7c9f17d3b0d",
     "semantic_hash": ""
   },
   "bot/bars/indexer.py": {

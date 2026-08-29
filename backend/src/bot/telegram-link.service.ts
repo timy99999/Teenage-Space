@@ -82,6 +82,18 @@ export class TelegramLinkService {
   async unlinkByTelegramId(telegramId: number) {
     const { error } = await this.supabase.client.from('telegram_links').delete().eq('telegram_id', telegramId);
     if (error) throw error;
+    await this.purgeBotData(telegramId);
+  }
+
+  /**
+   * The bot's QA transcript and token rollup key on the Telegram chat id (== the
+   * private-chat telegram_id), not on user_id, so nothing cascades when the link or
+   * the account goes. Once unlinked there is no admin route back to this person, so
+   * the stored conversation should go with it.
+   */
+  async purgeBotData(telegramId: number) {
+    await this.supabase.client.from('bot_messages').delete().eq('chat_id', telegramId);
+    await this.supabase.client.from('bot_usage_daily').delete().eq('chat_id', telegramId);
   }
 
   /** Bot side: redeem a token from /start <token>. */

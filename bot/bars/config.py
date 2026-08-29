@@ -36,6 +36,10 @@ class Settings(BaseSettings):
 
     # Behaviour
     memory_ttl_hours: int = 72
+    # How long the quality-control transcript (bot_messages) is kept. Longer than
+    # memory_ttl_hours on purpose: the dialogue expires for the bot at 72h, the
+    # admin's audit log a while later.
+    transcript_ttl_days: int = 30
     max_concurrent_llm: int = 8
     catalog_ttl_seconds: int = 300
     index_interval_minutes: int = 30

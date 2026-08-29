@@ -77,6 +77,19 @@ export class ProfileService {
   }
 
   async remove(user: User) {
+    // The bot's transcript/usage tables key on the Telegram chat id, not user_id, so
+    // they don't cascade on auth-user deletion. Purge them first, while the link
+    // still resolves this account to a chat id.
+    const { data: link } = await this.supabase.client
+      .from('telegram_links')
+      .select('telegram_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    if (link?.telegram_id) {
+      await this.supabase.client.from('bot_messages').delete().eq('chat_id', link.telegram_id);
+      await this.supabase.client.from('bot_usage_daily').delete().eq('chat_id', link.telegram_id);
+    }
+
     const { error } = await this.supabase.client.auth.admin.deleteUser(user.id);
     if (error) throw error;
   }

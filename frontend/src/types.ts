@@ -250,6 +250,62 @@ export interface TrafficSummary {
   topLinks: { linkKind: string; clicks: number }[];
 }
 
+export type BarsMessageStatus = 'ok' | 'off_topic' | 'error' | 'fallback';
+
+export interface BarsChatRow {
+  chatId: string;
+  telegramUsername: string | null;
+  name: string | null;
+  userId: string | null;
+  messageCount: number;
+  lastActivityAt: string;
+  hasError: boolean;
+  offTopicCount: number;
+}
+
+export interface BarsMessage {
+  role: 'user' | 'assistant';
+  text: string;
+  status: BarsMessageStatus;
+  tools: string[];
+  createdAt: string;
+}
+
+export interface BarsAnalytics {
+  summary: {
+    messages: number;
+    userMessages: number;
+    conversations: number;
+    activeUsers: number;
+    offTopic: number;
+    errors: number;
+    plansCreated: number;
+    remindersSent: number;
+    avgTurnsPerConvo: number;
+  };
+  tokenTotals: { promptTokens: number; outputTokens: number; thinkingTokens: number };
+  daily: {
+    day: string;
+    turns: number;
+    promptTokens: number;
+    outputTokens: number;
+    thinkingTokens: number;
+    costUsd: number;
+  }[];
+  costUsd: number;
+  pricingConfigured: boolean;
+  tools: { tool: string; calls: number }[];
+  topChats: {
+    chatId: string;
+    telegramUsername: string | null;
+    name: string | null;
+    messages: number;
+    promptTokens: number;
+    outputTokens: number;
+    thinkingTokens: number;
+  }[];
+}
+
 /**
  * One shared shape for "create/publish an event" — used identically by the
  * public submission form (PublishPage) and the admin's direct-publish/edit

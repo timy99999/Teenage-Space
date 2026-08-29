@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCapacity } from '../hooks/useCapacity';
 import { useTrafficSummary, useTrafficOnline } from '../hooks/useTraffic';
+import { useBarsAnalytics } from '../hooks/useBars';
 import { BarChart } from '../components/BarChart';
 
 const BUCKET_LABELS: Record<string, string> = {
@@ -26,8 +27,11 @@ const DEVICE_LABELS: Record<string, string> = {
 const TABS = [
   { key: 'capacity', label: 'Хранилище' },
   { key: 'users', label: 'Пользователи' },
-  { key: 'traffic', label: 'Посещаемость' }
+  { key: 'traffic', label: 'Посещаемость' },
+  { key: 'bars', label: 'Барс' }
 ] as const;
+
+const BARS_WINDOW_DAYS = 14;
 
 const LIMITED_BY_LABELS: Record<string, string> = {
   database: 'место в базе данных',
@@ -52,6 +56,10 @@ function formatBytes(bytes: number): string {
 function dayLabel(isoDate: string): string {
   const [, month, day] = isoDate.split('-');
   return `${day}.${month}`;
+}
+
+function formatCompact(n: number): string {
+  return new Intl.NumberFormat('ru-RU', { notation: 'compact', maximumFractionDigits: 1 }).format(n);
 }
 
 function UsageBar({ label, usedBytes, limitBytes }: { label: string; usedBytes: number; limitBytes: number }) {
@@ -323,6 +331,154 @@ function TrafficTab() {
   );
 }
 
+function BarsTab() {
+  const { analytics } = useBarsAnalytics(BARS_WINDOW_DAYS, true);
+
+  if (!analytics) return <p className="ts-center-note">Загрузка...</p>;
+
+  const { summary, tokenTotals, daily, costUsd, pricingConfigured, tools, topChats } = analytics;
+  const totalTokens = tokenTotals.promptTokens + tokenTotals.outputTokens;
+
+  return (
+    <div className="ts-publish-col" style={{ marginTop: 20 }}>
+      <div className="desc">За последние {BARS_WINDOW_DAYS} дней.</div>
+
+      <div className="ts-card-panel">
+        <div className="ts-admin-stats">
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{summary.messages}</div>
+            <div className="desc">сообщений</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{summary.conversations}</div>
+            <div className="desc">диалогов</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{summary.activeUsers}</div>
+            <div className="desc">активных пользователей</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{summary.avgTurnsPerConvo}</div>
+            <div className="desc">сообщений на диалог</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{summary.offTopic}</div>
+            <div className="desc">ответов не по теме</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{summary.errors}</div>
+            <div className="desc">сбоев</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Токены</h2>
+        <div className="ts-admin-stats">
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{formatCompact(tokenTotals.promptTokens)}</div>
+            <div className="desc">на вход (prompt)</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{formatCompact(tokenTotals.outputTokens)}</div>
+            <div className="desc">на выход</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{formatCompact(tokenTotals.thinkingTokens)}</div>
+            <div className="desc">на размышление</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{formatCompact(totalTokens)}</div>
+            <div className="desc">всего (вход + выход)</div>
+          </div>
+        </div>
+        <BarChart
+          data={daily.map((d) => ({
+            label: dayLabel(d.day),
+            value: d.promptTokens + d.outputTokens
+          }))}
+        />
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Стоимость</h2>
+        {pricingConfigured ? (
+          <>
+            <div className="ts-admin-stats">
+              <div className="ts-admin-stat">
+                <div className="ts-admin-stat-value">${costUsd.toFixed(2)}</div>
+                <div className="desc">оценка за период</div>
+              </div>
+            </div>
+            <BarChart
+              data={daily.map((d) => ({ label: dayLabel(d.day), value: Math.round(d.costUsd * 100) }))}
+            />
+            <div className="desc" style={{ marginTop: 10 }}>
+              По ценам из переменной BARS_TOKEN_PRICES. Столбцы графика — в центах.
+            </div>
+          </>
+        ) : (
+          <div className="desc">
+            Цены токенов не заданы (BARS_TOKEN_PRICES). Укажите их, чтобы видеть оценку
+            расходов в долларах.
+          </div>
+        )}
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Инструменты агента</h2>
+        {tools.length === 0 ? (
+          <div className="desc">За этот период инструменты не вызывались.</div>
+        ) : (
+          <div className="ts-admin-stats">
+            {tools.map((t) => (
+              <div className="ts-admin-stat" key={t.tool}>
+                <div className="ts-admin-stat-value">{t.calls}</div>
+                <div className="desc">{t.tool}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Топ чатов по токенам</h2>
+        {topChats.length === 0 ? (
+          <div className="desc">Пока нет данных.</div>
+        ) : (
+          <div className="ts-admin-stats">
+            {topChats.map((c) => (
+              <div className="ts-admin-stat" key={c.chatId}>
+                <div className="ts-admin-stat-value">
+                  {formatCompact(c.promptTokens + c.outputTokens)}
+                </div>
+                <div className="desc">
+                  {c.name ?? (c.telegramUsername ? `@${c.telegramUsername}` : `чат ${c.chatId}`)} ·{' '}
+                  {c.messages} сообщ.
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Результаты за период</h2>
+        <div className="ts-admin-stats">
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{summary.plansCreated}</div>
+            <div className="desc">планов подготовки создано</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{summary.remindersSent}</div>
+            <div className="desc">напоминаний отправлено</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AnalyticsPage() {
   const { profile, isSuperAdmin } = useAuth();
   const [tab, setTab] = useState<TabKey>('capacity');
@@ -349,6 +505,7 @@ export function AnalyticsPage() {
       {tab === 'capacity' && <CapacityTab />}
       {tab === 'users' && <UsersTab />}
       {tab === 'traffic' && <TrafficTab />}
+      {tab === 'bars' && <BarsTab />}
     </div>
   );
 }
