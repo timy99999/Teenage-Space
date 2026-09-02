@@ -108,9 +108,18 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
             </a>
           )}
           {event.registrationUrl && (
-            <button className="ts-btn-outline small" onClick={onOpen}>
+            <a
+              href={event.registrationUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="ts-btn-outline small"
+              onClick={(e) => {
+                e.stopPropagation();
+                trackLinkClick('registration', !!session, { targetType: 'event', targetId: event.id });
+              }}
+            >
               Регистрация
-            </button>
+            </a>
           )}
         </div>
       </div>

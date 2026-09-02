@@ -8372,7 +8372,7 @@
       "file_type": "code",
       "norm_label": "emptypostform()",
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L255"
+      "source_location": "L271"
     },
     {
       "id": "frontend_src_components_postform_eventtopostform",
@@ -8384,7 +8384,7 @@
       "file_type": "code",
       "norm_label": "eventtopostform()",
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L294"
+      "source_location": "L310"
     },
     {
       "id": "frontend_src_components_postform_parseage",
@@ -8408,7 +8408,7 @@
       "file_type": "code",
       "norm_label": "postcardinfo()",
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L191"
+      "source_location": "L207"
     },
     {
       "id": "frontend_src_components_postform_postformpayload",
@@ -8420,7 +8420,7 @@
       "file_type": "code",
       "norm_label": "postformpayload()",
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L284"
+      "source_location": "L300"
     },
     {
       "id": "frontend_src_components_postform_postsiteinfo",
@@ -8444,7 +8444,7 @@
       "file_type": "code",
       "norm_label": "toggledaterange()",
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L32"
+      "source_location": "L34"
     },
     {
       "id": "frontend_src_components_trashicon_trashicon",
@@ -23620,7 +23620,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L82",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -50812,7 +50812,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L191",
+      "source_location": "L207",
       "weight": 1.0
     },
     {
@@ -50834,18 +50834,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L255",
-      "weight": 1.0
-    },
-    {
-      "source": "frontend_src_components_postform",
-      "target": "frontend_src_components_postform_postformpayload",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L284",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -50861,13 +50850,24 @@
     },
     {
       "source": "frontend_src_components_postform",
+      "target": "frontend_src_components_postform_postformpayload",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/components/PostForm.tsx",
+      "source_location": "L300",
+      "weight": 1.0
+    },
+    {
+      "source": "frontend_src_components_postform",
       "target": "frontend_src_components_postform_eventtopostform",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L294",
+      "source_location": "L310",
       "weight": 1.0
     },
     {
@@ -50900,7 +50900,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/components/PostForm.tsx",
-      "source_location": "L32",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -58803,5 +58803,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "cb18c7eb30acbe74705a59fe0558ba3047621932"
+  "built_at_commit": "6323303ab9a29b056219e579c8a9b58e0c7fbd2f"
 }

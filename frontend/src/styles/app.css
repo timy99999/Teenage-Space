@@ -672,6 +672,9 @@
 }
 
 .ts-btn-outline {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
   padding: 13px 30px;
   border-radius: 999px;
   border: 1.5px solid var(--ts-violet);

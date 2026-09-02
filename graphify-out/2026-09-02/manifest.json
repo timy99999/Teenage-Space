@@ -390,10 +390,10 @@
     "semantic_hash": "1126713cd7cc30c610b5d0f710f8b06a"
   },
   "frontend/src/components/PostForm.tsx": {
-    "mtime": 1787278915.1432304,
-    "seen": 1787666027.1690547,
-    "ast_hash": "d00c8cc8fa258c8145cd45d67551c4fa",
-    "semantic_hash": "d00c8cc8fa258c8145cd45d67551c4fa"
+    "mtime": 1788352135.7817333,
+    "seen": 1788352223.370025,
+    "ast_hash": "e40884b4ce961870b971cbba4244ec50",
+    "semantic_hash": ""
   },
   "frontend/src/components/Sidebar.tsx": {
     "mtime": 1788010127.838066,
@@ -606,10 +606,10 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/PublishPage.tsx": {
-    "mtime": 1787278062.4636548,
-    "seen": 1787666027.1690547,
-    "ast_hash": "bb6238eeee4c32adf33a5e0b5a075518",
-    "semantic_hash": "bb6238eeee4c32adf33a5e0b5a075518"
+    "mtime": 1788352140.0478938,
+    "seen": 1788352223.3979506,
+    "ast_hash": "579988f8795467513c65310261b62714",
+    "semantic_hash": ""
   },
   "frontend/src/pages/SettingsPage.tsx": {
     "mtime": 1787063041.6082773,
