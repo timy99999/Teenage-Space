@@ -34,10 +34,16 @@ alter table bot_messages add column if not exists meta jsonb not null default '{
 
 -- ------------------------------------------------------------------------------- RPC
 -- Extends the admin chat list with the two failure shapes worth spotting at a glance.
--- Same signature contract as 20260829120000_bars_observability.sql, so the backend's
--- existing mapper keeps working -- the columns are appended, not reordered.
+-- The columns are appended, not reordered, so the backend's existing mapper (which
+-- reads by name) keeps working and simply ignores the new ones until it is taught them.
+--
+-- DROP before CREATE, not CREATE OR REPLACE: adding a column to RETURNS TABLE changes
+-- the function's return type, and Postgres refuses that in a replace
+-- ("cannot change return type of existing function").
 
-create or replace function public.get_bars_chat_list(p_days int)
+drop function if exists public.get_bars_chat_list(int);
+
+create function public.get_bars_chat_list(p_days int)
 returns table(
   chat_id bigint,
   telegram_username text,

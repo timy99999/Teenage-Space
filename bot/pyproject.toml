@@ -15,6 +15,11 @@ packages = ["bars", "bars.graph"]
 testpaths = ["tests"]
 # Every test here is async; declaring the mode saves a decorator on each one.
 asyncio_mode = "auto"
+# `bars` is imported from the source tree, not installed. `python -m pytest` would put
+# the working directory on sys.path implicitly, but a bare `pytest` -- which is what CI
+# runs -- does not, and the whole suite fails to collect. Being explicit makes both
+# invocations behave the same.
+pythonpath = ["."]
 
 [tool.ruff]
 line-length = 110
