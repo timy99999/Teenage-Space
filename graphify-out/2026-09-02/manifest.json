@@ -306,9 +306,9 @@
     "semantic_hash": ""
   },
   "frontend/src/App.tsx": {
-    "mtime": 1788010118.363703,
-    "seen": 1788010451.5487592,
-    "ast_hash": "a44b7f94f1471485f4cb6f3a620aa3f8",
+    "mtime": 1788354652.5660932,
+    "seen": 1788354730.7103727,
+    "ast_hash": "cfcb2c77a1b58171cd29ed185489a4a5",
     "semantic_hash": ""
   },
   "frontend/src/components/BottomNav.tsx": {
@@ -396,9 +396,9 @@
     "semantic_hash": ""
   },
   "frontend/src/components/Sidebar.tsx": {
-    "mtime": 1788010127.838066,
-    "seen": 1788010451.5559144,
-    "ast_hash": "189a45814c5a99453e5af429924ebe83",
+    "mtime": 1788354639.944758,
+    "seen": 1788354730.7183788,
+    "ast_hash": "03c212ab3d9191132c7fa01429637e93",
     "semantic_hash": ""
   },
   "frontend/src/components/Toast.tsx": {
@@ -600,9 +600,9 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/ProfilePage.tsx": {
-    "mtime": 1787931518.4449015,
-    "seen": 1787931780.6259959,
-    "ast_hash": "12a6ae56bd613d45a887eab09a904ea2",
+    "mtime": 1788354647.935131,
+    "seen": 1788354730.7339392,
+    "ast_hash": "f1ecfc39b1f090950695350ee471d2b6",
     "semantic_hash": ""
   },
   "frontend/src/pages/PublishPage.tsx": {

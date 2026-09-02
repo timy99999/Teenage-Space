@@ -14,6 +14,13 @@ function todayInBishkek(): string {
   return new Date(Date.now() + BISHKEK_UTC_OFFSET_MS).toISOString().slice(0, 10);
 }
 
+/** Bishkek calendar date one month back — the cutoff for archiving date-less events. */
+function oneMonthAgoInBishkek(): string {
+  const d = new Date(Date.now() + BISHKEK_UTC_OFFSET_MS);
+  d.setUTCMonth(d.getUTCMonth() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
 @Injectable()
 export class EventsService implements OnModuleInit {
   private readonly logger = new Logger(EventsService.name);
@@ -76,15 +83,17 @@ export class EventsService implements OnModuleInit {
 
   /**
    * Archives events the day after their registration deadline — or, if none is set,
-   * the day after the event's (end) date. Runs nightly plus once on boot to catch up
+   * the day after the event's (end) date. Events with no dates at all are archived
+   * a month after they were published. Runs nightly plus once on boot to catch up
    * after any downtime.
    */
   @Cron('0 18 * * *') // 00:00 in Asia/Bishkek (UTC+6), expressed in UTC to sidestep IANA timezone lookups
   async archiveExpiredEvents() {
     const today = todayInBishkek();
+    const monthAgo = oneMonthAgoInBishkek();
     const base = () => this.supabase.client.from('events').update({ archived: true }).eq('archived', false);
 
-    const [byDeadline, byEventEnd, byEventDate] = await Promise.all([
+    const [byDeadline, byEventEnd, byEventDate, byNoDates] = await Promise.all([
       base().not('deadline_date', 'is', null).lt('deadline_date', today).select('id'),
       base().is('deadline_date', null).not('event_date_end', 'is', null).lt('event_date_end', today).select('id'),
       base()
@@ -92,14 +101,21 @@ export class EventsService implements OnModuleInit {
         .is('event_date_end', null)
         .not('event_date', 'is', null)
         .lt('event_date', today)
+        .select('id'),
+      base()
+        .is('deadline_date', null)
+        .is('event_date_end', null)
+        .is('event_date', null)
+        .lt('created_at', monthAgo)
         .select('id')
     ]);
 
-    for (const r of [byDeadline, byEventEnd, byEventDate]) {
+    const results = [byDeadline, byEventEnd, byEventDate, byNoDates];
+    for (const r of results) {
       if (r.error) throw r.error;
     }
 
-    const archivedCount = (byDeadline.data?.length ?? 0) + (byEventEnd.data?.length ?? 0) + (byEventDate.data?.length ?? 0);
+    const archivedCount = results.reduce((sum, r) => sum + (r.data?.length ?? 0), 0);
     if (archivedCount > 0) {
       await this.cache.clear();
       this.logger.log(`Auto-archived ${archivedCount} event(s) past their registration/event date`);
