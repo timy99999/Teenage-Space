@@ -27,7 +27,7 @@ except ImportError:  # pragma: no cover - older langchain-core: skip token accou
     def get_usage_metadata_callback():
         yield _NoUsageCallback()
 
-from . import analytics, plans, sessions
+from . import analytics, plans, sessions, smalltalk
 from .api_client import ApiError, api
 from .catalog import bishkek_today, catalog, parse_date
 from .config import get_settings
@@ -189,6 +189,22 @@ async def process(job: Job) -> None:
 
         context = await chat_context(chat_id)
         user_id = context.get("user_id")
+
+        canned = smalltalk.canned_reply(job.text)
+        if canned is not None:
+            # A pleasantry whose answer depends on nothing. Skipping the graph skips the
+            # guard call and the persona both — the whole turn costs zero tokens and no
+            # round-trip. Nothing enters the checkpoint either, which is right: neither
+            # side of "спасибо / пожалуйста" is context a later turn needs.
+            #
+            # On a fresh session GREETING has just gone out and already answers a hello,
+            # so a second message here would be the double-greeting _seed_greeting exists
+            # to prevent.
+            if not fresh:
+                await message.answer(canned)
+            answer_text = canned
+            meta = {"canned": True, "tool_rounds": 0, "tool_calls": 0}
+            return
 
         state = {"messages": [*seed, HumanMessage(content=job.text)]}
         config = {

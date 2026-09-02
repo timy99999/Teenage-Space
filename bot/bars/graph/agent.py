@@ -19,9 +19,9 @@ from langgraph.prebuilt import ToolNode
 from psycopg_pool import AsyncConnectionPool
 from pydantic import BaseModel, Field
 
-from ..catalog import bishkek_today
+from ..catalog import availability_line, bishkek_today, catalog
 from ..config import get_settings
-from ..persona import GUARD_PROMPT, OFF_TOPIC_REPLY, system_prompt
+from ..persona import GUARD_PROMPT, OFF_TOPIC_REPLY, SMALLTALK_PROMPT, system_prompt
 from .state import BarsState
 from .tools import TOOLS
 
@@ -47,11 +47,6 @@ FINALIZE_INSTRUCTION = (
     "и задай один уточняющий вопрос. Никогда не отвечай пустым сообщением."
 )
 
-SMALLTALK_INSTRUCTION = (
-    "Это короткая светская реплика, а не запрос на подбор. Ответь в одну-две строки, "
-    "по-человечески, и спроси, что человеку интересно. Не перечисляй мероприятия и не "
-    "повторяй свой прошлый ответ."
-)
 
 
 # --- history shaping ---------------------------------------------------------
@@ -246,17 +241,30 @@ def build_graph(pool: AsyncConnectionPool):
         as a verbatim copy of an earlier answer about a finance olympiad, after nine tool
         calls. One cheap call against one turn of context cannot do that.
         """
-        messages = state["messages"]
-        question = next((m for m in reversed(messages) if isinstance(m, HumanMessage)), None)
-        parts = [SystemMessage(content=system_prompt(bishkek_today().isoformat()))]
+        question = next(
+            (m for m in reversed(state["messages"]) if isinstance(m, HumanMessage)), None
+        )
+        parts: list = [SystemMessage(content=SMALLTALK_PROMPT)]
         if question is not None:
             parts.append(question)
-        parts.append(SystemMessage(content=SMALLTALK_INSTRUCTION))
         response = await plain_llm.ainvoke(parts)
         return {"messages": [response]}
 
+    async def _system_message() -> SystemMessage:
+        """The persona, with the current catalogue census folded in.
+
+        The census comes from the in-process snapshot, so it costs no network call --
+        and a failure to build it must not cost the user their answer, hence the guard.
+        """
+        census = ""
+        try:
+            census = availability_line(await catalog().snapshot())
+        except Exception:
+            logger.warning("Could not build the catalogue census", exc_info=True)
+        return SystemMessage(content=system_prompt(bishkek_today().isoformat(), census))
+
     async def agent(state: BarsState) -> dict:
-        prompt = SystemMessage(content=system_prompt(bishkek_today().isoformat()))
+        prompt = await _system_message()
         response = await llm.ainvoke([prompt, *_recent_history(state["messages"])])
         return {"messages": [filter_tool_calls(state["messages"], response)]}
 
@@ -279,10 +287,7 @@ def build_graph(pool: AsyncConnectionPool):
         if collected:
             instruction += "\n\nДанные из каталога, собранные для этого вопроса:\n\n" + collected
 
-        parts = [
-            SystemMessage(content=system_prompt(bishkek_today().isoformat())),
-            *_prior_turns(messages),
-        ]
+        parts = [await _system_message(), *_prior_turns(messages)]
         if question is not None:
             parts.append(question)
         parts.append(SystemMessage(content=instruction))

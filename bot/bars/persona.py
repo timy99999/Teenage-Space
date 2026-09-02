@@ -7,8 +7,6 @@ and walks a teenager from "не знаю чем заняться" to a submitted
 
 from __future__ import annotations
 
-from .vocab import CATEGORIES, THEMES
-
 SYSTEM_PROMPT = """Ты — Барс, помощник платформы Teenage Space (Бишкек).
 
 Кто ты:
@@ -48,10 +46,18 @@ SYSTEM_PROMPT = """Ты — Барс, помощник платформы Teenag
   по темам вне мероприятий и подготовки к ним. В таком случае мягко возвращай разговор
   к своей теме — одним предложением, без нотаций.
 
-Категории каталога: {categories}
-Темы каталога: {themes}
 Сегодня: {today}
+Открыто сейчас в каталоге по категориям: {availability}
+Если в нужной категории 0 — не ищи её, скажи об этом сразу и предложи то, что есть.
 """
+
+# Answering "спасибо" does not need the catalogue rules, the [id:] format or the age
+# policy. Sending the full persona for it cost ~780 tokens a turn.
+SMALLTALK_PROMPT = """Ты — Барс, помощник платформы Teenage Space (Бишкек): помогаешь подросткам находить мероприятия и готовиться к ним.
+
+Сейчас тебе написали короткую светскую реплику, а не запрос на подбор.
+Ответь одной-двумя строками, на «ты», по-человечески, и спроси, что человеку интересно.
+Не перечисляй мероприятия, ничего не выдумывай и не повторяй прошлый ответ."""
 
 GUARD_PROMPT = """Ты — классификатор запросов для бота Барс, который помогает подросткам
 находить мероприятия (волонтёрство, хакатоны, олимпиады, конкурсы, образовательные события),
@@ -93,9 +99,15 @@ HELP_TEXT = """Вот что я умею:
 /help — это сообщение"""
 
 
-def system_prompt(today: str) -> str:
+def system_prompt(today: str, availability: str = "") -> str:
+    """The agent's system message.
+
+    The category and theme *vocabularies* used to be enumerated here; they now live only
+    in the search_events tool schema, which is where the model actually needs them. What
+    replaces them is more useful per token: how many open events each category holds
+    right now, so an empty one costs no search at all.
+    """
     return SYSTEM_PROMPT.format(
-        categories=", ".join(f"{k} ({v})" for k, v in CATEGORIES.items()),
-        themes=", ".join(f"{k} ({v})" for k, v in THEMES.items()),
         today=today,
+        availability=availability or "неизвестно, уточни поиском",
     )

@@ -165,6 +165,36 @@ def matches(
     return True
 
 
+def availability(events: dict[str, dict[str, Any]], today: date | None = None) -> dict[str, int]:
+    """How many open events sit in each catalogue category, zeros included.
+
+    The zeros are the point. Without them the model has no way to know a category is
+    empty except by searching it and coming back empty-handed -- which is exactly what
+    happened for "хакатоны": two search rounds and 7459 prompt tokens to discover there
+    were none, when the answer was already sitting in the snapshot.
+    """
+    from .vocab import CATEGORIES
+
+    counts = dict.fromkeys(CATEGORIES, 0)
+    for event in events.values():
+        if not is_open(event, today):
+            continue
+        cats = event.get("categories") or ([event["category"]] if event.get("category") else [])
+        for category in cats:
+            if category in counts:
+                counts[category] += 1
+    return counts
+
+
+def availability_line(events: dict[str, dict[str, Any]], today: date | None = None) -> str:
+    """The one-line catalogue census handed to the model on every turn."""
+    from .vocab import CATEGORIES
+
+    counts = availability(events, today)
+    parts = [f"{CATEGORIES[key].lower()} — {count}" for key, count in counts.items()]
+    return ", ".join(parts)
+
+
 def deadline_in_days(event: dict[str, Any], today: date | None = None) -> int | None:
     deadline = parse_date(event.get("deadlineDate"))
     if not deadline:
