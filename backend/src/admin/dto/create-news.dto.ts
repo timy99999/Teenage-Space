@@ -1,6 +1,5 @@
-import { IsOptional, IsString, IsUrl } from 'class-validator';
-
-const URL_OPTS = { protocols: ['http', 'https'], require_protocol: true };
+import { IsOptional, IsString } from 'class-validator';
+import { IsLooseUrl } from '../../common/url';
 
 export class CreateNewsDto {
   @IsString()
@@ -12,7 +11,7 @@ export class CreateNewsDto {
   @IsString()
   eventDate!: string;
 
-  @IsUrl(URL_OPTS)
+  @IsLooseUrl()
   imageUrl!: string;
 
   @IsOptional()
@@ -20,6 +19,6 @@ export class CreateNewsDto {
   linkTitle?: string | null;
 
   @IsOptional()
-  @IsUrl(URL_OPTS)
+  @IsLooseUrl()
   linkUrl?: string | null;
 }

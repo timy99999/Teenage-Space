@@ -1,12 +1,11 @@
-import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, IsUrl, Max, Min } from 'class-validator';
-
-const URL_OPTS = { protocols: ['http', 'https'], require_protocol: true };
+import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsLooseUrl } from '../common/url';
 
 export class CreateSubmissionDto {
   @IsString()
   title!: string;
 
-  @IsUrl(URL_OPTS)
+  @IsLooseUrl()
   imageUrl!: string;
 
   @IsOptional()
@@ -78,7 +77,7 @@ export class CreateSubmissionDto {
   description?: string;
 
   @IsOptional()
-  @IsUrl(URL_OPTS)
+  @IsLooseUrl()
   registrationUrl?: string | null;
 
   @IsOptional()
@@ -86,7 +85,7 @@ export class CreateSubmissionDto {
   extraLinkTitle?: string | null;
 
   @IsOptional()
-  @IsUrl(URL_OPTS)
+  @IsLooseUrl()
   extraLinkUrl?: string | null;
 
   @IsOptional()

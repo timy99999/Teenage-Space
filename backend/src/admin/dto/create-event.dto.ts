@@ -1,9 +1,8 @@
-import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, IsUrl, Max, Min } from 'class-validator';
-
-const URL_OPTS = { protocols: ['http', 'https'], require_protocol: true };
+import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsLooseUrl } from '../../common/url';
 
 export class CreateEventDto {
-  @IsUrl(URL_OPTS)
+  @IsLooseUrl()
   imageUrl!: string;
 
   @IsString()
@@ -71,7 +70,7 @@ export class CreateEventDto {
   description!: string;
 
   @IsOptional()
-  @IsUrl(URL_OPTS)
+  @IsLooseUrl()
   registrationUrl?: string | null;
 
   @IsOptional()
@@ -79,7 +78,7 @@ export class CreateEventDto {
   extraLinkTitle?: string | null;
 
   @IsOptional()
-  @IsUrl(URL_OPTS)
+  @IsLooseUrl()
   extraLinkUrl?: string | null;
 
   @IsOptional()

@@ -1,4 +1,5 @@
-import { IsBoolean, IsIn, IsOptional, IsString, IsUrl, Matches } from 'class-validator';
+import { IsBoolean, IsIn, IsOptional, IsString, Matches } from 'class-validator';
+import { IsLooseUrl } from '../common/url';
 
 export class UpdateProfileDto {
   @IsOptional()
@@ -18,7 +19,7 @@ export class UpdateProfileDto {
   birthDate?: string;
 
   @IsOptional()
-  @IsUrl({ protocols: ['http', 'https'], require_protocol: true })
+  @IsLooseUrl()
   avatarUrl?: string;
 
   @IsOptional()
