@@ -47,7 +47,7 @@ export function EditEventModal({ event, onClose, onSaved }: EditEventModalProps)
           <h2 className="ts-modal-title">Редактировать мероприятие</h2>
           <section>
             <div className="ts-field-label">Информация для сайта</div>
-            <PostSiteInfo value={form} onChange={setForm} multiCategory />
+            <PostSiteInfo value={form} onChange={setForm} admin />
           </section>
           <section>
             <div className="ts-field-label">Информация для карточки</div>

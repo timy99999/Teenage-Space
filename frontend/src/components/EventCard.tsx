@@ -40,6 +40,23 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
         <button className="ts-card-img" onClick={onOpen}>
           <EventPhoto src={event.imageUrl} alt={event.title} />
         </button>
+        {event.organizerName &&
+          (event.organizerUrl ? (
+            <a
+              className="ts-card-organizer"
+              href={event.organizerUrl}
+              target="_blank"
+              rel="noreferrer"
+              title={event.organizerName}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {event.organizerName}
+            </a>
+          ) : (
+            <span className="ts-card-organizer" title={event.organizerName}>
+              {event.organizerName}
+            </span>
+          ))}
         {event.charity && (
           <span className="ts-card-charity-badge" style={admin ? { right: 44 } : undefined}>
             Благотворительное

@@ -75,6 +75,14 @@ export class CreateEventDto {
   description!: string;
 
   @IsOptional()
+  @IsString()
+  organizerName?: string | null;
+
+  @IsOptional()
+  @IsLooseUrl()
+  organizerUrl?: string | null;
+
+  @IsOptional()
   @IsLooseUrl()
   registrationUrl?: string | null;
 

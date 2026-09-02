@@ -24,6 +24,8 @@ export interface EventRow {
   registration_url: string | null;
   extra_link_title: string | null;
   extra_link_url: string | null;
+  organizer_name: string | null;
+  organizer_url: string | null;
   telegram: string | null;
   is_past: boolean;
   archived: boolean;
@@ -58,6 +60,8 @@ export function mapEvent(row: EventRow) {
     registrationUrl: row.registration_url,
     extraLinkTitle: row.extra_link_title,
     extraLinkUrl: row.extra_link_url,
+    organizerName: row.organizer_name,
+    organizerUrl: row.organizer_url,
     telegram: row.telegram,
     isPast: row.is_past,
     archived: row.archived,

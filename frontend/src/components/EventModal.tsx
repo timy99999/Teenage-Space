@@ -63,6 +63,22 @@ export function EventModal() {
         <div className="ts-modal-grid">
           <div className="ts-modal-img">
             <EventPhoto src={event.imageUrl} alt={event.title} />
+            {event.organizerName &&
+              (event.organizerUrl ? (
+                <a
+                  className="ts-card-organizer"
+                  href={event.organizerUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={event.organizerName}
+                >
+                  {event.organizerName}
+                </a>
+              ) : (
+                <span className="ts-card-organizer" title={event.organizerName}>
+                  {event.organizerName}
+                </span>
+              ))}
           </div>
           <div className="ts-modal-body">
             <div className="ts-modal-cat">

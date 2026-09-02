@@ -56,6 +56,8 @@ function buildFormFromSubmission(s: AdminSubmission): PostFormValue {
     address: s.address ?? '',
     audience: s.audience ?? '',
     description: s.description ?? '',
+    organizerName: '',
+    organizerUrl: '',
     registrationUrl: s.registrationUrl ?? '',
     extraLinkTitle: s.extraLinkTitle ?? '',
     extraLinkUrl: s.extraLinkUrl ?? '',
@@ -260,7 +262,7 @@ function SubmissionRow({
 
           <div>
             <div className="ts-field-label">Оформить как мероприятие для публикации</div>
-            <PostSiteInfo value={form} onChange={setForm} multiCategory />
+            <PostSiteInfo value={form} onChange={setForm} admin />
             <PostCardInfo value={form} onChange={setForm} />
           </div>
 
@@ -314,7 +316,7 @@ function PublishEventTab() {
       <section className="ts-card-panel">
         <h2>Информация для сайта</h2>
         <div className="desc">Определяет категорию, фильтры и расположение мероприятия</div>
-        <PostSiteInfo value={form} onChange={setForm} multiCategory />
+        <PostSiteInfo value={form} onChange={setForm} admin />
       </section>
 
       <section className="ts-card-panel">

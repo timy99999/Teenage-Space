@@ -29,6 +29,8 @@ export interface EventItem {
   registrationUrl: string | null;
   extraLinkTitle: string | null;
   extraLinkUrl: string | null;
+  organizerName: string | null;
+  organizerUrl: string | null;
   telegram: string | null;
   isPast: boolean;
   archived: boolean;
@@ -342,6 +344,8 @@ export interface PostFormValue {
   address: string;
   audience: string;
   description: string;
+  organizerName: string;
+  organizerUrl: string;
   registrationUrl: string;
   extraLinkTitle: string;
   extraLinkUrl: string;

@@ -139,6 +139,8 @@ export class AdminService {
         audience: dto.audience || null,
         short_desc: deriveShortDesc(dto.description),
         description: dto.description,
+        organizer_name: dto.organizerName || null,
+        organizer_url: dto.organizerUrl || null,
         instagram: dto.instagram || null,
         registration_url: dto.registrationUrl || null,
         extra_link_title: dto.extraLinkTitle || null,
@@ -179,6 +181,8 @@ export class AdminService {
     if (dto.address !== undefined) patch.place = dto.address ?? '';
     if (dto.audience !== undefined) patch.audience = dto.audience || null;
     if (dto.description !== undefined) patch.description = dto.description;
+    if (dto.organizerName !== undefined) patch.organizer_name = dto.organizerName || null;
+    if (dto.organizerUrl !== undefined) patch.organizer_url = dto.organizerUrl || null;
     if (dto.registrationUrl !== undefined) patch.registration_url = dto.registrationUrl || null;
     if (dto.extraLinkTitle !== undefined) patch.extra_link_title = dto.extraLinkTitle || null;
     if (dto.extraLinkUrl !== undefined) patch.extra_link_url = dto.extraLinkUrl || null;

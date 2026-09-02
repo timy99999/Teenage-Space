@@ -24,11 +24,14 @@ function parseAge(raw: string): number | '' {
 export interface PostFormFieldsProps {
   value: PostFormValue;
   onChange: Dispatch<SetStateAction<PostFormValue>>;
-  /** Admins may tag an event with several categories; the public form stays single-select. */
-  multiCategory?: boolean;
+  /**
+   * Admin-only surfaces: several categories at once, plus the "Организатор"
+   * name/link fields. The public submission form leaves this off.
+   */
+  admin?: boolean;
 }
 
-export function PostSiteInfo({ value: form, onChange: setForm, multiCategory = false }: PostFormFieldsProps) {
+export function PostSiteInfo({ value: form, onChange: setForm, admin = false }: PostFormFieldsProps) {
   const [dateRange, setDateRange] = useState(() => !!form.eventDateEnd);
   const anyAge =
     form.ageMin !== '' && form.ageMax !== '' && Number(form.ageMin) === 0 && Number(form.ageMax) === 99;
@@ -43,8 +46,28 @@ export function PostSiteInfo({ value: form, onChange: setForm, multiCategory = f
 
   return (
     <div className="ts-field-group">
+      {admin && (
+        <div>
+          <div className="ts-field-label">Организатор</div>
+          <div className="ts-form-stack">
+            <input
+              className="ts-input"
+              placeholder="Название организации"
+              value={form.organizerName}
+              onChange={(e) => setForm((v) => ({ ...v, organizerName: e.target.value }))}
+            />
+            <input
+              className="ts-input"
+              placeholder="Ссылка на организатора"
+              value={form.organizerUrl}
+              onChange={(e) => setForm((v) => ({ ...v, organizerUrl: e.target.value }))}
+            />
+          </div>
+          <div className="ts-hint">Показывается в левом верхнем углу карточки и ведёт по ссылке.</div>
+        </div>
+      )}
       <div>
-        <div className="ts-field-label">{multiCategory ? 'Категории' : 'Категория'}</div>
+        <div className="ts-field-label">{admin ? 'Категории' : 'Категория'}</div>
         <div className="ts-filter-chips">
           {CATS.map((c) => (
             <Chip
@@ -54,7 +77,7 @@ export function PostSiteInfo({ value: form, onChange: setForm, multiCategory = f
               onClick={() =>
                 setForm((v) => ({
                   ...v,
-                  categories: multiCategory
+                  categories: admin
                     ? v.categories.includes(c.key)
                       ? v.categories.filter((x) => x !== c.key)
                       : [...v.categories, c.key]
@@ -299,6 +322,8 @@ export function emptyPostForm(): PostFormValue {
     address: '',
     audience: '',
     description: '',
+    organizerName: '',
+    organizerUrl: '',
     registrationUrl: '',
     extraLinkTitle: '',
     extraLinkUrl: '',
@@ -340,6 +365,8 @@ export function eventToPostForm(event: EventItem): PostFormValue {
     address: event.place,
     audience: event.audience ?? '',
     description: event.description,
+    organizerName: event.organizerName ?? '',
+    organizerUrl: event.organizerUrl ?? '',
     registrationUrl: event.registrationUrl ?? '',
     extraLinkTitle: event.extraLinkTitle ?? '',
     extraLinkUrl: event.extraLinkUrl ?? '',
