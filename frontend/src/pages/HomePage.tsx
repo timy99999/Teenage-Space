@@ -123,7 +123,8 @@ export function HomePage() {
             <button key={c.key} className="ts-tile" onClick={() => navigate(`/opportunities/${c.key}`)}>
               <div className="ts-tile-title">{c.label}</div>
               <div className="ts-tile-sub">
-                {events.filter((e) => e.category === c.key).length} — {CATN[c.key]}
+                {events.filter((e) => (e.categories.length ? e.categories : [e.category]).includes(c.key)).length} —{' '}
+                {CATN[c.key]}
               </div>
             </button>
           ))}

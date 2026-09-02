@@ -65,7 +65,11 @@ export function EventModal() {
             <EventPhoto src={event.imageUrl} alt={event.title} />
           </div>
           <div className="ts-modal-body">
-            <div className="ts-modal-cat">{CATS.find((c) => c.key === event.category)?.label}</div>
+            <div className="ts-modal-cat">
+              {(event.categories.length ? event.categories : [event.category])
+                .map((k) => CATS.find((c) => c.key === k)?.label ?? k)
+                .join(' · ')}
+            </div>
             <h2 className="ts-modal-title">{event.title}</h2>
             <p className="ts-modal-desc">{event.description}</p>
             {event.audience && (

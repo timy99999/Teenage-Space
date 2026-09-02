@@ -37,7 +37,7 @@ export function PublishPage() {
       await api.post<Submission>('/submissions', {
         title: form.title,
         imageUrl: form.imageUrl,
-        category: form.category || null,
+        category: form.categories[0] || null,
         themes: form.themes,
         ageMin: form.ageMin === '' ? null : form.ageMin,
         ageMax: form.ageMax === '' ? null : form.ageMax,

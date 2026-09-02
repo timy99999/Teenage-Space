@@ -16,6 +16,11 @@ export class UpdateEventDto {
 
   @IsOptional()
   @IsArray()
+  @IsString({ each: true })
+  categories?: string[];
+
+  @IsOptional()
+  @IsArray()
   themes?: string[];
 
   @IsOptional()

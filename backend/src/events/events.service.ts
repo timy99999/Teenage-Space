@@ -34,12 +34,12 @@ export class EventsService implements OnModuleInit {
     if (query.scope === 'upcoming') q = q.eq('is_past', false);
     else if (query.scope === 'past') q = q.eq('is_past', true);
 
-    if (query.category) q = q.eq('category', query.category);
+    if (query.category) q = q.contains('categories', [query.category]);
     if (query.price) q = q.eq('price', query.price);
     if (query.level) q = q.eq('level', query.level);
 
     const categories = query.categories?.split(',').filter(Boolean) ?? [];
-    if (categories.length) q = q.in('category', categories);
+    if (categories.length) q = q.overlaps('categories', categories);
 
     const themes = query.themes?.split(',').filter(Boolean) ?? [];
     if (themes.length) q = q.overlaps('themes', themes);

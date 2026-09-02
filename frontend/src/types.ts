@@ -5,7 +5,9 @@ export type Format = 'Личное' | 'Командное';
 export interface EventItem {
   id: string;
   title: string;
+  /** Primary category (first of `categories`) — kept for single-value reads. */
   category: string;
+  categories: string[];
   themes: string[];
   ageMin: number;
   ageMax: number;
@@ -324,7 +326,7 @@ export interface BarsAnalytics {
 export interface PostFormValue {
   imageUrl: string | null;
   title: string;
-  category: string;
+  categories: string[];
   themes: string[];
   ageMin: number | '';
   ageMax: number | '';

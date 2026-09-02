@@ -25,6 +25,10 @@ on conflict (id) do update set
   short_desc = excluded.short_desc, description = excluded.description, instagram = excluded.instagram,
   registration_url = excluded.registration_url, is_past = excluded.is_past;
 
+-- Keep the multi-category array in sync with the seeded single `category`.
+update events set categories = array[category]
+where categories = '{}' and category is not null and category <> '';
+
 insert into news (id, title, event_date, short_desc) values
 ('n1', 'Teenage Space открыт: 40 первых мероприятий', '2026-08-14', 'Мы собрали каталог возможностей Бишкека — от волонтёрства до международных конкурсов.'),
 ('n2', 'Как собрать портфолио к 11 классу', '2026-08-11', 'Разбираем, какие активности действительно замечают приёмные комиссии.'),

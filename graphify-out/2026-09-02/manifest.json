@@ -342,9 +342,9 @@
     "semantic_hash": "e308a0dc4a4482d600ecf849b5e318ab"
   },
   "frontend/src/components/EventCard.tsx": {
-    "mtime": 1787915376.5368805,
-    "seen": 1787917839.5080206,
-    "ast_hash": "d3531aef76595ad011cda7dc5947db5c",
+    "mtime": 1788352535.9082065,
+    "seen": 1788352614.6290038,
+    "ast_hash": "e72d315b97f0f151f68375bb637fcb5b",
     "semantic_hash": ""
   },
   "frontend/src/components/EventModal.tsx": {

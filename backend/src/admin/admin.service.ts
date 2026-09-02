@@ -114,12 +114,14 @@ export class AdminService {
   }
 
   private async insertEvent(dto: CreateEventDto) {
+    const categories = dto.categories?.length ? dto.categories : dto.category ? [dto.category] : [];
     const { data: event, error: eventError } = await this.supabase.client
       .from('events')
       .insert({
         id: randomUUID(),
         title: dto.title,
-        category: dto.category,
+        category: categories[0] ?? dto.category,
+        categories,
         themes: dto.themes ?? [],
         age_min: dto.ageMin,
         age_max: dto.ageMax,
@@ -156,7 +158,12 @@ export class AdminService {
     const patch: Record<string, unknown> = {};
     if (dto.imageUrl !== undefined) patch.image_url = dto.imageUrl;
     if (dto.title !== undefined) patch.title = dto.title;
-    if (dto.category !== undefined) patch.category = dto.category;
+    if (dto.categories !== undefined) {
+      patch.categories = dto.categories;
+      if (dto.categories.length) patch.category = dto.categories[0];
+    } else if (dto.category !== undefined) {
+      patch.category = dto.category;
+    }
     if (dto.themes !== undefined) patch.themes = dto.themes;
     if (dto.ageMin !== undefined) patch.age_min = dto.ageMin;
     if (dto.ageMax !== undefined) patch.age_max = dto.ageMax;

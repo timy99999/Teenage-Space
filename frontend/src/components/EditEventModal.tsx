@@ -16,7 +16,7 @@ export function EditEventModal({ event, onClose, onSaved }: EditEventModalProps)
   const [saving, setSaving] = useState(false);
 
   async function save() {
-    if (!form.title.trim() || !form.category) {
+    if (!form.title.trim() || !form.categories.length) {
       flash('Заполните название и категорию');
       return;
     }
@@ -47,7 +47,7 @@ export function EditEventModal({ event, onClose, onSaved }: EditEventModalProps)
           <h2 className="ts-modal-title">Редактировать мероприятие</h2>
           <section>
             <div className="ts-field-label">Информация для сайта</div>
-            <PostSiteInfo value={form} onChange={setForm} />
+            <PostSiteInfo value={form} onChange={setForm} multiCategory />
           </section>
           <section>
             <div className="ts-field-label">Информация для карточки</div>

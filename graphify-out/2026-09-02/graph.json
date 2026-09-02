@@ -7964,7 +7964,7 @@
       "file_type": "code",
       "norm_label": "cardmenu()",
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L121"
+      "source_location": "L130"
     },
     {
       "id": "frontend_src_components_eventcard_cardmenu_pick",
@@ -7976,7 +7976,7 @@
       "file_type": "code",
       "norm_label": "pick()",
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L134"
+      "source_location": "L143"
     },
     {
       "id": "frontend_src_components_eventcard_eventcard",
@@ -25528,7 +25528,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L134",
+      "source_location": "L143",
       "weight": 1.0
     },
     {
@@ -50564,17 +50564,6 @@
     },
     {
       "source": "frontend_src_components_eventcard",
-      "target": "frontend_src_components_eventcard_cardmenu",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L121",
-      "weight": 1.0
-    },
-    {
-      "source": "frontend_src_components_eventcard",
       "target": "frontend_src_components_eventcard_eventcardadminactions",
       "relation": "contains",
       "_origin": "ast",
@@ -50582,6 +50571,17 @@
       "confidence_score": 1.0,
       "source_file": "frontend/src/components/EventCard.tsx",
       "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "frontend_src_components_eventcard",
+      "target": "frontend_src_components_eventcard_cardmenu",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/components/EventCard.tsx",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -58803,5 +58803,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "6323303ab9a29b056219e579c8a9b58e0c7fbd2f"
+  "built_at_commit": "58c4acb2ae159b7f79597aee7bee124067faea1f"
 }

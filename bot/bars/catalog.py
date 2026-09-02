@@ -111,8 +111,10 @@ def matches(
 ) -> bool:
     if not is_open(event, today):
         return False
-    if category and event.get("category") != category:
-        return False
+    if category:
+        cats = event.get("categories") or ([event["category"]] if event.get("category") else [])
+        if category not in cats:
+            return False
     if themes and not set(themes) & set(event.get("themes") or []):
         return False
     if price and event.get("price") != price:

@@ -40,7 +40,7 @@ function buildFormFromSubmission(s: AdminSubmission): PostFormValue {
   return {
     imageUrl: s.imageUrl,
     title: s.title,
-    category: s.category ?? '',
+    categories: s.category ? [s.category] : [],
     themes: s.themes,
     ageMin: s.ageMin ?? 0,
     ageMax: s.ageMax ?? 0,
@@ -172,7 +172,7 @@ function SubmissionRow({
   }
 
   async function publish() {
-    if (!form.title.trim() || !form.category) {
+    if (!form.title.trim() || !form.categories.length) {
       flash('Заполните название и категорию');
       return;
     }
@@ -260,7 +260,7 @@ function SubmissionRow({
 
           <div>
             <div className="ts-field-label">Оформить как мероприятие для публикации</div>
-            <PostSiteInfo value={form} onChange={setForm} />
+            <PostSiteInfo value={form} onChange={setForm} multiCategory />
             <PostCardInfo value={form} onChange={setForm} />
           </div>
 
@@ -293,7 +293,7 @@ function PublishEventTab() {
       flash('Загрузите фото мероприятия');
       return;
     }
-    if (!form.category) {
+    if (!form.categories.length) {
       flash('Заполните категорию');
       return;
     }
@@ -314,7 +314,7 @@ function PublishEventTab() {
       <section className="ts-card-panel">
         <h2>Информация для сайта</h2>
         <div className="desc">Определяет категорию, фильтры и расположение мероприятия</div>
-        <PostSiteInfo value={form} onChange={setForm} />
+        <PostSiteInfo value={form} onChange={setForm} multiCategory />
       </section>
 
       <section className="ts-card-panel">
@@ -488,7 +488,11 @@ function ArchiveTab() {
       {events.map((e) => (
         <div className="ts-request-row" key={e.id}>
           <span className="ts-request-title">{e.title}</span>
-          <span className="ts-badge">{CATS.find((c) => c.key === e.category)?.label ?? e.category}</span>
+          <span className="ts-badge">
+            {(e.categories.length ? e.categories : [e.category])
+              .map((k) => CATS.find((c) => c.key === k)?.label ?? k)
+              .join(', ')}
+          </span>
           <div style={{ display: 'flex', gap: 8 }}>
             <button className="ts-btn-outline small" onClick={() => setEditTarget(e)}>
               Редактировать

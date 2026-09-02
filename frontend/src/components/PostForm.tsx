@@ -24,9 +24,11 @@ function parseAge(raw: string): number | '' {
 export interface PostFormFieldsProps {
   value: PostFormValue;
   onChange: Dispatch<SetStateAction<PostFormValue>>;
+  /** Admins may tag an event with several categories; the public form stays single-select. */
+  multiCategory?: boolean;
 }
 
-export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsProps) {
+export function PostSiteInfo({ value: form, onChange: setForm, multiCategory = false }: PostFormFieldsProps) {
   const [dateRange, setDateRange] = useState(() => !!form.eventDateEnd);
   const anyAge =
     form.ageMin !== '' && form.ageMax !== '' && Number(form.ageMin) === 0 && Number(form.ageMax) === 99;
@@ -42,14 +44,23 @@ export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsP
   return (
     <div className="ts-field-group">
       <div>
-        <div className="ts-field-label">Категория</div>
+        <div className="ts-field-label">{multiCategory ? 'Категории' : 'Категория'}</div>
         <div className="ts-filter-chips">
           {CATS.map((c) => (
             <Chip
               key={c.key}
               label={c.label}
-              active={form.category === c.key}
-              onClick={() => setForm((v) => ({ ...v, category: c.key }))}
+              active={form.categories.includes(c.key)}
+              onClick={() =>
+                setForm((v) => ({
+                  ...v,
+                  categories: multiCategory
+                    ? v.categories.includes(c.key)
+                      ? v.categories.filter((x) => x !== c.key)
+                      : [...v.categories, c.key]
+                    : [c.key]
+                }))
+              }
             />
           ))}
         </div>
@@ -272,7 +283,7 @@ export function emptyPostForm(): PostFormValue {
   return {
     imageUrl: null,
     title: '',
-    category: '',
+    categories: [],
     themes: [],
     ageMin: 0,
     ageMax: 0,
@@ -300,6 +311,8 @@ export function emptyPostForm(): PostFormValue {
 export function postFormPayload(form: PostFormValue) {
   return {
     ...form,
+    category: form.categories[0] ?? '',
+    categories: form.categories,
     ageMin: form.ageMin === '' ? 0 : form.ageMin,
     ageMax: form.ageMax === '' ? 0 : form.ageMax,
     charity: form.price === 'paid' ? form.charity : false
@@ -311,7 +324,7 @@ export function eventToPostForm(event: EventItem): PostFormValue {
   return {
     imageUrl: event.imageUrl,
     title: event.title,
-    category: event.category,
+    categories: event.categories,
     themes: event.themes,
     ageMin: event.ageMin,
     ageMax: event.ageMax,

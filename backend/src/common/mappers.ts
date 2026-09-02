@@ -2,6 +2,7 @@ export interface EventRow {
   id: string;
   title: string;
   category: string;
+  categories: string[] | null;
   themes: string[];
   age_min: number;
   age_max: number;
@@ -35,6 +36,7 @@ export function mapEvent(row: EventRow) {
     id: row.id,
     title: row.title,
     category: row.category,
+    categories: row.categories?.length ? row.categories : row.category ? [row.category] : [],
     themes: row.themes ?? [],
     ageMin: row.age_min,
     ageMax: row.age_max,
