@@ -28,6 +28,8 @@ export interface PostFormFieldsProps {
 
 export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsProps) {
   const [dateRange, setDateRange] = useState(() => !!form.eventDateEnd);
+  const anyAge =
+    form.ageMin !== '' && form.ageMax !== '' && Number(form.ageMin) === 0 && Number(form.ageMax) === 99;
 
   function toggleDateRange() {
     setDateRange((r) => {
@@ -70,29 +72,43 @@ export function PostSiteInfo({ value: form, onChange: setForm }: PostFormFieldsP
           ))}
         </div>
       </div>
-      <div className="ts-date-row">
-        <label className="ts-date-field">
-          Возраст от
-          <input
-            className="ts-input"
-            type="number"
-            min={0}
-            max={99}
-            value={form.ageMin}
-            onChange={(e) => setForm((v) => ({ ...v, ageMin: parseAge(e.target.value) }))}
+      <div>
+        <div className="ts-field-label">Возраст</div>
+        <div className="ts-filter-chips" style={{ marginBottom: anyAge ? 0 : 12 }}>
+          <Chip
+            label="Любой"
+            active={anyAge}
+            onClick={() =>
+              setForm((v) => (anyAge ? { ...v, ageMin: '', ageMax: '' } : { ...v, ageMin: 0, ageMax: 99 }))
+            }
           />
-        </label>
-        <label className="ts-date-field">
-          Возраст до
-          <input
-            className="ts-input"
-            type="number"
-            min={0}
-            max={99}
-            value={form.ageMax}
-            onChange={(e) => setForm((v) => ({ ...v, ageMax: parseAge(e.target.value) }))}
-          />
-        </label>
+        </div>
+        {!anyAge && (
+          <div className="ts-date-row">
+            <label className="ts-date-field">
+              Возраст от
+              <input
+                className="ts-input"
+                type="number"
+                min={0}
+                max={99}
+                value={form.ageMin}
+                onChange={(e) => setForm((v) => ({ ...v, ageMin: parseAge(e.target.value) }))}
+              />
+            </label>
+            <label className="ts-date-field">
+              Возраст до
+              <input
+                className="ts-input"
+                type="number"
+                min={0}
+                max={99}
+                value={form.ageMax}
+                onChange={(e) => setForm((v) => ({ ...v, ageMax: parseAge(e.target.value) }))}
+              />
+            </label>
+          </div>
+        )}
       </div>
       <div>
         <div className="ts-field-label">Участие</div>
