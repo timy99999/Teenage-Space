@@ -11,6 +11,7 @@ a different chat by making up an id.
 from __future__ import annotations
 
 import logging
+from datetime import date
 from typing import Annotated, Any
 
 from langchain_core.runnables import RunnableConfig
@@ -18,12 +19,26 @@ from langchain_core.tools import tool
 from pydantic import BaseModel, Field
 
 from ..api_client import ApiError, api
-from ..catalog import catalog, parse_date
+from ..catalog import age_fits, bishkek_today, catalog, is_open, parse_date
 from ..plans import create_plan, get_plan
-from ..retrieval import describe, search
+from ..retrieval import age_mismatch_note, describe, find_by_title, search
 from ..vocab import CATEGORIES, THEMES
 
 logger = logging.getLogger(__name__)
+
+# What to say when the catalogue genuinely has nothing, keyed by why. Being specific is
+# the point: "ничего не найдено" is what let the bot claim an empty catalogue while
+# holding two olympiads the user was simply too young for.
+NO_RESULTS = {
+    "empty_catalog": (
+        "В каталоге сейчас нет ни одного открытого мероприятия — всё либо прошло, "
+        "либо в архиве. Скажи об этом честно и предложи вернуться позже."
+    ),
+    "filters": (
+        "Ничего не найдено по этим условиям. Стоит расширить поиск: убрать фильтр по "
+        "дате, теме или цене."
+    ),
+}
 
 
 def _ctx(config: RunnableConfig) -> dict[str, Any]:
@@ -75,7 +90,7 @@ async def search_events(
     if age is None:
         age = _ctx(config).get("age")
 
-    events = await search(
+    result = await search(
         query,
         category=category,
         themes=themes,
@@ -86,12 +101,30 @@ async def search_events(
         date_to=parse_date(date_to),
         limit=5,
     )
-    if not events:
-        return (
-            "Ничего не найдено по этим условиям. Стоит расширить поиск: убрать фильтр по "
-            "дате, теме или цене."
+    matched = list(result.matched)
+    near_miss = list(result.near_miss)
+
+    # Someone who typed an event's name gets that card even when a filter or the ranker
+    # buried it. This is the "Fiolimp" -> "FinOlimp 2026" rescue.
+    known = {event["id"] for event in [*matched, *near_miss]}
+    for event in await find_by_title(query):
+        if event["id"] in known or not is_open(event):
+            continue
+        known.add(event["id"])
+        (matched if age_fits(event, age) else near_miss).insert(0, event)
+
+    blocks: list[str] = []
+    if matched:
+        blocks.append("ПОДХОДЯЩИЕ:\n\n" + "\n\n---\n\n".join(describe(event) for event in matched))
+    if near_miss:
+        blocks.append(
+            "НЕ ПО ВОЗРАСТУ — покажи их пользователю с пометкой, не скрывай и не говори,"
+            " что ничего нет:\n\n"
+            + "\n\n---\n\n".join(describe(e, age_mismatch_note(e, age)) for e in near_miss)
         )
-    return "\n\n---\n\n".join(describe(event) for event in events)
+    if not blocks:
+        return NO_RESULTS.get(result.reason, NO_RESULTS["filters"])
+    return "\n\n===\n\n".join(blocks)
 
 
 @tool
@@ -103,29 +136,64 @@ async def get_event(event_id: str) -> str:
     return describe(event)
 
 
+def _plan_horizon(event: dict[str, Any]) -> date | None:
+    """The last day a step can sensibly fall on: registration closes, or failing that,
+    the event happens."""
+    return parse_date(event.get("deadlineDate")) or parse_date(event.get("eventDate"))
+
+
+def _clean_due_date(raw: str | None, today: date, horizon: date | None) -> str | None:
+    """Keep a step's deadline inside the window the event actually allows.
+
+    A plan written on 29 August once opened with "определиться до 31 августа" for an
+    event whose registration ran to 12 September -- the model had confused two similarly
+    named olympiads. A date in the past is dropped (the step stays, undated); a date past
+    the event's own deadline is pulled back to it.
+    """
+    due = parse_date(raw)
+    if due is None or due < today:
+        return None
+    if horizon and due > horizon:
+        return horizon.isoformat()
+    return due.isoformat()
+
+
 @tool
 async def save_plan(
     title: str,
     steps: list[PlanStep],
+    event_id: str,
     config: RunnableConfig,
-    event_id: str | None = None,
 ) -> str:
-    """Сохранить план подготовки и включить напоминания.
+    """Сохранить план подготовки к мероприятию и включить напоминания.
 
-    Вызывай, только когда пользователь согласился на план. Один план на чат: новый
-    заменяет старый.
+    Вызывай ТОЛЬКО после того, как пользователь прямо согласился на план («да»,
+    «давай», «составь»). Не вызывай в том же ходе, где ищешь мероприятия. Один план на
+    чат: новый заменяет старый.
 
     Args:
         title: короткое название плана, например «Подготовка к хакатону DevFest».
         steps: шаги по порядку, каждый с title, detail и (если есть срок) due_date.
-            Привязывай сроки к дедлайну регистрации мероприятия.
-        event_id: id мероприятия, к которому относится план, если он есть.
+            Сроки не раньше сегодня и не позже дедлайна регистрации мероприятия.
+        event_id: id мероприятия из каталога, к которому относится план. Обязателен.
     """
     chat_id = _ctx(config).get("chat_id")
     if not chat_id:
         return "Не удалось сохранить план: не определён чат."
 
-    event = await catalog().get(event_id) if event_id else None
+    # A plan is always about one event. Requiring it is also the structural guard against
+    # the failure seen in the transcripts, where save_plan fired mid-search-spray across
+    # five unrelated queries the user had never agreed to a plan for.
+    event = await catalog().get(event_id)
+    if not event:
+        return (
+            f"Мероприятие {event_id} не найдено — план не сохранён. Сначала найди "
+            "мероприятие через search_events и уточни у пользователя, к чему готовимся."
+        )
+
+    today = bishkek_today()
+    horizon = _plan_horizon(event)
+
     # ToolNode hands over whatever the model produced: pydantic objects when the
     # schema validated, plain dicts when it came back as raw JSON.
     normalised = [s if isinstance(s, dict) else s.model_dump() for s in steps]
@@ -133,7 +201,7 @@ async def save_plan(
         {
             "title": str(step.get("title") or "").strip(),
             "detail": str(step.get("detail") or "").strip(),
-            "due_date": step.get("due_date"),
+            "due_date": _clean_due_date(step.get("due_date"), today, horizon),
         }
         for step in normalised
         if str(step.get("title") or "").strip()

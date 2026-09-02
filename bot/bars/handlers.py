@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
+import time
 from dataclasses import dataclass
 from datetime import date
 from typing import Any
@@ -30,7 +31,15 @@ from . import analytics, plans, sessions
 from .api_client import ApiError, api
 from .catalog import bishkek_today, catalog, parse_date
 from .config import get_settings
-from .formatting import chunks, event_ids, event_keyboard, plan_keyboard, render_plan, to_html
+from .formatting import (
+    chunks,
+    event_ids,
+    event_keyboard,
+    plan_keyboard,
+    render_plan,
+    to_html,
+    truncate_to_last_complete_line,
+)
 from .persona import GREETING, HELP_TEXT, OFF_TOPIC_REPLY
 from .runtime import runtime
 
@@ -52,10 +61,21 @@ LINK_INSTRUCTIONS = (
 )
 
 
+# Gemini's stop reasons that mean "I ran out of room", not "I finished".
+TRUNCATED_FINISH_REASONS = {"MAX_TOKENS", "LENGTH"}
+
+
 @dataclass
 class Job:
     message: Message
     text: str
+
+
+def _finish_reason(answer: AIMessage | None) -> str:
+    """Gemini's stop reason, normalised. Absent on older langchain versions."""
+    meta = getattr(answer, "response_metadata", None) or {}
+    reason = meta.get("finish_reason") or meta.get("finishReason") or ""
+    return str(reason).upper()
 
 
 def _age_from(birth_date: str | None, today: date | None = None) -> int | None:
@@ -147,6 +167,7 @@ async def process(job: Job) -> None:
     message = job.message
     chat_id = message.chat.id
 
+    started = time.monotonic()
     typing = asyncio.create_task(_keep_typing(message))
     user_id: str | None = None
     status = "ok"
@@ -154,6 +175,7 @@ async def process(job: Job) -> None:
     tools_used: list[str] = []
     usage: dict[str, dict] = {}
     seed: list[AIMessage] = []
+    meta: dict[str, Any] = {}
     try:
         # The chat lock keeps this in step with /start and /reset — otherwise both
         # could see the chat as new and each send a greeting.
@@ -207,6 +229,11 @@ async def process(job: Job) -> None:
         if not text:
             text = "Не смог собрать ответ. Попробуй переформулировать?"
             status = "fallback"
+        elif _finish_reason(answer) in TRUNCATED_FINISH_REASONS:
+            # The budget ran out mid-sentence. Better a short complete answer plus an
+            # offer to continue than a message that stops mid-word.
+            text = truncate_to_last_complete_line(text)
+            status = "truncated"
         elif text == OFF_TOPIC_REPLY:
             status = "off_topic"
         answer_text = text
@@ -216,6 +243,13 @@ async def process(job: Job) -> None:
             if isinstance(m, AIMessage)
             for call in (getattr(m, "tool_calls", None) or [])
         ]
+        meta = {
+            "tool_rounds": sum(
+                1 for m in turn_messages if isinstance(m, AIMessage) and getattr(m, "tool_calls", None)
+            ),
+            "tool_calls": len(tools_used),
+            "finish_reason": _finish_reason(answer),
+        }
 
         referenced = event_ids(text)
         events = [e for e in [await catalog().get(eid) for eid in referenced] if e]
@@ -239,10 +273,14 @@ async def process(job: Job) -> None:
         typing.cancel()
         with contextlib.suppress(asyncio.CancelledError):
             await typing
+        meta["latency_ms"] = int((time.monotonic() - started) * 1000)
+        for counts in usage.values():
+            meta["prompt_tokens"] = meta.get("prompt_tokens", 0) + int(counts.get("input_tokens", 0) or 0)
+            meta["output_tokens"] = meta.get("output_tokens", 0) + int(counts.get("output_tokens", 0) or 0)
         # Journalling must never take a turn down — the user already has their reply.
         with contextlib.suppress(Exception):
             await analytics.log_turn(
-                chat_id, user_id, job.text, answer_text, status=status, tools=tools_used
+                chat_id, user_id, job.text, answer_text, status=status, tools=tools_used, meta=meta
             )
         if usage:
             with contextlib.suppress(Exception):
@@ -337,7 +375,13 @@ async def on_text(message: Message) -> None:
         return
     if runtime.queues is None:
         return
-    await runtime.queues.submit(message.chat.id, Job(message=message, text=message.text or ""))
+    text = message.text or ""
+    if runtime.seen_recently(message.chat.id, text):
+        # An impatient resend of the same words. The queue only drops jobs it has not
+        # started, so without this the same question gets answered twice.
+        logger.info("Ignoring a duplicate message from chat %s", message.chat.id)
+        return
+    await runtime.queues.submit(message.chat.id, Job(message=message, text=text))
 
 
 @router.message(F.text.startswith("/"))

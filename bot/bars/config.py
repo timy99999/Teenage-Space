@@ -25,6 +25,11 @@ class Settings(BaseSettings):
     gemini_router_model: str = "gemini-3.5-flash-lite"
     gemini_embed_model: str = "models/gemini-embedding-001"
     embed_dim: int = 768
+    # Gemini 3.x bills thinking out of this same budget, so it has to cover both the
+    # reasoning and the visible answer. At 1200 a list of five events came back cut off
+    # mid-word once thinking had taken its share. Tunable from the environment so a
+    # truncation can be answered without a redeploy.
+    gemini_max_output_tokens: int = 4000
 
     # Teenage Space backend
     api_base_url: str = "http://localhost:3000/api"

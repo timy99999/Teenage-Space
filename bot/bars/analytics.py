@@ -17,6 +17,7 @@ Every write is best-effort: a failure here must never cost the user their answer
 
 from __future__ import annotations
 
+import json
 import logging
 
 from .db import execute, fetch_one
@@ -50,14 +51,20 @@ async def log_turn(
     *,
     status: str,
     tools: list[str],
+    meta: dict | None = None,
 ) -> None:
-    """Append one exchange — the user's line and the assistant's — to the journal."""
+    """Append one exchange — the user's line and the assistant's — to the journal.
+
+    `meta` rides on the assistant row: tool_rounds, finish_reason, latency_ms and the
+    turn's token counts. Reading the text alone told us answers were being cut off and
+    loops were being run, but never why; these are the numbers that answer that.
+    """
     try:
         await execute(
             """
-            insert into bot_messages (chat_id, user_id, role, text, status, tools)
-            values (%s, %s, 'user', %s, 'ok', '{}'),
-                   (%s, %s, 'assistant', %s, %s, %s)
+            insert into bot_messages (chat_id, user_id, role, text, status, tools, meta)
+            values (%s, %s, 'user', %s, 'ok', '{}', '{}'),
+                   (%s, %s, 'assistant', %s, %s, %s, %s)
             """,
             (
                 chat_id,
@@ -68,6 +75,7 @@ async def log_turn(
                 _clip(answer_text),
                 status,
                 tools,
+                json.dumps(meta or {}, ensure_ascii=False, default=str),
             ),
         )
     except Exception:

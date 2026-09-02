@@ -10,6 +10,8 @@ exactly one place.
 from __future__ import annotations
 
 import logging
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
@@ -106,6 +108,18 @@ async def fetch_one(sql: str, params: tuple[Any, ...] = ()) -> dict[str, Any] | 
 async def execute(sql: str, params: tuple[Any, ...] = ()) -> None:
     async with pool().connection() as conn, conn.cursor() as cur:
         await cur.execute(sql, params)
+
+
+@asynccontextmanager
+async def transaction() -> AsyncIterator[Any]:
+    """One connection, one atomic unit, for a change that spans several statements.
+
+    The pool runs in autocommit (LangGraph's checkpointer wants it that way), so every
+    execute() above commits on its own. Anything that must not be observed half-applied
+    -- replacing a plan is delete-then-insert -- has to opt in here explicitly.
+    """
+    async with pool().connection() as conn, conn.transaction(), conn.cursor(row_factory=dict_row) as cur:
+        yield cur
 
 
 def to_vector_literal(values: list[float]) -> str:

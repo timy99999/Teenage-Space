@@ -62,7 +62,7 @@ interface ChatListRow {
 interface MessageRow {
   role: 'user' | 'assistant';
   text: string;
-  status: 'ok' | 'off_topic' | 'error' | 'fallback';
+  status: 'ok' | 'off_topic' | 'error' | 'fallback' | 'truncated';
   tools: string[] | null;
   created_at: string;
 }

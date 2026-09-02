@@ -15,4 +15,7 @@ from langgraph.graph.message import add_messages
 
 class BarsState(TypedDict, total=False):
     messages: Annotated[list[AnyMessage], add_messages]
-    in_scope: bool
+    # What the guard made of the latest message: "events" (do the real work),
+    # "smalltalk" (a hello or a thank-you -- answer briefly, no tools, no catalogue
+    # context) or "off_topic" (decline). Re-derived every turn, never restored stale.
+    kind: str

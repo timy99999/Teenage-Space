@@ -1,0 +1,6 @@
+# Test-only dependencies. Not installed on Railway — the bot image builds from
+# requirements.txt alone; CI installs both.
+-r requirements.txt
+
+pytest>=8,<9
+pytest-asyncio>=0.24,<1

@@ -254,7 +254,7 @@ export interface TrafficSummary {
   topLinks: { linkKind: string; clicks: number }[];
 }
 
-export type BarsMessageStatus = 'ok' | 'off_topic' | 'error' | 'fallback';
+export type BarsMessageStatus = 'ok' | 'off_topic' | 'error' | 'fallback' | 'truncated';
 
 export interface BarsChatRow {
   chatId: string;

@@ -97,6 +97,36 @@ def is_open(event: dict[str, Any], today: date | None = None) -> bool:
     return True
 
 
+def age_fits(event: dict[str, Any], age: int | None) -> bool:
+    """Whether a participant of this age is inside the event's stated range.
+
+    Deliberately permissive, exactly as the age check inside matches() has always been:
+    a one-sided bound (only ageMin, or only ageMax) excludes nobody, because half a
+    range is not a rule the catalogue actually meant to state.
+    """
+    if age is None:
+        return True
+    lo, hi = event.get("ageMin"), event.get("ageMax")
+    if lo is None or hi is None:
+        return True
+    return lo <= age <= hi
+
+
+def age_requirement(event: dict[str, Any]) -> str:
+    """How the event states its age rule, for telling a user why it doesn't fit."""
+    label = (event.get("ageLabel") or "").strip()
+    if label:
+        return label
+    lo, hi = event.get("ageMin"), event.get("ageMax")
+    if lo is not None and hi is not None:
+        return f"{lo}–{hi} лет"
+    if lo is not None:
+        return f"от {lo} лет"
+    if hi is not None:
+        return f"до {hi} лет"
+    return "без ограничений"
+
+
 def matches(
     event: dict[str, Any],
     *,
@@ -121,10 +151,8 @@ def matches(
         return False
     if level and event.get("level") != level:
         return False
-    if age is not None:
-        lo, hi = event.get("ageMin"), event.get("ageMax")
-        if lo is not None and hi is not None and not (lo <= age <= hi):
-            return False
+    if not age_fits(event, age):
+        return False
     if date_from or date_to:
         # An event with no date at all (rolling opportunity) stays in: excluding it
         # would hide exactly the kind of thing a teenager can join at any time.

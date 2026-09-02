@@ -94,6 +94,39 @@ def plan_keyboard(items: list[dict[str, Any]]) -> InlineKeyboardMarkup | None:
     return InlineKeyboardMarkup(inline_keyboard=rows) if rows else None
 
 
+MORE_HINT = "\n\n…это не всё. Скажи «ещё», покажу остальные."
+
+# Sentence-enders we are willing to treat as a clean stopping point mid-line.
+SENTENCE_END = (".", "!", "?", ":", "…")
+
+
+def truncate_to_last_complete_line(text: str) -> str:
+    """Cut a budget-truncated answer back to its last complete thought.
+
+    The model stops wherever the token budget ran out — mid-word, mid-bullet — and the
+    raw tail reads like a bug. Falling back to the last complete line (or failing that,
+    the last finished sentence) turns it into a short answer instead of a broken one.
+    """
+    body = text.rstrip()
+    if not body:
+        return body
+
+    lines = body.split("\n")
+    # The final line is the truncated one unless it happens to end cleanly.
+    if len(lines) > 1 and not lines[-1].rstrip().endswith(SENTENCE_END):
+        kept = "\n".join(lines[:-1]).rstrip()
+        if kept:
+            return kept + MORE_HINT
+
+    if body.endswith(SENTENCE_END):
+        return body + MORE_HINT
+
+    cut = max(body.rfind(end) for end in SENTENCE_END)
+    if cut > 0:
+        return body[: cut + 1] + MORE_HINT
+    return body + MORE_HINT
+
+
 def chunks(text: str, limit: int = TELEGRAM_LIMIT) -> list[str]:
     """Split on paragraph boundaries so a long answer never breaks mid-tag."""
     if len(text) <= limit:

@@ -17,6 +17,11 @@ from .queue import ChatQueues
 # that a chatty conversation is not one API call per message.
 CONTEXT_TTL_SECONDS = 60
 
+# A person who resends the same words this quickly is retrying, not asking twice. The
+# queue only ever discarded jobs it had not *started*, so an identical question sent
+# 30 seconds later was answered a second time -- at full price.
+DUPLICATE_WINDOW_SECONDS = 30
+
 
 @dataclass
 class Runtime:
@@ -25,6 +30,19 @@ class Runtime:
     queues: ChatQueues | None = None
     _context_cache: dict[int, tuple[float, dict[str, Any]]] = field(default_factory=dict)
     _chat_locks: dict[int, asyncio.Lock] = field(default_factory=dict)
+    _last_text: dict[int, tuple[float, str]] = field(default_factory=dict)
+
+    def seen_recently(self, chat_id: int, text: str) -> bool:
+        """True when this chat just sent these exact words, and records them either way.
+
+        Guards against the impatient resend: the same question arriving twice inside the
+        window is one question, and answering it twice costs a full agent turn and
+        leaves two near-identical replies in the chat.
+        """
+        now = time.monotonic()
+        previous = self._last_text.get(chat_id)
+        self._last_text[chat_id] = (now, text)
+        return bool(previous and previous[1] == text and now - previous[0] < DUPLICATE_WINDOW_SECONDS)
 
     def chat_lock(self, chat_id: int) -> asyncio.Lock:
         """Serialises conversation-state changes for one chat across *every* handler —
@@ -40,6 +58,9 @@ class Runtime:
         """Drop idle locks so the map does not grow without bound. Called from the sweep."""
         for chat_id in [cid for cid, lock in self._chat_locks.items() if not lock.locked()]:
             self._chat_locks.pop(chat_id, None)
+        cutoff = time.monotonic() - DUPLICATE_WINDOW_SECONDS
+        for chat_id in [cid for cid, (at, _) in self._last_text.items() if at < cutoff]:
+            self._last_text.pop(chat_id, None)
 
     def cached_context(self, chat_id: int) -> dict[str, Any] | None:
         entry = self._context_cache.get(chat_id)

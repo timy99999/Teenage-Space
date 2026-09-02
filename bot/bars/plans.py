@@ -12,7 +12,7 @@ from datetime import date, datetime, time, timedelta
 from typing import Any
 
 from .catalog import BISHKEK_TZ, bishkek_today, parse_date
-from .db import execute, fetch_all, fetch_one
+from .db import execute, fetch_all, fetch_one, transaction
 
 logger = logging.getLogger(__name__)
 
@@ -36,50 +36,61 @@ async def create_plan(
     event: dict[str, Any] | None,
 ) -> str:
     event_id = event.get("id") if event else None
+    today = bishkek_today()
 
-    # One plan per chat at a time: a teenager juggling three checklists in a chat window
-    # is worse off than one with a clear next step.
-    await execute("delete from bot_plans where chat_id = %s", (chat_id,))
-    await execute("delete from bot_reminders where chat_id = %s and sent_at is null", (chat_id,))
-
-    row = await fetch_one(
-        "insert into bot_plans (chat_id, event_id, title) values (%s, %s, %s) returning id",
-        (chat_id, event_id, title),
-    )
-    plan_id = str(row["id"])
-
-    for index, item in enumerate(items, start=1):
-        due = parse_date(item.get("due_date"))
-        await execute(
-            """
-            insert into bot_plan_items (plan_id, step_no, title, detail, due_date)
-            values (%s, %s, %s, %s, %s)
-            """,
-            (plan_id, index, item.get("title", "")[:200], (item.get("detail") or "")[:600], due),
+    # Replacing a plan is a delete followed by an insert. Run in autocommit -- which the
+    # pool is, because LangGraph's checkpointer needs it -- a failure between the two
+    # leaves the chat with no plan at all and its old reminders already gone. One
+    # transaction makes the swap all-or-nothing.
+    async with transaction() as cur:
+        # One plan per chat at a time: a teenager juggling three checklists in a chat
+        # window is worse off than one with a clear next step. Already-sent reminders
+        # stay as history; only the pending ones belong to the plan being replaced.
+        await cur.execute("delete from bot_plans where chat_id = %s", (chat_id,))
+        await cur.execute(
+            "delete from bot_reminders where chat_id = %s and sent_at is null", (chat_id,)
         )
-        if due and due >= bishkek_today():
-            await _add_reminder(
-                chat_id,
-                _fire_at(due),
-                "plan_step",
-                {"plan_id": plan_id, "step_no": index, "title": item.get("title", "")},
-            )
 
-    if event:
-        await _schedule_event_reminders(chat_id, plan_id, event)
+        await cur.execute(
+            "insert into bot_plans (chat_id, event_id, title) values (%s, %s, %s) returning id",
+            (chat_id, event_id, title),
+        )
+        plan_id = str((await cur.fetchone())["id"])
+
+        for index, item in enumerate(items, start=1):
+            due = parse_date(item.get("due_date"))
+            await cur.execute(
+                """
+                insert into bot_plan_items (plan_id, step_no, title, detail, due_date)
+                values (%s, %s, %s, %s, %s)
+                """,
+                (plan_id, index, item.get("title", "")[:200], (item.get("detail") or "")[:600], due),
+            )
+            if due and due >= today:
+                await _add_reminder(
+                    cur,
+                    chat_id,
+                    _fire_at(due),
+                    "plan_step",
+                    {"plan_id": plan_id, "step_no": index, "title": item.get("title", "")},
+                )
+
+        if event:
+            await _schedule_event_reminders(cur, chat_id, plan_id, event, today)
 
     return plan_id
 
 
-async def _schedule_event_reminders(chat_id: int, plan_id: str, event: dict[str, Any]) -> None:
-    today = bishkek_today()
-
+async def _schedule_event_reminders(
+    cur: Any, chat_id: int, plan_id: str, event: dict[str, Any], today: date
+) -> None:
     deadline = parse_date(event.get("deadlineDate"))
     if deadline:
         for offset in DEADLINE_OFFSETS:
             day = deadline - timedelta(days=offset)
             if day >= today:
                 await _add_reminder(
+                    cur,
                     chat_id,
                     _fire_at(day),
                     "deadline",
@@ -94,6 +105,7 @@ async def _schedule_event_reminders(chat_id: int, plan_id: str, event: dict[str,
     starts = parse_date(event.get("eventDate"))
     if starts and starts - timedelta(days=1) >= today:
         await _add_reminder(
+            cur,
             chat_id,
             _fire_at(starts - timedelta(days=1)),
             "event_soon",
@@ -101,8 +113,10 @@ async def _schedule_event_reminders(chat_id: int, plan_id: str, event: dict[str,
         )
 
 
-async def _add_reminder(chat_id: int, fire_at: datetime, kind: str, payload: dict[str, Any]) -> None:
-    await execute(
+async def _add_reminder(
+    cur: Any, chat_id: int, fire_at: datetime, kind: str, payload: dict[str, Any]
+) -> None:
+    await cur.execute(
         "insert into bot_reminders (chat_id, fire_at, kind, payload) values (%s, %s, %s, %s)",
         (chat_id, fire_at, kind, json.dumps(payload, ensure_ascii=False)),
     )

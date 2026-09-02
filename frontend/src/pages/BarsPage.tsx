@@ -9,7 +9,8 @@ const STATUS_LABELS: Record<BarsMessageStatus, string> = {
   ok: '',
   off_topic: 'не по теме',
   error: 'сбой',
-  fallback: 'не собрал ответ'
+  fallback: 'не собрал ответ',
+  truncated: 'обрезан'
 };
 
 function chatTitle(chat: BarsChatRow): string {

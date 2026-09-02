@@ -11,6 +11,11 @@ dependencies = { file = ["requirements.txt"] }
 [tool.setuptools]
 packages = ["bars", "bars.graph"]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Every test here is async; declaring the mode saves a decorator on each one.
+asyncio_mode = "auto"
+
 [tool.ruff]
 line-length = 110
 target-version = "py312"
