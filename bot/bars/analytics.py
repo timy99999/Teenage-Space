@@ -37,6 +37,10 @@ SYSTEM_CHAT_ID = 0
 # prepaid balance and this only feeds an estimate.
 CHARS_PER_TOKEN = 4
 
+# Statuses the table's CHECK accepted before the bars_turn_meta migration. Used only by
+# the fallback insert, so a turn journalled against the older schema still lands.
+LEGACY_STATUSES = frozenset({"ok", "off_topic", "error", "fallback"})
+
 
 def _clip(text: str | None) -> str:
     text = text or ""
@@ -76,6 +80,32 @@ async def log_turn(
                 status,
                 tools,
                 json.dumps(meta or {}, ensure_ascii=False, default=str),
+            ),
+        )
+        return
+    except Exception:
+        logger.warning("Journalling turn for chat %s failed; retrying legacy", chat_id, exc_info=True)
+
+    # The bot deploys on Railway the moment main moves; the migration that widens this
+    # table runs in a *separate* workflow. For the minutes in between, the new column and
+    # the new status do not exist yet, and the insert above fails on both. Losing the
+    # audit trail over a deploy-ordering race is worse than losing two of its fields.
+    try:
+        await execute(
+            """
+            insert into bot_messages (chat_id, user_id, role, text, status, tools)
+            values (%s, %s, 'user', %s, 'ok', '{}'),
+                   (%s, %s, 'assistant', %s, %s, %s)
+            """,
+            (
+                chat_id,
+                user_id,
+                _clip(user_text),
+                chat_id,
+                user_id,
+                _clip(answer_text),
+                status if status in LEGACY_STATUSES else "ok",
+                tools,
             ),
         )
     except Exception:
