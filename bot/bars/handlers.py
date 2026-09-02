@@ -50,6 +50,12 @@ router = Router()
 TYPING_INTERVAL_SECONDS = 4
 FALLBACK_REPLY = "Что-то пошло не так на моей стороне. Попробуй, пожалуйста, ещё раз через минуту."
 
+# Sent instead of an answer that named events the catalogue does not contain.
+UNGROUNDED_REPLY = (
+    "Не нашёл подходящего в каталоге — не хочу советовать наугад. "
+    "Уточни, что тебе интересно, и я поищу ещё раз."
+)
+
 LINK_INSTRUCTIONS = (
     "Я работаю только с привязанными аккаунтами Teenage Space — так я вижу твой "
     "возраст из профиля и могу сохранять избранное и планы.\n\n"
@@ -268,7 +274,25 @@ async def process(job: Job) -> None:
         }
 
         referenced = event_ids(text)
-        events = [e for e in [await catalog().get(eid) for eid in referenced] if e]
+        resolved = {eid: await catalog().get(eid) for eid in referenced}
+        events = [e for e in resolved.values() if e]
+
+        unknown = [eid for eid, event in resolved.items() if event is None]
+        if unknown:
+            # An id the catalogue has never heard of means the model invented the event
+            # around it. This happens with no tool calls at all: told a category was
+            # empty, it once answered from nothing and made up "[id:101]".
+            logger.warning("Chat %s: answer referenced unknown event ids %s", chat_id, unknown)
+            meta["ungrounded_ids"] = unknown
+            if not tools_used:
+                # Nothing in this turn came from the catalogue, so nothing in it can be
+                # trusted. Sending a plausible invented event is worse than admitting
+                # the miss.
+                text = UNGROUNDED_REPLY
+                status = "fallback"
+                answer_text = text
+                events = []
+
         keyboard = event_keyboard(events, linked=context["linked"], favorites=context["favorites"])
 
         parts = chunks(to_html(text))

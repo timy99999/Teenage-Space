@@ -132,7 +132,17 @@ async def get_event(event_id: str) -> str:
     """Показать полную карточку одного мероприятия по его id."""
     event = await catalog().get(event_id)
     if not event:
-        return f"Мероприятие {event_id} не найдено — возможно, оно уже в архиве."
+        # Deliberately offers no explanation. The old wording ("возможно, оно уже в
+        # архиве") was a guess, and when the id was one the model had invented, that
+        # guess came back to the user as a fact: a fabricated event with a fabricated
+        # reason for being gone.
+        return (
+            f"Мероприятия с id {event_id} в каталоге нет. Не называй его пользователю и не "
+            "объясняй, куда оно делось — найди реальные варианты через search_events."
+        )
+    if not is_open(event):
+        return describe(event, "ЗАКРЫТО: мероприятие в архиве или его дата уже прошла. "
+                        "Не предлагай его как доступное — скажи, что оно уже неактуально.")
     return describe(event)
 
 

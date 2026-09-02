@@ -1062,15 +1062,15 @@
     "semantic_hash": ""
   },
   "bot/bars/graph/tools.py": {
-    "mtime": 1788357385.2840455,
-    "seen": 1788358251.41832,
-    "ast_hash": "693dca8c18b18e162d568fd5f595a8d7",
+    "mtime": 1788363074.6275246,
+    "seen": 1788363146.669305,
+    "ast_hash": "806446efb8a97c3c50b35a063d1a6e18",
     "semantic_hash": ""
   },
   "bot/bars/handlers.py": {
-    "mtime": 1788362372.657796,
-    "seen": 1788362586.995354,
-    "ast_hash": "911dfae39400aea2d4effc4484f1cdfa",
+    "mtime": 1788363065.4976332,
+    "seen": 1788363146.669305,
+    "ast_hash": "15985a5dead4af5716606cfe050b5457",
     "semantic_hash": ""
   },
   "bot/bars/indexer.py": {
@@ -1086,9 +1086,9 @@
     "semantic_hash": ""
   },
   "bot/bars/persona.py": {
-    "mtime": 1788362329.1619215,
-    "seen": 1788362586.995354,
-    "ast_hash": "fb3f031275331712277d1968015ad02d",
+    "mtime": 1788362983.4423418,
+    "seen": 1788363146.669305,
+    "ast_hash": "149c0c73fe186bc18dcf9dc765dd79a9",
     "semantic_hash": ""
   },
   "bot/bars/plans.py": {
@@ -1509,6 +1509,12 @@
     "mtime": 1788362396.0585308,
     "seen": 1788362586.995354,
     "ast_hash": "4a63a36253b1f12ad0af6193e8286155",
+    "semantic_hash": ""
+  },
+  "bot/tests/test_grounding.py": {
+    "mtime": 1788363091.2599146,
+    "seen": 1788363146.6834357,
+    "ast_hash": "34272c22842c2adab7ebcd6d3a996d6c",
     "semantic_hash": ""
   }
 }
