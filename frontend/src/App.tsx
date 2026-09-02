@@ -95,7 +95,8 @@ export default function App() {
           <Route path="opportunities" element={<GridPage mode="opps" />} />
           <Route path="opportunities/:category" element={<GridPage mode="opps" />} />
           <Route path="favorites" element={<GridPage mode="fav" />} />
-          <Route path="vote" element={<GridPage mode="vote" />} />
+          {/* временно скрыто: страница голосования — /vote уходит в редирект на "/" через catch-all
+          <Route path="vote" element={<GridPage mode="vote" />} /> */}
           <Route path="education" element={<EducationIndex />} />
           <Route path="education/:trackId" element={<EducationPage />} />
           <Route path="article/:id" element={<ArticlePage />} />

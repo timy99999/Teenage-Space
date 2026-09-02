@@ -210,10 +210,12 @@ export function ProfilePage() {
           <span>Избранное</span>
           <span className="arrow">→</span>
         </button>
+        {/* временно скрыто: страница голосования
         <button className="ts-account-link" onClick={() => navigate('/vote')}>
           <span>Голосование</span>
           <span className="arrow">→</span>
         </button>
+        */}
         {isAdmin && (
           <button className="ts-account-link" onClick={() => navigate('/admin')}>
             <span>Админ-панель</span>

@@ -15,7 +15,6 @@ export function Sidebar() {
   const isHome = path === '/';
   const isNews = path === '/news';
   const isFav = path === '/favorites';
-  const isVote = path === '/vote';
   const isAdminPage = path === '/admin';
   const isAnalyticsPage = path === '/analytics';
   const isBarsPage = path === '/bars';
@@ -49,10 +48,12 @@ export function Sidebar() {
           {isFav && <span className="ts-nav-dot" />}
           <span>Избранное</span>
         </button>
+        {/* временно скрыто: страница голосования
         <button className="ts-nav-item" onClick={() => navigate('/vote')}>
           {isVote && <span className="ts-nav-dot" />}
           <span>Голосование</span>
         </button>
+        */}
       </nav>
 
       <nav className="ts-nav">

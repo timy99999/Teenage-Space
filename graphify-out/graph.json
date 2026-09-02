@@ -3260,7 +3260,7 @@
       "file_type": "code",
       "norm_label": "authshell()",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L119"
+      "source_location": "L120"
     },
     {
       "id": "frontend_src_app_educationindex",
@@ -50141,7 +50141,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L119",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -58803,5 +58803,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "f2e02b297c0e309c98daa950afee023f95e1f3be"
+  "built_at_commit": "79815d36bafd32a200ee56bed5a92ff45f2aa1e1"
 }
