@@ -600,9 +600,9 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/ProfilePage.tsx": {
-    "mtime": 1788354647.935131,
-    "seen": 1788354730.7339392,
-    "ast_hash": "f1ecfc39b1f090950695350ee471d2b6",
+    "mtime": 1788485341.5588467,
+    "seen": 1788485403.794482,
+    "ast_hash": "9f186ffb58cb5a7f842f96bb68006c3f",
     "semantic_hash": ""
   },
   "frontend/src/pages/PublishPage.tsx": {

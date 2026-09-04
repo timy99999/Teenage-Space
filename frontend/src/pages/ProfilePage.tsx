@@ -33,7 +33,7 @@ function PencilIcon() {
 
 export function ProfilePage() {
   const navigate = useNavigate();
-  const { session, profile, isAdmin, refreshProfile, signOut } = useAuth();
+  const { session, profile, isAdmin, isSuperAdmin, refreshProfile, signOut } = useAuth();
   const { theme, setTheme } = useUI();
   const { submissions } = useSubmissions();
   const [confirmLogout, setConfirmLogout] = useState(false);
@@ -219,6 +219,24 @@ export function ProfilePage() {
         {isAdmin && (
           <button className="ts-account-link" onClick={() => navigate('/admin')}>
             <span>Админ-панель</span>
+            <span className="arrow">→</span>
+          </button>
+        )}
+        {isSuperAdmin && (
+          <button className="ts-account-link" onClick={() => navigate('/users')}>
+            <span>Пользователи</span>
+            <span className="arrow">→</span>
+          </button>
+        )}
+        {isSuperAdmin && (
+          <button className="ts-account-link" onClick={() => navigate('/analytics')}>
+            <span>Аналитика</span>
+            <span className="arrow">→</span>
+          </button>
+        )}
+        {isSuperAdmin && (
+          <button className="ts-account-link" onClick={() => navigate('/bars')}>
+            <span>Барс</span>
             <span className="arrow">→</span>
           </button>
         )}
