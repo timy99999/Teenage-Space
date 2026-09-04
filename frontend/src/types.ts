@@ -140,6 +140,8 @@ export interface Submission {
 export interface AdminSubmission {
   id: string;
   userId: string;
+  submitterUsername: string | null;
+  submitterEmail: string | null;
   title: string;
   category: string | null;
   themes: string[];

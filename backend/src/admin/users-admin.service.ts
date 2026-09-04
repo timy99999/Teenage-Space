@@ -55,7 +55,9 @@ export class UsersAdminService {
     if (error) throw error;
     return {
       ...mapAdminUser(row),
-      submissions: (subs as SubmissionAdminRow[]).map(mapSubmissionAdmin)
+      submissions: (subs as SubmissionAdminRow[]).map((s) =>
+        mapSubmissionAdmin(s, { username: row.username, email: row.email })
+      )
     };
   }
 

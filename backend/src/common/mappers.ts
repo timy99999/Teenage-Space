@@ -234,10 +234,20 @@ export interface SubmissionAdminRow extends SubmissionRow {
   image_url: string | null;
 }
 
-export function mapSubmissionAdmin(row: SubmissionAdminRow) {
+/** The bits of the submitter's profile an admin needs to see who sent a
+ *  submission. Looked up separately — submissions.user_id points at auth.users,
+ *  not profiles, so PostgREST can't embed it. */
+export interface SubmitterInfo {
+  username: string | null;
+  email: string | null;
+}
+
+export function mapSubmissionAdmin(row: SubmissionAdminRow, submitter?: SubmitterInfo | null) {
   return {
     id: row.id,
     userId: row.user_id,
+    submitterUsername: submitter?.username ?? null,
+    submitterEmail: submitter?.email ?? null,
     title: row.title,
     category: row.category,
     themes: row.themes ?? [],

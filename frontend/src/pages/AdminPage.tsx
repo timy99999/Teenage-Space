@@ -210,7 +210,13 @@ function SubmissionRow({
   return (
     <div className="ts-request-row" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, width: '100%' }}>
-        <span className="ts-request-title">{s.title}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <span className="ts-request-title">{s.title}</span>
+          <div style={{ marginTop: 2, fontSize: 12.5, color: 'var(--ts-muted)' }}>
+            от {s.submitterUsername ?? 'неизвестно'}
+            {s.submitterEmail ? ` · ${s.submitterEmail}` : ''}
+          </div>
+        </div>
         <span className={`ts-badge ${s.status}`}>{STATUS_LABEL[s.status]}</span>
         <button className="ts-btn-outline small" onClick={onToggle}>
           {open ? 'Свернуть' : 'Открыть'}

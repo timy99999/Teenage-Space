@@ -49,7 +49,26 @@ export class AdminService {
     if (status) query = query.eq('status', status);
     const { data, error } = await query;
     if (error) throw error;
-    return (data as SubmissionAdminRow[]).map(mapSubmissionAdmin);
+    const rows = data as SubmissionAdminRow[];
+    const submitters = await this.submitterMap(rows.map((r) => r.user_id));
+    return rows.map((r) => mapSubmissionAdmin(r, submitters.get(r.user_id)));
+  }
+
+  /** username/email for each given user id — so the review screen can show who
+   *  sent a submission. Failures degrade to an empty map rather than 500. */
+  private async submitterMap(userIds: string[]) {
+    const unique = [...new Set(userIds.filter(Boolean))];
+    const map = new Map<string, { username: string | null; email: string | null }>();
+    if (unique.length === 0) return map;
+    const { data, error } = await this.supabase.client
+      .from('profiles')
+      .select('id, username, email')
+      .in('id', unique);
+    if (error) return map;
+    for (const p of data as { id: string; username: string | null; email: string | null }[]) {
+      map.set(p.id, { username: p.username, email: p.email });
+    }
+    return map;
   }
 
   async updateSubmission(id: string, dto: UpdateSubmissionDto) {
