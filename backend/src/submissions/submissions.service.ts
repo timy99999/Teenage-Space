@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { User } from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase/supabase.service';
 import { SubmissionRow, mapSubmission } from '../common/mappers';
+import { normalizeKgPhone } from '../common/phone';
 import { CreateSubmissionDto } from './create-submission.dto';
 
 @Injectable()
@@ -19,6 +20,9 @@ export class SubmissionsService {
   }
 
   async create(user: User, dto: CreateSubmissionDto) {
+    // Store the WhatsApp number in a canonical +996 form so every new
+    // submission carries a number admins can dial and link to.
+    const whatsapp = normalizeKgPhone(dto.whatsapp)?.e164 ?? dto.whatsapp ?? null;
     const { data, error } = await this.supabase.client
       .from('submissions')
       .insert({
@@ -46,7 +50,7 @@ export class SubmissionsService {
         extra_link_url: dto.extraLinkUrl ?? null,
         instagram: dto.instagram ?? null,
         telegram: dto.telegram ?? null,
-        whatsapp: dto.whatsapp ?? null,
+        whatsapp,
         status: 'pending'
       })
       .select('id, title, status, created_at')

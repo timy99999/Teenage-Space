@@ -1,3 +1,5 @@
+import { normalizeKgPhone, whatsappLink } from './phone';
+
 export interface EventRow {
   id: string;
   title: string;
@@ -270,7 +272,10 @@ export function mapSubmissionAdmin(row: SubmissionAdminRow, submitter?: Submitte
     extraLinkUrl: row.extra_link_url,
     instagram: row.instagram,
     telegram: row.telegram,
-    whatsapp: row.whatsapp,
+    // Show the +996-normalised form when the raw value parses, so pre-existing
+    // submissions read the same as new ones.
+    whatsapp: normalizeKgPhone(row.whatsapp)?.e164 ?? row.whatsapp,
+    whatsappLink: whatsappLink(row.whatsapp),
     status: row.status,
     createdAt: row.created_at,
     publishedEventId: row.published_event_id,

@@ -228,7 +228,15 @@ function SubmissionRow({
           <div>
             <div className="ts-field-label">Контакты автора (видно только админам)</div>
             <div className="desc">
-              WhatsApp: {s.whatsapp || '—'} · Telegram: {s.telegram || '—'} · Instagram: {s.instagram || '—'}
+              WhatsApp:{' '}
+              {s.whatsappLink ? (
+                <a href={s.whatsappLink} target="_blank" rel="noopener noreferrer">
+                  {s.whatsapp}
+                </a>
+              ) : (
+                s.whatsapp || '—'
+              )}{' '}
+              · Telegram: {s.telegram || '—'} · Instagram: {s.instagram || '—'}
             </div>
           </div>
 

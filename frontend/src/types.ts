@@ -165,6 +165,7 @@ export interface AdminSubmission {
   instagram: string | null;
   telegram: string | null;
   whatsapp: string | null;
+  whatsappLink: string | null;
   status: SubmissionStatus;
   createdAt: string;
   publishedEventId: string | null;
