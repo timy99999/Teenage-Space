@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_supabase_migrations_20260826120000_storage_bucket_limits_sql", "label": "20260826120000_storage_bucket_limits.sql", "file_type": "code", "source_file": "supabase/migrations/20260826120000_storage_bucket_limits.sql", "source_location": null}], "edges": []}

@@ -7,6 +7,7 @@ export const CATS: CategoryDef[] = [
   { key: 'contest', label: 'Конкурсы' },
   { key: 'hackathon', label: 'Хакатоны' },
   { key: 'olympiad', label: 'Олимпиады' },
+  { key: 'internship', label: 'Стажировки' },
   { key: 'other', label: 'Другое' }
 ];
 
@@ -31,6 +32,7 @@ export const CATN: Record<string, string> = {
   contest: 'конкурсы',
   hackathon: 'хакатоны',
   olympiad: 'олимпиады',
+  internship: 'стажировки',
   other: 'другое'
 };
 

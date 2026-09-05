@@ -71,7 +71,7 @@ async def search_events(
     Args:
         query: свободное описание того, что ищет пользователь, его словами.
         category: одна из категорий каталога (volunteering, social, eduevent, contest,
-            hackathon, olympiad, other). Не указывай, если пользователь не сузил тему.
+            hackathon, olympiad, internship, other). Не указывай, если пользователь не сузил тему.
         themes: темы каталога (sport, it, eco, media, mun, other).
         age: возраст участника в годах.
         price: 'free' или 'paid'.

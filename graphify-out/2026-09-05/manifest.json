@@ -426,16 +426,16 @@
     "semantic_hash": "954c1d6d8d7425ef3b674182538e14df"
   },
   "frontend/src/data/constants.ts": {
-    "mtime": 1788583539.4585433,
-    "seen": 1788583618.7061875,
-    "ast_hash": "741e9c8f2c7b3b10d6cddab97f374773",
-    "semantic_hash": ""
+    "mtime": 1787278030.0856054,
+    "seen": 1787666027.1690547,
+    "ast_hash": "0985db8162f92abf3dd21e6dd5533042",
+    "semantic_hash": "0985db8162f92abf3dd21e6dd5533042"
   },
   "frontend/src/data/heroOrbit.tsx": {
-    "mtime": 1788583545.620723,
-    "seen": 1788583618.7061875,
-    "ast_hash": "6d39d1fb468c5c5fcfd5a68e1ce422c7",
-    "semantic_hash": ""
+    "mtime": 1787273164.2615192,
+    "seen": 1787666027.1690547,
+    "ast_hash": "50ca0ed331350aee0a60a107cee51d75",
+    "semantic_hash": "50ca0ed331350aee0a60a107cee51d75"
   },
   "frontend/src/data/pageFloaters.tsx": {
     "mtime": 1787276951.525832,
@@ -649,20 +649,20 @@
   },
   "supabase/migrations/20260821115320_baseline.sql": {
     "mtime": 1787313236.724028,
-    "seen": 1788583618.7071853,
-    "ast_hash": "464c8706d6a7b400a91418d507860bf4",
+    "seen": 1787666027.1690547,
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "supabase/migrations/20260825110348_perf_indexes_and_rls.sql": {
     "mtime": 1787655836.3630974,
-    "seen": 1788583618.7071853,
-    "ast_hash": "488e3b64d2c4661d445ebf5f15e01a66",
+    "seen": 1787666027.1690547,
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "supabase/seed.sql": {
-    "mtime": 1788353336.5544245,
-    "seen": 1788583618.7071853,
-    "ast_hash": "98a49a2500e0aa562990d62a105e5f82",
+    "mtime": 1787313323.6211183,
+    "seen": 1787666027.1690547,
+    "ast_hash": "",
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
@@ -1062,9 +1062,9 @@
     "semantic_hash": ""
   },
   "bot/bars/graph/tools.py": {
-    "mtime": 1788583540.6428378,
-    "seen": 1788583618.7061875,
-    "ast_hash": "8fc011aff1c87a8571ec6ba1f5aef946",
+    "mtime": 1788363074.6275246,
+    "seen": 1788363146.669305,
+    "ast_hash": "806446efb8a97c3c50b35a063d1a6e18",
     "semantic_hash": ""
   },
   "bot/bars/handlers.py": {
@@ -1134,9 +1134,9 @@
     "semantic_hash": ""
   },
   "bot/bars/vocab.py": {
-    "mtime": 1788583539.5650656,
-    "seen": 1788583618.7061875,
-    "ast_hash": "9741c1a50ff83aef5c2e057f92ba4196",
+    "mtime": 1787925809.3960657,
+    "seen": 1787931780.602006,
+    "ast_hash": "ffb72093cece5b332d39d6e8084f3a9a",
     "semantic_hash": ""
   },
   "bot/pyproject.toml": {
@@ -1521,78 +1521,6 @@
     "mtime": 1788486635.1912537,
     "seen": 1788486873.8123326,
     "ast_hash": "ff498b14ca31eda9852c2e3200d1a7f9",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260826120000_storage_bucket_limits.sql": {
-    "mtime": 1787750537.857546,
-    "seen": 1788583618.7071853,
-    "ast_hash": "0eefd16fe38f0955a256a9c7376188e8",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260826150917_super_admin_and_capacity_stats.sql": {
-    "mtime": 1787756796.2520301,
-    "seen": 1788583618.7071853,
-    "ast_hash": "92140733065a17fd67e7db61c7dc2f2f",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260828103623_traffic_analytics.sql": {
-    "mtime": 1787913098.9875681,
-    "seen": 1788583618.7071853,
-    "ast_hash": "9ce06778d0366380f7c01e840b5ea75c",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260828111013_card_unique_views.sql": {
-    "mtime": 1787915295.7281685,
-    "seen": 1788583618.7071853,
-    "ast_hash": "db863f465951e578ed84f278cfb61ccc",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260828160000_admin_perms_and_timed_bans.sql": {
-    "mtime": 1787917290.6516342,
-    "seen": 1788583618.7071853,
-    "ast_hash": "8625d72ce8325e174b1c78872ef5984f",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260828170000_user_capacity_stats.sql": {
-    "mtime": 1787920820.7962825,
-    "seen": 1788583618.7071853,
-    "ast_hash": "86d17baa12514a8b95e51373bbcf90d4",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260828190000_bars_bot.sql": {
-    "mtime": 1787925468.3331132,
-    "seen": 1788583618.7071853,
-    "ast_hash": "8eaa3883a490c6cfef30916c912a184f",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260829120000_bars_observability.sql": {
-    "mtime": 1788009860.4389417,
-    "seen": 1788583618.7071853,
-    "ast_hash": "3c587776f7b7bf2fbd2f98534e377091",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260829140000_bars_credit.sql": {
-    "mtime": 1788012652.8201058,
-    "seen": 1788583618.7071853,
-    "ast_hash": "6b1c9adda4a0248574de5c83b0e1894f",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260902184600_event_multi_category.sql": {
-    "mtime": 1788353119.2708526,
-    "seen": 1788583618.7071853,
-    "ast_hash": "057bf8ee3ab4bfd810c8fcde6d6c8cc5",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260902185000_event_organizer.sql": {
-    "mtime": 1788353665.638962,
-    "seen": 1788583618.7071853,
-    "ast_hash": "30a477437273f1e2828155ce8e6130fa",
-    "semantic_hash": ""
-  },
-  "supabase/migrations/20260902190000_bars_turn_meta.sql": {
-    "mtime": 1788359533.8423998,
-    "seen": 1788583618.7071853,
-    "ast_hash": "132576221bbc4a2b3b561c95cfbbdbd1",
     "semantic_hash": ""
   }
 }

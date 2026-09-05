@@ -76,5 +76,16 @@ export const ORBIT_ITEMS = [
         <path d="M12 12.2 13.1 14.5 15.6 14.8 13.8 16.5 14.2 19 12 17.8 9.8 19 10.2 16.5 8.4 14.8 10.9 14.5 12 12.2Z" />
       </svg>
     )
+  },
+  {
+    key: 'internship',
+    label: 'Стажировки',
+    icon: (
+      <svg {...iconProps}>
+        <rect x="3" y="8" width="18" height="12" rx="2" />
+        <path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />
+        <path d="M3 13h18" />
+      </svg>
+    )
   }
 ];

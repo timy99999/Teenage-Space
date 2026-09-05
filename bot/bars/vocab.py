@@ -15,6 +15,7 @@ CATEGORIES: dict[str, str] = {
     "contest": "Конкурсы",
     "hackathon": "Хакатоны",
     "olympiad": "Олимпиады",
+    "internship": "Стажировки",
     "other": "Другое",
 }
 
