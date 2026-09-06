@@ -150,16 +150,16 @@
     "semantic_hash": "d2a8aecf68bda72c746ef6a948a3504e"
   },
   "backend/src/events/events.service.ts": {
-    "mtime": 1788690229.5601497,
-    "seen": 1788690764.8968349,
-    "ast_hash": "10cbe312d875b8f765222ffb921684ef",
+    "mtime": 1788355393.7746232,
+    "seen": 1788355436.188307,
+    "ast_hash": "c8bd940151be1923f66ecee2f453ebd0",
     "semantic_hash": ""
   },
   "backend/src/events/query-events.dto.ts": {
-    "mtime": 1788690210.2656436,
-    "seen": 1788690764.8968349,
-    "ast_hash": "86e37427e2f0ff8411d72250407cfae1",
-    "semantic_hash": ""
+    "mtime": 1787063206.0733638,
+    "seen": 1787666027.1690547,
+    "ast_hash": "f3470d2823b552eaef10afb81c4970b0",
+    "semantic_hash": "f3470d2823b552eaef10afb81c4970b0"
   },
   "backend/src/favorites/favorites.controller.ts": {
     "mtime": 1787063260.913478,
@@ -474,10 +474,10 @@
     "semantic_hash": "df5f9107de817a81bcd160c9f14e482a"
   },
   "frontend/src/hooks/useEvents.ts": {
-    "mtime": 1788690564.9006362,
-    "seen": 1788690764.8973389,
-    "ast_hash": "cb485be3fb358586d90acbb4d99bfcab",
-    "semantic_hash": ""
+    "mtime": 1787151793.3592136,
+    "seen": 1787666027.1690547,
+    "ast_hash": "43bb672d4a123376d7e27998d59c9390",
+    "semantic_hash": "43bb672d4a123376d7e27998d59c9390"
   },
   "frontend/src/hooks/useFavorites.ts": {
     "mtime": 1787062888.1362424,
@@ -582,9 +582,9 @@
     "semantic_hash": "89befc245588055a903401d306a45eb5"
   },
   "frontend/src/pages/GridPage.tsx": {
-    "mtime": 1788690644.8138607,
-    "seen": 1788690764.8973389,
-    "ast_hash": "15dc236307da196c3ff371e103f17967",
+    "mtime": 1787917655.2761972,
+    "seen": 1787917839.522432,
+    "ast_hash": "8124ef59fd507ea9b2bd21eef025c722",
     "semantic_hash": ""
   },
   "frontend/src/pages/HomePage.tsx": {
@@ -1596,15 +1596,9 @@
     "semantic_hash": ""
   },
   "frontend/src/lib/deadline.ts": {
-    "mtime": 1788690192.481017,
-    "seen": 1788690764.8973389,
-    "ast_hash": "2554cf77cb8e0895500a194d882967dd",
-    "semantic_hash": ""
-  },
-  "frontend/src/hooks/useDebouncedValue.ts": {
-    "mtime": 1788690542.6858416,
-    "seen": 1788690764.8973389,
-    "ast_hash": "fb388c140e237ed2989146441f0ca663",
+    "mtime": 1788690006.8253927,
+    "seen": 1788690127.0898046,
+    "ast_hash": "6e0b2ccc6d560a1dfe28c9a17373d19f",
     "semantic_hash": ""
   }
 }

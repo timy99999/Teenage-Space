@@ -1,4 +1,5 @@
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class QueryEventsDto {
   @IsOptional()
@@ -25,7 +26,30 @@ export class QueryEventsDto {
   @IsIn(['local', 'intl'])
   level?: 'local' | 'intl';
 
+  // MaxLength is a size guard only — a malformed but short value (e.g. "abc") is
+  // still accepted here and silently ignored by the service's regex, matching the
+  // frontend's "ignore junk from stale links" behaviour.
   @IsOptional()
   @IsString()
+  @MaxLength(11)
   age?: string;
+
+  /**
+   * Free-text search over title + description. Used by the "Возможности" catalog only
+   * (news / education are out of scope). LIKE metacharacters are escaped downstream.
+   */
+  @IsOptional()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @IsString()
+  @MaxLength(100)
+  q?: string;
+
+  /**
+   * `new` — newest first (default). `deadline` — soonest registration deadline first.
+   * Anything unrecognised (a stale or hand-edited link) falls back to `new` rather
+   * than 400-ing, matching how `age` / `themes` treat junk values.
+   */
+  @Transform(({ value }) => (value === 'deadline' ? 'deadline' : 'new'))
+  @IsString()
+  sort: 'new' | 'deadline' = 'new';
 }
