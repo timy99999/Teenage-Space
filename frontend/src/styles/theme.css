@@ -185,20 +185,25 @@ textarea::placeholder {
   font-size: 14px;
   padding: 4px 11px;
 }
+/* chips on the coloured "Возможности" header (--ts-blue): an accent fill can't
+   separate from the header, so it's a white pill vs. an outlined transparent one. */
 .ts-chip.on-grey {
-  border-color: var(--ts-grey-line);
+  border-color: rgba(255, 255, 255, 0.55);
   background: transparent;
-  color: var(--ts-grey-fg);
+  color: #fff;
+}
+.ts-chip.on-grey:not(.active):hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+.ts-chip.on-grey.active {
+  border-color: #fff;
+  background: #fff;
+  /* literal, not var(--ts-blue): the pill stays white in dark theme too, where
+     the token would resolve to #9a8cff and fail contrast on white */
+  color: #2412c8;
 }
 .ts-chip.active:not(.on-grey) {
   border-color: var(--ts-chip-active);
   background: var(--ts-chip-active);
   color: var(--ts-chip-active-fg);
-}
-/* chips on the coloured "Возможности" header keep their old look — restyling that
-   variant (white pill) is a separate P1 design task. */
-.ts-chip.on-grey.active {
-  border-color: var(--ts-violet);
-  background: var(--ts-violet);
-  color: #fff;
 }
