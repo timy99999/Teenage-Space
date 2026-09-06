@@ -13,6 +13,9 @@ export interface EventFilters {
   price?: 'free' | 'paid' | null;
   level?: 'local' | 'intl' | null;
   age?: string;
+  /** Free-text search — catalog only. */
+  q?: string;
+  sort?: 'new' | 'deadline';
 }
 
 function buildQuery(filters: EventFilters): string {
@@ -24,26 +27,39 @@ function buildQuery(filters: EventFilters): string {
   if (filters.price) params.set('price', filters.price);
   if (filters.level) params.set('level', filters.level);
   if (filters.age) params.set('age', filters.age);
+  const q = filters.q?.trim();
+  if (q) params.set('q', q);
+  if (filters.sort && filters.sort !== 'new') params.set('sort', filters.sort);
   return params.toString();
 }
 
 export function useEvents(filters: EventFilters) {
   const key = buildQuery(filters);
-  const [events, setEvents] = useState<EventItem[]>(() => getCached<EventItem[]>(`events?${key}`) ?? []);
-  const [loading, setLoading] = useState(() => !getCached<EventItem[]>(`events?${key}`));
+  // Search results are volatile and query-specific — keep them out of the persistent
+  // (localStorage) cache so it doesn't fill up with one-off queries. Plain catalog
+  // views still get the stale-while-error persistence.
+  const isSearch = !!filters.q?.trim();
+  const [events, setEvents] = useState<EventItem[]>(() =>
+    isSearch ? [] : getCached<EventItem[]>(`events?${key}`) ?? []
+  );
+  const [loading, setLoading] = useState(() => isSearch || !getCached<EventItem[]>(`events?${key}`));
 
   useEffect(() => {
     let cancelled = false;
     const cacheKey = `events?${key}`;
-    const cached = getCached<EventItem[]>(cacheKey);
+    const cached = isSearch ? null : getCached<EventItem[]>(cacheKey);
     if (cached) {
       setEvents(cached);
       setLoading(false);
     } else {
       setLoading(true);
     }
-    getOrFetch<EventItem[]>(cacheKey, () => api.get<EventItem[]>(`/events?${key}`), TTL_MS)
+    const fetcher = () => api.get<EventItem[]>(`/events?${key}`);
+    const request = isSearch ? fetcher() : getOrFetch<EventItem[]>(cacheKey, fetcher, TTL_MS);
+    request
       .then((data) => {
+        // A superseded request (key changed) has cancelled === true — its result is dropped,
+        // so responses can't land out of order.
         if (!cancelled) {
           setEvents(data);
           setLoading(false);
@@ -58,7 +74,7 @@ export function useEvents(filters: EventFilters) {
     return () => {
       cancelled = true;
     };
-  }, [key]);
+  }, [key, isSearch]);
 
   return { events, loading };
 }

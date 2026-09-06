@@ -400,6 +400,21 @@
     padding: 14px 16px 0;
   }
 
+  .ts-catalog-toolbar {
+    padding: 12px 16px 0;
+    gap: 10px;
+  }
+  .ts-search {
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .ts-sort-seg {
+    flex: 1;
+  }
+  .ts-sort-seg-btn {
+    flex: 1;
+  }
+
   .ts-card-grid {
     padding: 16px 14px calc(90px + 62px + env(safe-area-inset-bottom, 0px));
     grid-template-columns: repeat(2, 1fr);

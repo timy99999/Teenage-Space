@@ -1055,6 +1055,105 @@
   padding: 18px 34px 0;
 }
 
+/* ---- catalog toolbar: search + sort + reset (Возможности only) ---- */
+.ts-catalog-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px 34px 0;
+}
+.ts-search {
+  position: relative;
+  flex: 1 1 260px;
+  max-width: 520px;
+  display: flex;
+  align-items: center;
+}
+.ts-search-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--ts-muted);
+  pointer-events: none;
+}
+.ts-search-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 34px;
+  border-radius: 10px;
+  border: 1px solid var(--ts-line);
+  background: var(--ts-surface);
+  color: var(--ts-fg);
+  font-size: 14.5px;
+  outline: none;
+  transition: border-color 0.16s, box-shadow 0.16s;
+}
+.ts-search-input:focus {
+  border-color: var(--ts-chip-active);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25);
+}
+.ts-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+.ts-search-clear {
+  position: absolute;
+  right: 6px;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: var(--ts-muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.ts-search-clear:hover {
+  background: var(--ts-surface2);
+  color: var(--ts-fg);
+}
+.ts-sort-seg {
+  display: inline-flex;
+  border: 1px solid var(--ts-line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.ts-sort-seg-btn {
+  padding: 8px 14px;
+  border: none;
+  background: var(--ts-surface);
+  color: var(--ts-muted);
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s;
+}
+.ts-sort-seg-btn + .ts-sort-seg-btn {
+  border-left: 1px solid var(--ts-line);
+}
+.ts-sort-seg-btn.active {
+  background: var(--ts-chip-active);
+  color: var(--ts-chip-active-fg);
+}
+.ts-reset-all {
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--ts-chip-active);
+  font-size: 13.5px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.ts-reset-all:hover {
+  background: var(--ts-surface2);
+}
+.ts-empty-actions {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
 .ts-empty {
   flex: 1;
   display: grid;
