@@ -21,6 +21,43 @@ function oneMonthAgoInBishkek(): string {
   return d.toISOString().slice(0, 10);
 }
 
+/**
+ * Builds a PostgREST `.or()` filter for a case-insensitive substring match over
+ * title + description. Returns null for blank input.
+ *
+ *  - `\ % _` in the user's text are backslash-escaped so LIKE treats them literally
+ *    (backslash is Postgres's default LIKE escape char, no explicit ESCAPE needed);
+ *  - the pattern is wrapped in double quotes and `"` is escaped, so commas, parens
+ *    and dots in the query can't break the or() filter grammar.
+ */
+function buildSearchOrFilter(raw: string): string | null {
+  const term = raw.trim();
+  if (!term) return null;
+  const escaped = term.replace(/[\\%_]/g, (c) => `\\${c}`).replace(/"/g, '\\"');
+  return `title.ilike."%${escaped}%",description.ilike."%${escaped}%"`;
+}
+
+/**
+ * Re-orders events by soonest registration deadline. Events whose deadline has
+ * passed, and events with no deadline at all, go to the end (spec §2). Ties keep
+ * the incoming order — the DB query already sorts newest-first — because
+ * Array.prototype.sort is stable.
+ */
+function sortByDeadline<T extends { deadline_date: string | null }>(rows: T[], today: string): T[] {
+  const bucket = (r: T): number => {
+    if (!r.deadline_date) return 1; // no date
+    if (r.deadline_date < today) return 2; // registration closed
+    return 0; // deadline today or later
+  };
+  return [...rows].sort((a, b) => {
+    const ba = bucket(a);
+    const bb = bucket(b);
+    if (ba !== bb) return ba - bb;
+    if (ba === 0) return a.deadline_date! < b.deadline_date! ? -1 : a.deadline_date! > b.deadline_date! ? 1 : 0;
+    return 0;
+  });
+}
+
 @Injectable()
 export class EventsService implements OnModuleInit {
   private readonly logger = new Logger(EventsService.name);
@@ -66,12 +103,21 @@ export class EventsService implements OnModuleInit {
       }
     }
 
+    if (query.q) {
+      const orFilter = buildSearchOrFilter(query.q);
+      if (orFilter) q = q.or(orFilter);
+    }
+
+    // Always fetch newest-first — it's the default order and the stable tiebreaker
+    // for the deadline sort applied below.
     q = q.order('created_at', { ascending: false });
 
     const { data, error } = await q;
     if (error) throw error;
 
-    return ((data ?? []) as EventRow[]).map(mapEvent);
+    const rows = (data ?? []) as EventRow[];
+    const ordered = query.sort === 'deadline' ? sortByDeadline(rows, todayInBishkek()) : rows;
+    return ordered.map(mapEvent);
   }
 
   async findOne(id: string) {

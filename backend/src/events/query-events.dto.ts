@@ -1,4 +1,5 @@
-import { IsIn, IsOptional, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsIn, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class QueryEventsDto {
   @IsOptional()
@@ -28,4 +29,19 @@ export class QueryEventsDto {
   @IsOptional()
   @IsString()
   age?: string;
+
+  /**
+   * Free-text search over title + description. Used by the "Возможности" catalog only
+   * (news / education are out of scope). LIKE metacharacters are escaped downstream.
+   */
+  @IsOptional()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @IsString()
+  @MaxLength(100)
+  q?: string;
+
+  /** `new` — newest first (default). `deadline` — soonest registration deadline first. */
+  @IsOptional()
+  @IsIn(['new', 'deadline'])
+  sort: 'new' | 'deadline' = 'new';
 }
