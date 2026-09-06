@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useEducationTracks } from '../hooks/useEducation';
 import { NAV_CATS } from '../data/constants';
+import { carryCatalogSearch } from '../lib/catalogNav';
 
 export function Sidebar() {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export function Sidebar() {
           className="ts-nav-item ts-nav-parent"
           onClick={() => {
             setOppsOpen((v) => !v);
-            navigate('/opportunities');
+            navigate({ pathname: '/opportunities', search: carryCatalogSearch(location.search) });
           }}
         >
           {isOppsRoot && <span className="ts-nav-dot" style={{ marginRight: 8 }} />}
@@ -83,7 +84,9 @@ export function Sidebar() {
               <button
                 key={c.key}
                 className={`ts-nav-sub${isOppsRoot && activeCategory === c.key ? ' active' : ''}`}
-                onClick={() => navigate(`/opportunities/${c.key}`)}
+                onClick={() =>
+                  navigate({ pathname: `/opportunities/${c.key}`, search: carryCatalogSearch(location.search) })
+                }
               >
                 {c.label}
               </button>

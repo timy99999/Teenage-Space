@@ -44,8 +44,12 @@ export class QueryEventsDto {
   @MaxLength(100)
   q?: string;
 
-  /** `new` — newest first (default). `deadline` — soonest registration deadline first. */
-  @IsOptional()
-  @IsIn(['new', 'deadline'])
+  /**
+   * `new` — newest first (default). `deadline` — soonest registration deadline first.
+   * Anything unrecognised (a stale or hand-edited link) falls back to `new` rather
+   * than 400-ing, matching how `age` / `themes` treat junk values.
+   */
+  @Transform(({ value }) => (value === 'deadline' ? 'deadline' : 'new'))
+  @IsString()
   sort: 'new' | 'deadline' = 'new';
 }

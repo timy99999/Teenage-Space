@@ -16,6 +16,7 @@ import { Chip } from '../components/Chip';
 import { CardSizeSlider } from '../components/CardSizeSlider';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EditEventModal } from '../components/EditEventModal';
+import { carryCatalogSearch } from '../lib/catalogNav';
 import type { EventItem } from '../types';
 
 type ConfirmKind = 'archive' | 'voting' | 'delete';
@@ -382,14 +383,19 @@ export function GridPage({ mode }: { mode: GridMode }) {
 
         {isOpps && (
           <div className="ts-mobile-subtabs">
-            <button className={`ts-mobile-subtab${!category ? ' active' : ''}`} onClick={() => navigate('/opportunities')}>
+            <button
+              className={`ts-mobile-subtab${!category ? ' active' : ''}`}
+              onClick={() => navigate({ pathname: '/opportunities', search: carryCatalogSearch(params.toString()) })}
+            >
               Все
             </button>
             {NAV_CATS.map((c) => (
               <button
                 key={c.key}
                 className={`ts-mobile-subtab${category === c.key ? ' active' : ''}`}
-                onClick={() => navigate(`/opportunities/${c.key}`)}
+                onClick={() =>
+                  navigate({ pathname: `/opportunities/${c.key}`, search: carryCatalogSearch(params.toString()) })
+                }
               >
                 {c.label}
               </button>
