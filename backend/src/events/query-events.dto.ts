@@ -26,8 +26,12 @@ export class QueryEventsDto {
   @IsIn(['local', 'intl'])
   level?: 'local' | 'intl';
 
+  // MaxLength is a size guard only — a malformed but short value (e.g. "abc") is
+  // still accepted here and silently ignored by the service's regex, matching the
+  // frontend's "ignore junk from stale links" behaviour.
   @IsOptional()
   @IsString()
+  @MaxLength(11)
   age?: string;
 
   /**

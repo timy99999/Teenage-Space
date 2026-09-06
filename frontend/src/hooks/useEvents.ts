@@ -27,7 +27,8 @@ function buildQuery(filters: EventFilters): string {
   if (filters.price) params.set('price', filters.price);
   if (filters.level) params.set('level', filters.level);
   if (filters.age) params.set('age', filters.age);
-  const q = filters.q?.trim();
+  // Mirror the backend's @MaxLength(100) so an over-long term can't 400 the request.
+  const q = filters.q?.trim().slice(0, 100);
   if (q) params.set('q', q);
   if (filters.sort && filters.sort !== 'new') params.set('sort', filters.sort);
   return params.toString();

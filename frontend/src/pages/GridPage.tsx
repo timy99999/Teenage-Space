@@ -90,7 +90,10 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const fPrice: 'free' | 'paid' | null = priceParam === 'free' || priceParam === 'paid' ? priceParam : null;
   const levelParam = params.get('level');
   const fLevel: 'local' | 'intl' | null = levelParam === 'local' || levelParam === 'intl' ? levelParam : null;
-  const ageApplied = (params.get('age') ?? '').trim();
+  const ageRaw = (params.get('age') ?? '').trim();
+  // Validate like the other filters — a stale link with ?age=<junk> should be
+  // ignored silently, not shown as an active-but-ineffective filter.
+  const ageApplied = /^\d{1,3}(-\d{1,3})?$/.test(ageRaw) ? ageRaw : '';
   const sort: 'new' | 'deadline' = params.get('sort') === 'deadline' ? 'deadline' : 'new';
   const qApplied = isOpps ? (params.get('q') ?? '').trim() : '';
 
@@ -375,6 +378,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
             <input
               className="ts-search-input"
               type="search"
+              maxLength={100}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => {
