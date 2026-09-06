@@ -54,6 +54,9 @@ export function useEvents(filters: EventFilters) {
       setLoading(false);
     } else {
       setLoading(true);
+      // In search mode, drop the previous query's results immediately so the grid
+      // never flashes a stale/unfiltered list while the new request is in flight.
+      if (isSearch) setEvents([]);
     }
     const fetcher = () => api.get<EventItem[]>(`/events?${key}`);
     const request = isSearch ? fetcher() : getOrFetch<EventItem[]>(cacheKey, fetcher, TTL_MS);

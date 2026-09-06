@@ -179,11 +179,39 @@ export function GridPage({ mode }: { mode: GridMode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Canonical serialisation of the filters after validation.
+  const normalizedFilters: Record<string, string | null> = {
+    themes: fThemes.length ? fThemes.join(',') : null,
+    cats: fCats.length ? fCats.join(',') : null,
+    price: fPrice,
+    level: fLevel,
+    age: ageApplied || null,
+    sort: sort === 'deadline' ? 'deadline' : null
+  };
+
+  // Rewrite the URL with validated values so junk from a stale link
+  // (?themes=foo,it, ?sort=xxx, ?age=abc) doesn't linger in the address bar or
+  // get mirrored verbatim into localStorage.
+  useEffect(() => {
+    if (!(isOpps || isVote)) return;
+    const needsFix = Object.entries(normalizedFilters).some(
+      ([k, v]) => (v ?? null) !== (params.get(k) ?? null)
+    );
+    if (!needsFix) return;
+    patchParams((p) => {
+      for (const [k, v] of Object.entries(normalizedFilters)) {
+        if (v) p.set(k, v);
+        else p.delete(k);
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params, isOpps, isVote]);
+
   useEffect(() => {
     if (!isOpps) return;
     const obj: Record<string, string> = {};
     for (const k of REMEMBERED_KEYS) {
-      const v = params.get(k);
+      const v = normalizedFilters[k];
       if (v) obj[k] = v;
     }
     try {
@@ -192,9 +220,10 @@ export function GridPage({ mode }: { mode: GridMode }) {
     } catch {
       /* localStorage unavailable — non-fatal */
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params, isOpps]);
 
-  const { events: fetchedEvents } = useEvents({
+  const { events: fetchedEvents, loading } = useEvents({
     scope,
     category: isOpps ? category : undefined,
     categories: isVote ? fCats : undefined,
@@ -243,7 +272,8 @@ export function GridPage({ mode }: { mode: GridMode }) {
   }
 
   const favEvents = isFav ? events.filter((e) => favorites.has(e.id)) : events;
-  const isEmpty = isNews ? news.length === 0 : favEvents.length === 0;
+  // While a request is in flight, don't flash the "nothing here" state.
+  const isEmpty = isNews ? news.length === 0 : !loading && favEvents.length === 0;
 
   const subLabel = isOpps && category ? CATS.find((c) => c.key === category)?.label ?? '' : '';
   const pageTitle = isOpps ? TITLES.opps : TITLES[mode];
@@ -537,7 +567,12 @@ export function GridPage({ mode }: { mode: GridMode }) {
       )}
 
       {!isEmpty && !isNews && (
-        <div className="ts-card-grid">
+        <div
+          className="ts-card-grid"
+          /* Dim + lock the grid while a request is in flight so a search never
+             flashes the previous/unfiltered list as if it were the result. */
+          style={loading ? { opacity: 0.45, pointerEvents: 'none', transition: 'opacity .15s' } : undefined}
+        >
           {favEvents.map((e) => (
             <EventCard
               key={e.id}
