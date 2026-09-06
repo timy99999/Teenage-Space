@@ -6,6 +6,14 @@
   --ts-surface: #ffffff;
   --ts-surface2: #f4f4f5;
   --ts-ph: #a9a9a9;
+  /* text placeholders / hints — AA on both #fff (5.33) and form fields --ts-surface2 #f4f4f5 (4.82).
+     Do NOT use #767676: it drops to 4.11 on #f4f4f5. Distinct from --ts-ph (image-loading bg). */
+  --ts-placeholder: #6b6b6b;
+  /* inactive filter chip — filled, not hairline border (border #e6e6e6 failed contrast) */
+  --ts-chip-bg: #eeeef0;
+  --ts-chip-border: #d8d8dc;
+  --ts-chip-active: #7c3aed;
+  --ts-chip-active-fg: #ffffff;
   --ts-side: #000000;
   --ts-side-fg: #ffffff;
   --ts-side-dim: #bdbdbd;
@@ -28,6 +36,12 @@
   --ts-surface: #121212;
   --ts-surface2: #1a1a1a;
   --ts-ph: #2e2e2e;
+  --ts-placeholder: #8f8f8f;
+  --ts-chip-bg: #1f1f1f;
+  --ts-chip-border: #2e2e2e;
+  --ts-chip-active: #9a8cff;
+  /* white on #9a8cff is only 2.77 — dark text needed for AA */
+  --ts-chip-active-fg: #141414;
   --ts-side: #000000;
   --ts-side-fg: #ffffff;
   --ts-side-dim: #a0a0a0;
@@ -75,6 +89,12 @@ input,
 textarea,
 button {
   font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ts-placeholder);
+  opacity: 1;
 }
 
 :focus-visible {
@@ -157,8 +177,8 @@ button {
   font-size: 14.5px;
   transition: background 0.16s, color 0.16s, border-color 0.16s;
   white-space: nowrap;
-  border: 1.5px solid var(--ts-line);
-  background: transparent;
+  border: 1px solid var(--ts-chip-border);
+  background: var(--ts-chip-bg);
   color: var(--ts-fg);
 }
 .ts-chip.small {
@@ -167,9 +187,17 @@ button {
 }
 .ts-chip.on-grey {
   border-color: var(--ts-grey-line);
+  background: transparent;
   color: var(--ts-grey-fg);
 }
-.ts-chip.active {
+.ts-chip.active:not(.on-grey) {
+  border-color: var(--ts-chip-active);
+  background: var(--ts-chip-active);
+  color: var(--ts-chip-active-fg);
+}
+/* chips on the coloured "Возможности" header keep their old look — restyling that
+   variant (white pill) is a separate P1 design task. */
+.ts-chip.on-grey.active {
   border-color: var(--ts-violet);
   background: var(--ts-violet);
   color: #fff;
