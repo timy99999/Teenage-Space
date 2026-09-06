@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { EventItem } from '../types';
 import { fmtEventWhen } from '../data/constants';
+import { deadlineBadge } from '../lib/deadline';
 import { EventPhoto } from './EventPhoto';
 import { useAuth } from '../contexts/AuthContext';
 import { trackLinkClick } from '../lib/tracking';
@@ -32,6 +33,7 @@ interface EventCardProps {
 
 export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, admin, viewCount }: EventCardProps) {
   const priceLabel = event.price === 'free' ? 'Бесплатно' : event.cost ?? '';
+  const deadline = deadlineBadge(event.deadlineDate, { isPast: event.isPast || isVoteMode });
   const { session } = useAuth();
 
   return (
@@ -72,6 +74,9 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
       <button className="ts-card-body" onClick={onOpen}>
         <h3 className="ts-card-title">{event.title}</h3>
         <p className="ts-card-short">{event.short}</p>
+        {deadline && (
+          <span className={`ts-deadline-badge ts-deadline-badge--${deadline.tone}`}>{deadline.text}</span>
+        )}
         <div className="ts-card-meta">
           {event.eventDate && <span>{fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime)}</span>}
           <span>{event.ageLabel}</span>
