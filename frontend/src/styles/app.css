@@ -1405,11 +1405,26 @@ a.ts-card-organizer:hover {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  gap: 4px 12px;
+  align-items: center;
+  gap: 5px 12px;
   font-family: 'Open Sans', sans-serif;
-  font-size: 12px;
-  color: var(--ts-fg);
-  opacity: 0.78;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ts-muted);
+}
+.ts-card-meta .ts-deadline-badge {
+  margin-top: 0;
+}
+.ts-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.ts-meta-ico {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 .ts-card-foot {
   margin-top: auto;

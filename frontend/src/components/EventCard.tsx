@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { EventItem } from '../types';
 import { fmtEventWhen } from '../data/constants';
 import { deadlineBadge } from '../lib/deadline';
+import { CalendarIcon, CapIcon, GlobeIcon } from './MetaIcons';
 import { EventPhoto } from './EventPhoto';
 import { useAuth } from '../contexts/AuthContext';
 import { trackLinkClick } from '../lib/tracking';
@@ -10,6 +11,9 @@ function instagramUrl(handle: string): string {
   if (handle.startsWith('http')) return handle;
   return `https://instagram.com/${handle.replace(/^@/, '')}`;
 }
+
+/** Age labels that carry no information — hidden from the meta-row. */
+const UNINFORMATIVE_AGE = new Set(['любой', 'любой возраст', 'для всех', 'все возрасты', '0+']);
 
 export interface EventCardAdminActions {
   onEdit: () => void;
@@ -33,6 +37,8 @@ interface EventCardProps {
 
 export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, admin, viewCount }: EventCardProps) {
   const priceLabel = event.price === 'free' ? 'Бесплатно' : event.cost ?? '';
+  const ageText = (event.ageLabel ?? '').trim();
+  const showAge = ageText !== '' && !UNINFORMATIVE_AGE.has(ageText.toLowerCase());
   const deadline = deadlineBadge(event.deadlineDate, { isPast: event.isPast || isVoteMode });
   const { session } = useAuth();
 
@@ -74,13 +80,29 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
       <button className="ts-card-body" onClick={onOpen}>
         <h3 className="ts-card-title">{event.title}</h3>
         <p className="ts-card-short">{event.short}</p>
-        {deadline && (
-          <span className={`ts-deadline-badge ts-deadline-badge--${deadline.tone}`}>{deadline.text}</span>
-        )}
         <div className="ts-card-meta">
-          {event.eventDate && <span>{fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime)}</span>}
-          <span>{event.ageLabel}</span>
-          <span>{priceLabel}</span>
+          {deadline && (
+            <span className={`ts-deadline-badge ts-deadline-badge--${deadline.tone}`}>{deadline.text}</span>
+          )}
+          {event.eventDate && (
+            <span className="ts-meta-item">
+              <CalendarIcon />
+              {fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime)}
+            </span>
+          )}
+          {showAge && (
+            <span className="ts-meta-item">
+              <CapIcon />
+              {ageText}
+            </span>
+          )}
+          {priceLabel && <span className="ts-meta-item">{priceLabel}</span>}
+          {event.level === 'intl' && (
+            <span className="ts-meta-item">
+              <GlobeIcon />
+              Международное
+            </span>
+          )}
         </div>
       </button>
       <div className="ts-card-foot">
