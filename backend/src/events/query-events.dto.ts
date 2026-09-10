@@ -26,6 +26,13 @@ export class QueryEventsDto {
   @IsIn(['local', 'intl'])
   level?: 'local' | 'intl';
 
+  // Attendance format. `online` widens to online+hybrid, `offline` to offline+hybrid,
+  // `hybrid` matches hybrid only — so the "Онлайн" preset (mode=online) still shows
+  // hybrid events. Junk 400s, same as price/level (frontend strips unknown values).
+  @IsOptional()
+  @IsIn(['offline', 'online', 'hybrid'])
+  mode?: 'offline' | 'online' | 'hybrid';
+
   // MaxLength is a size guard only — a malformed but short value (e.g. "abc") is
   // still accepted here and silently ignored by the service's regex, matching the
   // frontend's "ignore junk from stale links" behaviour.

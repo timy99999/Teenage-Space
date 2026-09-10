@@ -35,6 +35,10 @@ export class UpdateSubmissionDto {
   format?: string | null;
 
   @IsOptional()
+  @IsIn(['offline', 'online', 'hybrid'])
+  attendanceMode?: 'offline' | 'online' | 'hybrid' | null;
+
+  @IsOptional()
   @IsIn(['free', 'paid'])
   price?: 'free' | 'paid' | null;
 

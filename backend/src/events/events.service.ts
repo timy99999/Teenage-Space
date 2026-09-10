@@ -82,6 +82,10 @@ export class EventsService implements OnModuleInit {
     if (query.price) q = q.eq('price', query.price);
     if (query.level) q = q.eq('level', query.level);
 
+    if (query.mode === 'online') q = q.in('attendance_mode', ['online', 'hybrid']);
+    else if (query.mode === 'offline') q = q.in('attendance_mode', ['offline', 'hybrid']);
+    else if (query.mode === 'hybrid') q = q.eq('attendance_mode', 'hybrid');
+
     const categories = query.categories?.split(',').filter(Boolean) ?? [];
     if (categories.length) q = q.overlaps('categories', categories);
 

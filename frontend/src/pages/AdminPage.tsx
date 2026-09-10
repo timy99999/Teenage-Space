@@ -45,6 +45,7 @@ function buildFormFromSubmission(s: AdminSubmission): PostFormValue {
     ageMin: s.ageMin ?? 0,
     ageMax: s.ageMax ?? 0,
     format: s.format ?? '',
+    attendanceMode: s.attendanceMode ?? 'offline',
     price: s.price,
     cost: s.cost ?? '',
     charity: s.charity,

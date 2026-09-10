@@ -40,6 +40,10 @@ export class UpdateEventDto {
   format?: string;
 
   @IsOptional()
+  @IsIn(['offline', 'online', 'hybrid'])
+  attendanceMode?: 'offline' | 'online' | 'hybrid';
+
+  @IsOptional()
   @IsIn(['free', 'paid'])
   price?: 'free' | 'paid';
 

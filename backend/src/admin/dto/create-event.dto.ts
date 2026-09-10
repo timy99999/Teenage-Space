@@ -33,6 +33,10 @@ export class CreateEventDto {
   @IsString()
   format!: string;
 
+  @IsOptional()
+  @IsIn(['offline', 'online', 'hybrid'])
+  attendanceMode?: 'offline' | 'online' | 'hybrid';
+
   @IsIn(['free', 'paid'])
   price!: 'free' | 'paid';
 

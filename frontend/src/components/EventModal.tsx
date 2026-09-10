@@ -47,6 +47,15 @@ export function EventModal() {
     ...(themeLabel ? [{ l: 'Тема', v: themeLabel }] : []),
     { l: 'Возраст', v: event.ageLabel },
     ...(event.format ? [{ l: 'Формат участия', v: event.format }] : []),
+    {
+      l: 'Формат проведения',
+      v:
+        event.attendanceMode === 'online'
+          ? 'Онлайн'
+          : event.attendanceMode === 'hybrid'
+            ? 'Онлайн + очно'
+            : 'Очно'
+    },
     ...(priceLabel ? [{ l: 'Цена', v: priceLabel }] : []),
     { l: 'Уровень', v: event.level === 'local' ? 'Локальное' : 'Международное' },
     ...(event.eventDate ? [{ l: 'Дата', v: fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime) }] : []),

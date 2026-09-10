@@ -42,6 +42,7 @@ export function PublishPage() {
         ageMin: form.ageMin === '' ? null : form.ageMin,
         ageMax: form.ageMax === '' ? null : form.ageMax,
         format: form.format || null,
+        attendanceMode: form.attendanceMode,
         price: form.price,
         cost: form.price === 'paid' ? form.cost || null : null,
         charity: form.price === 'paid' ? form.charity : false,

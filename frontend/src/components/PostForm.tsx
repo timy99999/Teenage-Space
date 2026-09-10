@@ -2,9 +2,14 @@ import { useState, type Dispatch, type SetStateAction } from 'react';
 import { Chip } from './Chip';
 import { ImageUploadField } from './ImageUploadField';
 import { CATS, THEMES } from '../data/constants';
-import type { EventItem, PostFormValue } from '../types';
+import type { AttendanceMode, EventItem, PostFormValue } from '../types';
 
 const FORMATS = ['Личное', 'Командное'];
+const ATTENDANCE: { k: AttendanceMode; l: string }[] = [
+  { k: 'offline', l: 'Очно' },
+  { k: 'online', l: 'Онлайн' },
+  { k: 'hybrid', l: 'Гибрид' }
+];
 const PRICES = [
   { k: 'free' as const, l: 'Бесплатно' },
   { k: 'paid' as const, l: 'Платно' }
@@ -149,6 +154,19 @@ export function PostSiteInfo({ value: form, onChange: setForm, admin = false }: 
         <div className="ts-filter-chips">
           {FORMATS.map((f) => (
             <Chip key={f} label={f} active={form.format === f} onClick={() => setForm((v) => ({ ...v, format: f }))} />
+          ))}
+        </div>
+      </div>
+      <div>
+        <div className="ts-field-label">Формат проведения</div>
+        <div className="ts-filter-chips">
+          {ATTENDANCE.map((m) => (
+            <Chip
+              key={m.k}
+              label={m.l}
+              active={form.attendanceMode === m.k}
+              onClick={() => setForm((v) => ({ ...v, attendanceMode: m.k }))}
+            />
           ))}
         </div>
       </div>
@@ -311,6 +329,7 @@ export function emptyPostForm(): PostFormValue {
     ageMin: 0,
     ageMax: 0,
     format: '',
+    attendanceMode: 'offline',
     price: null,
     cost: '',
     charity: false,
@@ -354,6 +373,7 @@ export function eventToPostForm(event: EventItem): PostFormValue {
     ageMin: event.ageMin,
     ageMax: event.ageMax,
     format: event.format,
+    attendanceMode: event.attendanceMode ?? 'offline',
     price: event.price,
     cost: event.cost ?? '',
     charity: event.charity,

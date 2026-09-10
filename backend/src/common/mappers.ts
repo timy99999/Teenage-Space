@@ -14,6 +14,7 @@ export interface EventRow {
   charity: boolean;
   level: 'local' | 'intl';
   format: string;
+  attendance_mode: 'offline' | 'online' | 'hybrid';
   event_date: string | null;
   event_date_end: string | null;
   event_time: string | null;
@@ -50,6 +51,7 @@ export function mapEvent(row: EventRow) {
     charity: row.charity,
     level: row.level,
     format: row.format,
+    attendanceMode: row.attendance_mode ?? 'offline',
     eventDate: row.event_date,
     eventDateEnd: row.event_date_end,
     eventTime: row.event_time,
@@ -215,6 +217,7 @@ export interface SubmissionAdminRow extends SubmissionRow {
   age_min: number | null;
   age_max: number | null;
   format: string | null;
+  attendance_mode: 'offline' | 'online' | 'hybrid' | null;
   price: 'free' | 'paid' | null;
   cost: string | null;
   charity: boolean;
@@ -256,6 +259,7 @@ export function mapSubmissionAdmin(row: SubmissionAdminRow, submitter?: Submitte
     ageMin: row.age_min,
     ageMax: row.age_max,
     format: row.format,
+    attendanceMode: row.attendance_mode ?? null,
     price: row.price,
     cost: row.cost,
     charity: row.charity,

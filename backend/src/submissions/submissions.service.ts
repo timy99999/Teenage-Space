@@ -34,6 +34,7 @@ export class SubmissionsService {
         age_min: dto.ageMin ?? null,
         age_max: dto.ageMax ?? null,
         format: dto.format ?? null,
+        attendance_mode: dto.attendanceMode ?? null,
         price: dto.price ?? null,
         cost: dto.cost ?? null,
         charity: dto.charity ?? false,

@@ -1,6 +1,8 @@
 export type PriceType = 'free' | 'paid';
 export type Level = 'local' | 'intl';
 export type Format = 'Личное' | 'Командное';
+/** How the event is attended. `offline` is the default. */
+export type AttendanceMode = 'offline' | 'online' | 'hybrid';
 
 export interface EventItem {
   id: string;
@@ -17,6 +19,7 @@ export interface EventItem {
   charity: boolean;
   level: Level;
   format: Format;
+  attendanceMode: AttendanceMode;
   eventDate: string | null;
   eventDateEnd: string | null;
   eventTime: string | null;
@@ -148,6 +151,7 @@ export interface AdminSubmission {
   ageMin: number | null;
   ageMax: number | null;
   format: string | null;
+  attendanceMode: AttendanceMode | null;
   price: PriceType | null;
   cost: string | null;
   charity: boolean;
@@ -336,6 +340,7 @@ export interface PostFormValue {
   ageMin: number | '';
   ageMax: number | '';
   format: string;
+  attendanceMode: AttendanceMode;
   price: PriceType | null;
   cost: string;
   charity: boolean;

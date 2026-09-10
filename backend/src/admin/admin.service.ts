@@ -80,6 +80,7 @@ export class AdminService {
     if (dto.ageMin !== undefined) patch.age_min = dto.ageMin;
     if (dto.ageMax !== undefined) patch.age_max = dto.ageMax;
     if (dto.format !== undefined) patch.format = dto.format;
+    if (dto.attendanceMode !== undefined) patch.attendance_mode = dto.attendanceMode;
     if (dto.price !== undefined) patch.price = dto.price;
     if (dto.cost !== undefined) patch.cost = dto.cost;
     if (dto.charity !== undefined) patch.charity = dto.charity;
@@ -150,6 +151,7 @@ export class AdminService {
         charity: dto.charity ?? false,
         level: dto.level,
         format: dto.format,
+        attendance_mode: dto.attendanceMode ?? 'offline',
         event_date: dto.eventDate || null,
         event_date_end: dto.eventDateEnd || null,
         event_time: dto.eventTime || null,
@@ -189,6 +191,7 @@ export class AdminService {
     if (dto.ageMin !== undefined) patch.age_min = dto.ageMin;
     if (dto.ageMax !== undefined) patch.age_max = dto.ageMax;
     if (dto.format !== undefined) patch.format = dto.format;
+    if (dto.attendanceMode !== undefined) patch.attendance_mode = dto.attendanceMode;
     if (dto.price !== undefined) patch.price = dto.price;
     if (dto.cost !== undefined) patch.cost = dto.cost || null;
     if (dto.charity !== undefined) patch.charity = dto.charity;
