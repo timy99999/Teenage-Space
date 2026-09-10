@@ -28,7 +28,9 @@ export class QueryEventsDto {
 
   // Attendance format. `online` widens to online+hybrid, `offline` to offline+hybrid,
   // `hybrid` matches hybrid only — so the "Онлайн" preset (mode=online) still shows
-  // hybrid events. Junk 400s, same as price/level (frontend strips unknown values).
+  // hybrid events. An empty or unrecognised value (stale/hand-edited link) is
+  // dropped rather than 400-ing, matching how `sort` / `age` treat junk.
+  @Transform(({ value }) => (['offline', 'online', 'hybrid'].includes(value) ? value : undefined))
   @IsOptional()
   @IsIn(['offline', 'online', 'hybrid'])
   mode?: 'offline' | 'online' | 'hybrid';
