@@ -1,4 +1,4 @@
-// Inline SVG icon set for the card meta-row (date / age / level).
+// Inline SVG icon set for the card meta-row (date / format / age / level).
 // Feather/Lucide style, monochrome, inherits `currentColor` from `.ts-card-meta`.
 // Meaning is always duplicated by adjacent text — icons are decorative (`aria-hidden`).
 
@@ -20,6 +20,16 @@ export function CalendarIcon() {
       <line x1="3" y1="10" x2="21" y2="10" />
       <line x1="8" y1="2" x2="8" y2="6" />
       <line x1="16" y1="2" x2="16" y2="6" />
+    </svg>
+  );
+}
+
+export function MonitorIcon() {
+  return (
+    <svg {...svgProps}>
+      <rect x="2" y="3" width="20" height="14" rx="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
     </svg>
   );
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { EventItem } from '../types';
 import { fmtEventWhen } from '../data/constants';
 import { deadlineBadge } from '../lib/deadline';
-import { CalendarIcon, CapIcon, GlobeIcon } from './MetaIcons';
+import { CalendarIcon, CapIcon, GlobeIcon, MonitorIcon } from './MetaIcons';
 import { EventPhoto } from './EventPhoto';
 import { useAuth } from '../contexts/AuthContext';
 import { trackLinkClick } from '../lib/tracking';
@@ -88,6 +88,18 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
             <span className="ts-meta-item">
               <CalendarIcon />
               {fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime)}
+            </span>
+          )}
+          {event.attendanceMode === 'online' && (
+            <span className="ts-meta-item">
+              <MonitorIcon />
+              Онлайн
+            </span>
+          )}
+          {event.attendanceMode === 'hybrid' && (
+            <span className="ts-meta-item">
+              <MonitorIcon />
+              Онлайн + очно
             </span>
           )}
           {showAge && (
