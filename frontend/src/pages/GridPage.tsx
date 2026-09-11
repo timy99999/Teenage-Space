@@ -781,7 +781,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
                 {relatedCats.length > 0 && (
                   <div className="ts-empty-cats">
                     {relatedCats.map((c) => (
-                      <Chip key={c.key} label={c.label} active={false} onClick={() => navigate(`/opportunities/${c.key}`)} />
+                      <Chip key={c.key} label={c.label} small active={false} onClick={() => navigate(`/opportunities/${c.key}`)} />
                     ))}
                   </div>
                 )}
