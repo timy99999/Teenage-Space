@@ -58,6 +58,16 @@ function sortByDeadline<T extends { deadline_date: string | null }>(rows: T[], t
   });
 }
 
+/**
+ * True when a PostgREST error is Postgres's "undefined_column" (42703) for the
+ * given column name — i.e. the schema doesn't have it (yet). Used to let `mode`
+ * degrade gracefully instead of 500-ing the whole catalog when the
+ * `attendance_mode` migration hasn't landed/reloaded on this environment yet.
+ */
+function isUndefinedColumnError(error: { code?: string; message?: string } | null, column: string): boolean {
+  return error?.code === '42703' && !!error.message?.includes(column);
+}
+
 @Injectable()
 export class EventsService implements OnModuleInit {
   private readonly logger = new Logger(EventsService.name);
@@ -72,7 +82,10 @@ export class EventsService implements OnModuleInit {
     this.archiveExpiredEvents().catch((err) => this.logger.error('Startup archive sweep failed', err));
   }
 
-  async list(query: QueryEventsDto) {
+  /** Builds the filtered/sorted events query. `applyMode` is switchable so `list()`
+   *  can retry once without the `attendance_mode` filter if the column turns out
+   *  not to exist yet (deploy-order race between the backend and its migration). */
+  private buildEventsQuery(query: QueryEventsDto, applyMode: boolean) {
     let q = this.supabase.client.from('events').select('*').eq('archived', false);
 
     if (query.scope === 'upcoming') q = q.eq('is_past', false);
@@ -82,9 +95,11 @@ export class EventsService implements OnModuleInit {
     if (query.price) q = q.eq('price', query.price);
     if (query.level) q = q.eq('level', query.level);
 
-    if (query.mode === 'online') q = q.in('attendance_mode', ['online', 'hybrid']);
-    else if (query.mode === 'offline') q = q.in('attendance_mode', ['offline', 'hybrid']);
-    else if (query.mode === 'hybrid') q = q.eq('attendance_mode', 'hybrid');
+    if (applyMode) {
+      if (query.mode === 'online') q = q.in('attendance_mode', ['online', 'hybrid']);
+      else if (query.mode === 'offline') q = q.in('attendance_mode', ['offline', 'hybrid']);
+      else if (query.mode === 'hybrid') q = q.eq('attendance_mode', 'hybrid');
+    }
 
     const categories = query.categories?.split(',').filter(Boolean) ?? [];
     if (categories.length) q = q.overlaps('categories', categories);
@@ -114,9 +129,24 @@ export class EventsService implements OnModuleInit {
 
     // Always fetch newest-first — it's the default order and the stable tiebreaker
     // for the deadline sort applied below.
-    q = q.order('created_at', { ascending: false });
+    return q.order('created_at', { ascending: false });
+  }
 
-    const { data, error } = await q;
+  async list(query: QueryEventsDto) {
+    let { data, error } = await this.buildEventsQuery(query, true);
+
+    // Deploy-order race guard: the backend and the `attendance_mode` migration are
+    // two independent auto-deploys on the same push, with no ordering guarantee.
+    // If this backend goes live before the column exists (or before PostgREST's
+    // schema cache picks it up), don't 500 the entire catalog over a mode filter —
+    // drop the filter, log it, and serve everything else normally.
+    if (error && query.mode && isUndefinedColumnError(error, 'attendance_mode')) {
+      this.logger.warn(
+        `attendance_mode column not found — ignoring mode="${query.mode}" filter (${error.message})`
+      );
+      ({ data, error } = await this.buildEventsQuery(query, false));
+    }
+
     if (error) throw error;
 
     const rows = (data ?? []) as EventRow[];
