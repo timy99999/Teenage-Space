@@ -1146,6 +1146,86 @@
 .ts-reset-all:hover {
   background: var(--ts-surface2);
 }
+
+/* ---- preset chips: ряд 2 тулбара каталога (P1, b1/b2, e1) ---- */
+.ts-preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 34px 0; /* совпадает с гориз. 34px тулбара; 0 снизу — сетка даёт свой отступ */
+}
+.ts-preset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px 6px 10px; /* слева меньше — компенсирует глиф */
+  border-radius: 999px;
+  border: 1px solid var(--ts-chip-border);
+  background: transparent; /* НЕ заливка — покой пресета ≠ покой фильтр-чипа */
+  color: var(--ts-fg);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13.5px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s, border-color 0.16s;
+}
+.ts-preset-chip:hover {
+  border-color: var(--ts-chip-active);
+}
+.ts-preset-chip.active {
+  background: var(--ts-chip-active);
+  border-color: var(--ts-chip-active);
+  color: var(--ts-chip-active-fg);
+}
+.ts-preset-chip-glyph {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+/* "⚡ Для моего класса" без данных профиля — лёгкая подсказка-поповер (b2b) */
+.ts-preset-chip-wrap {
+  position: relative;
+}
+.ts-preset-hint {
+  position: absolute;
+  z-index: 40;
+  margin-top: 6px;
+  max-width: 260px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--ts-line);
+  background: var(--ts-surface);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ts-fg);
+}
+.ts-preset-hint-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.ts-age-custom-toggle {
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--ts-grey-fg-dim);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11.5px;
+  text-decoration: underline;
+  cursor: pointer;
+  display: block;
+}
+.ts-age-custom-toggle:hover {
+  color: var(--ts-fg);
+}
+
 .ts-empty-actions {
   margin-top: 14px;
   display: flex;
@@ -1162,17 +1242,25 @@
 }
 .ts-empty-title {
   font-family: 'Open Sans', sans-serif;
-  font-size: 20px;
-  color: var(--ts-muted);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ts-fg);
   text-align: center;
 }
 .ts-empty-hint {
   margin-top: 8px;
   font-family: 'Open Sans', sans-serif;
-  font-size: 12.5px;
+  font-size: 13.5px;
+  line-height: 1.5;
   color: var(--ts-muted);
-  opacity: 0.7;
   text-align: center;
+}
+.ts-empty-cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
 }
 
 .ts-card-grid {

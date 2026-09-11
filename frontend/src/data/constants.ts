@@ -25,6 +25,19 @@ export const THEMES: CategoryDef[] = [
 
 export const AGES = ['До 14', '14', '15', '16', '17', '18', '18+', '21+', 'Любой'];
 
+// Смежные категории для пустого состояния каталога ("В разделе … пока нет
+// мероприятий" → GridPage.tsx). `other` — не своя вкладка, ни ключом, ни
+// подсказкой в этой карте не участвует.
+export const RELATED_CATS: Record<string, string[]> = {
+  volunteering: ['social', 'eduevent'],
+  social: ['volunteering', 'eduevent'],
+  eduevent: ['contest', 'olympiad'],
+  contest: ['hackathon', 'olympiad'],
+  hackathon: ['contest', 'internship'],
+  olympiad: ['contest', 'eduevent'],
+  internship: ['hackathon', 'social']
+};
+
 export const CATN: Record<string, string> = {
   volunteering: 'волонтёрство',
   social: 'соцпроекты',

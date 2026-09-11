@@ -12,6 +12,7 @@ export interface EventFilters {
   themes?: string[];
   price?: 'free' | 'paid' | null;
   level?: 'local' | 'intl' | null;
+  mode?: 'offline' | 'online' | 'hybrid' | null;
   age?: string;
   /** Free-text search — catalog only. */
   q?: string;
@@ -26,6 +27,7 @@ function buildQuery(filters: EventFilters): string {
   if (filters.themes?.length) params.set('themes', filters.themes.join(','));
   if (filters.price) params.set('price', filters.price);
   if (filters.level) params.set('level', filters.level);
+  if (filters.mode) params.set('mode', filters.mode);
   if (filters.age) params.set('age', filters.age);
   // Mirror the backend's @MaxLength(100) so an over-long term can't 400 the request.
   const q = filters.q?.trim().slice(0, 100);

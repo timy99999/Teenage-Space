@@ -415,6 +415,18 @@
     flex: 1;
   }
 
+  .ts-preset-row {
+    padding: 10px 16px 0;
+    gap: 8px;
+  }
+  .ts-preset-hint {
+    /* Чип "Для моего класса" может оказаться у правого края узкого экрана —
+       на мобилке поповер выравниваем по правому краю чипа, а не по левому,
+       чтобы не вылезать за край вьюпорта. */
+    left: auto;
+    right: 0;
+  }
+
   .ts-card-grid {
     padding: 16px 14px calc(90px + 62px + env(safe-area-inset-bottom, 0px));
     grid-template-columns: repeat(2, 1fr);

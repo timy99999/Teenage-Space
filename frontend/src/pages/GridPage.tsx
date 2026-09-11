@@ -9,15 +9,26 @@ import { useCardViewCounts, cardViewKey } from '../hooks/useTraffic';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { api } from '../lib/api';
-import { CATS, NAV_CATS, THEMES, TITLES, plural } from '../data/constants';
+import { CATS, NAV_CATS, THEMES, TITLES, RELATED_CATS, plural } from '../data/constants';
 import { EventCard } from '../components/EventCard';
 import { NewsCard } from '../components/NewsCard';
 import { Chip } from '../components/Chip';
+import { BoltIcon, CheckIcon } from '../components/PresetIcons';
 import { CardSizeSlider } from '../components/CardSizeSlider';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EditEventModal } from '../components/EditEventModal';
 import { carryCatalogSearch } from '../lib/catalogNav';
+import { ageFromBirthDate, ageRangeForPreset } from '../lib/ageFromBirthDate';
+import { PRESETS, presetIsActive, type Preset, type PresetContext } from '../data/presets';
 import type { EventItem } from '../types';
+
+// Возраст-пресеты панели фильтров (b3) — заменяют текстовое поле кнопками-вилками;
+// "Указать точно" раскрывает прежний числовой ввод как запасной вариант.
+const AGE_PRESETS: { label: string; range: string }[] = [
+  { label: '5–8 класс', range: '11-14' },
+  { label: '9–11 класс', range: '15-17' },
+  { label: 'Студент · 18+', range: '18-99' }
+];
 
 type ConfirmKind = 'archive' | 'voting' | 'delete';
 
@@ -53,10 +64,10 @@ export type GridMode = 'opps' | 'fav' | 'vote' | 'news';
 const THEME_KEYS = THEMES.map((t) => t.key);
 const CAT_KEYS = NAV_CATS.map((c) => c.key);
 // Filter params that live in the URL (and, for the catalog, in localStorage).
-const URL_FILTER_KEYS = ['themes', 'cats', 'price', 'level', 'age', 'q', 'sort'] as const;
+const URL_FILTER_KEYS = ['themes', 'cats', 'price', 'level', 'mode', 'age', 'q', 'sort'] as const;
 // Subset persisted to localStorage — search text and sort are intentionally NOT
 // remembered across fresh visits, only the actual filters.
-const REMEMBERED_KEYS = ['themes', 'cats', 'price', 'level', 'age'] as const;
+const REMEMBERED_KEYS = ['themes', 'cats', 'price', 'level', 'mode', 'age'] as const;
 const FILTERS_LS_KEY = 'ts-opps-filters-v1';
 
 export function GridPage({ mode }: { mode: GridMode }) {
@@ -69,7 +80,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const [editedEvents, setEditedEvents] = useState<Record<string, EventItem>>({});
   const [confirmTarget, setConfirmTarget] = useState<{ event: EventItem; kind: ConfirmKind } | null>(null);
   const [editTarget, setEditTarget] = useState<EventItem | null>(null);
-  const { isSuperAdmin, hasPerm } = useAuth();
+  const { session, profile, isSuperAdmin, hasPerm } = useAuth();
   const canEditCards = hasPerm('card_edit');
   const { flash } = useUI();
   const cardViewCounts = useCardViewCounts();
@@ -91,6 +102,9 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const fPrice: 'free' | 'paid' | null = priceParam === 'free' || priceParam === 'paid' ? priceParam : null;
   const levelParam = params.get('level');
   const fLevel: 'local' | 'intl' | null = levelParam === 'local' || levelParam === 'intl' ? levelParam : null;
+  const modeParam = params.get('mode');
+  const fMode: 'offline' | 'online' | 'hybrid' | null =
+    modeParam === 'offline' || modeParam === 'online' || modeParam === 'hybrid' ? modeParam : null;
   const ageRaw = (params.get('age') ?? '').trim();
   // Validate like the other filters — a stale link with ?age=<junk> should be
   // ignored silently, not shown as an active-but-ineffective filter.
@@ -102,6 +116,46 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const [ageInput, setAgeInput] = useState(ageApplied);
   const [searchInput, setSearchInput] = useState(qApplied);
   const debouncedSearch = useDebouncedValue(searchInput, 300);
+
+  // "Указать точно" (b3) — manual age input is collapsed by default; forced open
+  // when the applied age doesn't match any of the three class presets, so the
+  // active value is never hidden behind a closed toggle.
+  const [ageCustomOpen, setAgeCustomOpen] = useState(false);
+  const ageMatchesPreset = AGE_PRESETS.some((a) => a.range === ageApplied);
+  const showAgeCustom = ageCustomOpen || (!!ageApplied && !ageMatchesPreset);
+
+  // "⚡ Для моего класса" без данных профиля (b2b) — какую подсказку показать.
+  const [presetHint, setPresetHint] = useState<'anon' | 'nobirthdate' | null>(null);
+  const presetHintRef = useRef<HTMLDivElement>(null);
+  const presetChipRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!presetHint) return;
+    const onDocClick = (e: MouseEvent) => {
+      if (presetHintRef.current && !presetHintRef.current.contains(e.target as Node)) setPresetHint(null);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPresetHint(null);
+    };
+    document.addEventListener('mousedown', onDocClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [presetHint]);
+
+  // Focus into the hint on open, back onto the chip on close (a11y, b2b).
+  const wasHintOpenRef = useRef(false);
+  useEffect(() => {
+    if (presetHint) {
+      wasHintOpenRef.current = true;
+      presetHintRef.current?.querySelector<HTMLButtonElement>('.ts-preset-hint-actions button')?.focus();
+    } else if (wasHintOpenRef.current) {
+      wasHintOpenRef.current = false;
+      presetChipRef.current?.focus();
+    }
+  }, [presetHint]);
 
   useEffect(() => {
     if (ageApplied !== ageInput.trim()) setAgeInput(ageApplied);
@@ -142,7 +196,41 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const toggleCat = (k: string) => toggleInList('cats', CAT_KEYS, k);
   const togglePrice = (k: 'free' | 'paid') => setSingle('price', fPrice === k ? null : k);
   const toggleLevel = (k: 'local' | 'intl') => setSingle('level', fLevel === k ? null : k);
+  const toggleMode = (k: 'offline' | 'online' | 'hybrid') => setSingle('mode', fMode === k ? null : k);
   const applyAge = () => setSingle('age', ageInput.trim() || null);
+  const clickAgePreset = (range: string) => {
+    setAgeCustomOpen(false);
+    setSingle('age', ageApplied === range ? null : range);
+  };
+
+  // ---- preset chips (ряд 2 тулбара, b1/b2) ----
+  const myClassAgeRange = ageRangeForPreset(ageFromBirthDate(profile?.birthDate));
+  const presetCtx: PresetContext = { myClassAgeRange };
+  const activePresets = PRESETS.filter((p) => presetIsActive(p, params, presetCtx));
+  const activePresetSlugs = new Set(activePresets.map((p) => p.slug));
+
+  const clickPreset = (preset: Preset) => {
+    if (preset.slug === 'myclass' && !myClassAgeRange) {
+      setPresetHint((h) => (h ? null : session ? 'nobirthdate' : 'anon'));
+      return;
+    }
+    setPresetHint(null);
+    const target = preset.params(presetCtx)!;
+    const isActive = activePresetSlugs.has(preset.slug);
+    patchParams((p) => {
+      for (const [k, v] of Object.entries(target)) {
+        if (isActive) p.delete(k);
+        else p.set(k, v);
+      }
+    });
+  };
+  const removePreset = (preset: Preset) => {
+    const target = preset.params(presetCtx);
+    if (!target) return;
+    patchParams((p) => {
+      for (const k of Object.keys(target)) p.delete(k);
+    });
+  };
 
   // Push the debounced search term into the URL (catalog only).
   useEffect(() => {
@@ -186,6 +274,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
     cats: fCats.length ? fCats.join(',') : null,
     price: fPrice,
     level: fLevel,
+    mode: fMode,
     age: ageApplied || null,
     sort: sort === 'deadline' ? 'deadline' : null
   };
@@ -231,6 +320,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
     themes: fThemes,
     price: fPrice,
     level: fLevel,
+    mode: fMode,
     age: ageApplied,
     q: isOpps ? qApplied : undefined,
     sort: isOpps ? sort : undefined
@@ -278,15 +368,26 @@ export function GridPage({ mode }: { mode: GridMode }) {
 
   const subLabel = isOpps && category ? CATS.find((c) => c.key === category)?.label ?? '' : '';
   const pageTitle = isOpps ? TITLES.opps : TITLES[mode];
+  // Соседние категории для пустого состояния 5 (b4) — только когда открыта своя вкладка каталога.
+  const relatedCats =
+    isOpps && category ? (RELATED_CATS[category] ?? []).map((k) => CATS.find((c) => c.key === k)).filter((c): c is (typeof CATS)[number] => !!c) : [];
 
   const activeFilterCount =
-    fThemes.length + fCats.length + (fPrice ? 1 : 0) + (fLevel ? 1 : 0) + (ageApplied ? 1 : 0) + (qApplied ? 1 : 0);
+    fThemes.length +
+    fCats.length +
+    (fPrice ? 1 : 0) +
+    (fLevel ? 1 : 0) +
+    (fMode ? 1 : 0) +
+    (ageApplied ? 1 : 0) +
+    (qApplied ? 1 : 0);
   const nonSearchFilterCount = activeFilterCount - (qApplied ? 1 : 0);
   const anyActive = activeFilterCount > 0 || sort !== 'new';
 
   const resetAll = () => {
     setAgeInput('');
+    setAgeCustomOpen(false);
     setSearchInput('');
+    setPresetHint(null);
     patchParams((p) => URL_FILTER_KEYS.forEach((k) => p.delete(k)));
   };
   const clearSearchOnly = () => {
@@ -295,6 +396,8 @@ export function GridPage({ mode }: { mode: GridMode }) {
   };
   const resetFiltersKeepSearch = () => {
     setAgeInput('');
+    setAgeCustomOpen(false);
+    setPresetHint(null);
     patchParams((p) => REMEMBERED_KEYS.forEach((k) => p.delete(k)));
   };
 
@@ -321,21 +424,30 @@ export function GridPage({ mode }: { mode: GridMode }) {
             </div>
             <div className="ts-filter-group">
               <div className="ts-filter-label">Возраст</div>
-              <div className="ts-age-row">
-                <input
-                  className="ts-age-input"
-                  value={ageInput}
-                  onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') applyAge();
-                  }}
-                  placeholder="15 или 12-15"
-                />
-                <button className="ts-age-apply" onClick={applyAge}>
-                  ✓
-                </button>
+              <div className="ts-filter-chips col">
+                {AGE_PRESETS.map((a) => (
+                  <Chip key={a.range} label={a.label} small onGrey active={ageApplied === a.range} onClick={() => clickAgePreset(a.range)} />
+                ))}
               </div>
-              <div className="ts-age-hint">{ageApplied ? `фильтр: ${ageApplied}` : 'например 15 или 12-15'}</div>
+              <button type="button" className="ts-age-custom-toggle" onClick={() => setAgeCustomOpen((v) => !v)}>
+                {showAgeCustom ? 'Указать точно ▾' : 'Указать точно ▸'}
+              </button>
+              {showAgeCustom && (
+                <div className="ts-age-row" style={{ marginTop: 8 }}>
+                  <input
+                    className="ts-age-input"
+                    value={ageInput}
+                    onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') applyAge();
+                    }}
+                    placeholder="15 или 12-15"
+                  />
+                  <button className="ts-age-apply" onClick={applyAge}>
+                    ✓
+                  </button>
+                </div>
+              )}
             </div>
             <div className="ts-filter-group">
               <div className="ts-filter-label">Цена</div>
@@ -356,6 +468,18 @@ export function GridPage({ mode }: { mode: GridMode }) {
                   { k: 'intl' as const, l: 'Международные' }
                 ].map((p) => (
                   <Chip key={p.k} label={p.l} small onGrey active={fLevel === p.k} onClick={() => toggleLevel(p.k)} />
+                ))}
+              </div>
+            </div>
+            <div className="ts-filter-group">
+              <div className="ts-filter-label">Формат</div>
+              <div className="ts-filter-chips col">
+                {[
+                  { k: 'offline' as const, l: 'Очно' },
+                  { k: 'online' as const, l: 'Онлайн' },
+                  { k: 'hybrid' as const, l: 'Гибрид' }
+                ].map((m) => (
+                  <Chip key={m.k} label={m.l} small onGrey active={fMode === m.k} onClick={() => toggleMode(m.k)} />
                 ))}
               </div>
             </div>
@@ -445,6 +569,56 @@ export function GridPage({ mode }: { mode: GridMode }) {
         </div>
       )}
 
+      {isOpps && (
+        <div className="ts-preset-row">
+          {PRESETS.map((preset) => {
+            const active = activePresetSlugs.has(preset.slug);
+            const isMyClass = preset.slug === 'myclass';
+            const chip = (
+              <button
+                key={preset.slug}
+                ref={isMyClass ? presetChipRef : undefined}
+                type="button"
+                className={`ts-preset-chip${active ? ' active' : ''}`}
+                onClick={() => clickPreset(preset)}
+                aria-pressed={active}
+                aria-haspopup={isMyClass ? 'dialog' : undefined}
+                aria-expanded={isMyClass ? presetHint !== null : undefined}
+              >
+                {active ? <CheckIcon /> : <BoltIcon />}
+                {preset.label}
+              </button>
+            );
+            if (!isMyClass) return chip;
+            return (
+              <div key={preset.slug} className="ts-preset-chip-wrap" ref={presetHintRef}>
+                {chip}
+                {presetHint && (
+                  <div className="ts-preset-hint" role="dialog">
+                    <div>
+                      {presetHint === 'anon'
+                        ? 'Войдите и укажите класс — подставим автоматически.'
+                        : 'Укажите дату рождения в профиле — подставим класс автоматически.'}
+                    </div>
+                    <div className="ts-preset-hint-actions">
+                      <button
+                        className="ts-btn-outline small"
+                        onClick={() => {
+                          setPresetHint(null);
+                          navigate(presetHint === 'anon' ? '/auth' : '/profile');
+                        }}
+                      >
+                        {presetHint === 'anon' ? 'Войти' : 'Открыть профиль'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {(isOpps || isVote) && mobileFiltersOpen && (
         <div className="ts-mobile-filter-overlay" onClick={() => setMobileFiltersOpen(false)}>
           <div className="ts-mobile-filter-sheet" onClick={(e) => e.stopPropagation()}>
@@ -462,21 +636,30 @@ export function GridPage({ mode }: { mode: GridMode }) {
 
             <div className="ts-mobile-filter-group">
               <div className="ts-mobile-filter-group-label">Возраст</div>
-              <div className="ts-mobile-filter-age-row">
-                <input
-                  className="ts-mobile-age-input"
-                  value={ageInput}
-                  onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') applyAge();
-                  }}
-                  placeholder="15 или 12-15"
-                />
-                <button className="ts-mobile-age-apply" onClick={applyAge}>
-                  Применить
-                </button>
+              <div className="ts-mobile-filter-chips">
+                {AGE_PRESETS.map((a) => (
+                  <Chip key={a.range} label={a.label} active={ageApplied === a.range} onClick={() => clickAgePreset(a.range)} />
+                ))}
               </div>
-              <div className="ts-mobile-filter-hint">{ageApplied ? `фильтр: ${ageApplied}` : 'например 15 или 12-15'}</div>
+              <button type="button" className="ts-age-custom-toggle" onClick={() => setAgeCustomOpen((v) => !v)}>
+                {showAgeCustom ? 'Указать точно ▾' : 'Указать точно ▸'}
+              </button>
+              {showAgeCustom && (
+                <div className="ts-mobile-filter-age-row" style={{ marginTop: 8 }}>
+                  <input
+                    className="ts-mobile-age-input"
+                    value={ageInput}
+                    onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') applyAge();
+                    }}
+                    placeholder="15 или 12-15"
+                  />
+                  <button className="ts-mobile-age-apply" onClick={applyAge}>
+                    Применить
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="ts-mobile-filter-group">
@@ -499,6 +682,19 @@ export function GridPage({ mode }: { mode: GridMode }) {
                   { k: 'intl' as const, l: 'Международные' }
                 ].map((p) => (
                   <Chip key={p.k} label={p.l} active={fLevel === p.k} onClick={() => toggleLevel(p.k)} />
+                ))}
+              </div>
+            </div>
+
+            <div className="ts-mobile-filter-group">
+              <div className="ts-mobile-filter-group-label">Формат</div>
+              <div className="ts-mobile-filter-chips">
+                {[
+                  { k: 'offline' as const, l: 'Очно' },
+                  { k: 'online' as const, l: 'Онлайн' },
+                  { k: 'hybrid' as const, l: 'Гибрид' }
+                ].map((m) => (
+                  <Chip key={m.k} label={m.l} active={fMode === m.k} onClick={() => toggleMode(m.k)} />
                 ))}
               </div>
             </div>
@@ -528,12 +724,18 @@ export function GridPage({ mode }: { mode: GridMode }) {
           <div>
             {isFav ? (
               <>
-                <div className="ts-empty-title">Ничего нет</div>
-                <div className="ts-empty-hint">Отмечайте мероприятия звездой — они появятся здесь</div>
+                <div className="ts-empty-title">Здесь пока пусто</div>
+                <div className="ts-empty-hint">Нажимайте ★ на карточке — сохранённые мероприятия появятся тут.</div>
+                <div className="ts-empty-actions">
+                  <button className="ts-btn-outline small" onClick={() => navigate('/opportunities')}>
+                    Смотреть возможности
+                  </button>
+                </div>
               </>
-            ) : qApplied ? (
+            ) : isOpps && qApplied ? (
               <>
                 <div className="ts-empty-title">Ничего не нашли по запросу «{qApplied}»</div>
+                <div className="ts-empty-hint">Проверьте опечатки или оставьте одно-два слова.</div>
                 <div className="ts-empty-actions">
                   <button className="ts-btn-outline small" onClick={clearSearchOnly}>
                     Очистить поиск
@@ -545,14 +747,54 @@ export function GridPage({ mode }: { mode: GridMode }) {
                   )}
                 </div>
               </>
+            ) : isOpps && activePresets.length === 1 && nonSearchFilterCount === 1 && !qApplied ? (
+              <>
+                <div className="ts-empty-title">Под пресет «{activePresets[0].label}» пока ничего нет</div>
+                <div className="ts-empty-actions">
+                  <button className="ts-btn-outline small" onClick={() => removePreset(activePresets[0])}>
+                    Убрать пресет
+                  </button>
+                </div>
+              </>
             ) : anyActive ? (
               <>
                 <div className="ts-empty-title">Ничего не подошло под фильтры</div>
+                <div className="ts-empty-hint">Попробуйте снять возраст или цену — они сужают сильнее всего.</div>
                 <div className="ts-empty-actions">
                   <button className="ts-btn-outline small" onClick={resetAll}>
                     Сбросить фильтры
                   </button>
+                  {isOpps && category && (
+                    <button
+                      className="ts-btn-outline small"
+                      onClick={() => navigate({ pathname: '/opportunities', search: carryCatalogSearch(params.toString()) })}
+                    >
+                      Показать во всех возможностях
+                    </button>
+                  )}
                 </div>
+              </>
+            ) : isOpps && category ? (
+              <>
+                <div className="ts-empty-title">В разделе «{subLabel}» пока нет мероприятий</div>
+                <div className="ts-empty-hint">Загляните позже — или посмотрите смежные разделы:</div>
+                {relatedCats.length > 0 && (
+                  <div className="ts-empty-cats">
+                    {relatedCats.map((c) => (
+                      <Chip key={c.key} label={c.label} active={false} onClick={() => navigate(`/opportunities/${c.key}`)} />
+                    ))}
+                  </div>
+                )}
+                <div className="ts-empty-actions">
+                  <button className="ts-btn-outline small" onClick={() => navigate('/opportunities')}>
+                    Все возможности
+                  </button>
+                </div>
+              </>
+            ) : isOpps ? (
+              <>
+                <div className="ts-empty-title">Пока нет ни одного мероприятия</div>
+                <div className="ts-empty-hint">Мы наполняем каталог — заходите чуть позже.</div>
               </>
             ) : (
               <>
