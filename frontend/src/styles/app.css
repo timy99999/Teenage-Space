@@ -1263,6 +1263,19 @@
   margin-top: 14px;
 }
 
+/* ---- лента по времени: заголовки секций внутри сетки карточек (P1, c) ---- */
+.ts-feed-head {
+  grid-column: 1 / -1;
+  margin: 22px 0 10px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ts-muted);
+}
+.ts-feed-head-first {
+  margin-top: 0;
+}
+
 .ts-card-grid {
   padding: 26px 34px 90px;
   display: grid;

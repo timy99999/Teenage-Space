@@ -366,6 +366,15 @@ export function GridPage({ mode }: { mode: GridMode }) {
   // While a request is in flight, don't flash the "nothing here" state.
   const isEmpty = isNews ? news.length === 0 : !loading && favEvents.length === 0;
 
+  // Лента по времени (P1, c): каталог на "Сначала новые" разбивается на "Ближайшие"
+  // (есть дата, по возрастанию) и "Постоянные и по записи" (даты нет, порядок как есть).
+  // Заголовки — только когда обе группы непусты и карточек в выдаче ≥ 6, иначе плоский
+  // список без регрессии на узких выдачах. При sort=deadline лента не включается —
+  // там уже действует сортировка по дедлайну.
+  const feedDated = isOpps && sort === 'new' ? favEvents.filter((e) => e.eventDate).sort((a, b) => (a.eventDate! < b.eventDate! ? -1 : a.eventDate! > b.eventDate! ? 1 : 0)) : [];
+  const feedUndated = isOpps && sort === 'new' ? favEvents.filter((e) => !e.eventDate) : [];
+  const useFeedGroups = feedDated.length > 0 && feedUndated.length > 0 && favEvents.length >= 6;
+
   const subLabel = isOpps && category ? CATS.find((c) => c.key === category)?.label ?? '' : '';
   const pageTitle = isOpps ? TITLES.opps : TITLES[mode];
   // Соседние категории для пустого состояния 5 (b4) — только когда открыта своя вкладка каталога.
@@ -400,6 +409,30 @@ export function GridPage({ mode }: { mode: GridMode }) {
     setPresetHint(null);
     patchParams((p) => REMEMBERED_KEYS.forEach((k) => p.delete(k)));
   };
+
+  const renderEventCard = (e: EventItem) => (
+    <EventCard
+      key={e.id}
+      event={e}
+      onOpen={() => openEvent(e.id)}
+      isVoteMode={isVote}
+      favActive={favorites.has(e.id)}
+      onToggleFav={() => toggle(e.id)}
+      rating={ratings[e.id] ?? 0}
+      onRate={(n) => rate(e.id, n)}
+      viewCount={isSuperAdmin ? cardViewCounts[cardViewKey('event', e.id)] : undefined}
+      admin={
+        canEditCards
+          ? {
+              onEdit: () => setEditTarget(e),
+              onArchive: () => setConfirmTarget({ event: e, kind: 'archive' }),
+              onMoveToVoting: () => setConfirmTarget({ event: e, kind: 'voting' }),
+              onDelete: () => setConfirmTarget({ event: e, kind: 'delete' })
+            }
+          : undefined
+      }
+    />
+  );
 
   return (
     <div className={`ts-grid-page${isOpps || isVote ? ' ts-grid-page-compact' : ''}`}>
@@ -821,29 +854,16 @@ export function GridPage({ mode }: { mode: GridMode }) {
              flashes the previous/unfiltered list as if it were the result. */
           style={loading ? { opacity: 0.45, pointerEvents: 'none', transition: 'opacity .15s' } : undefined}
         >
-          {favEvents.map((e) => (
-            <EventCard
-              key={e.id}
-              event={e}
-              onOpen={() => openEvent(e.id)}
-              isVoteMode={isVote}
-              favActive={favorites.has(e.id)}
-              onToggleFav={() => toggle(e.id)}
-              rating={ratings[e.id] ?? 0}
-              onRate={(n) => rate(e.id, n)}
-              viewCount={isSuperAdmin ? cardViewCounts[cardViewKey('event', e.id)] : undefined}
-              admin={
-                canEditCards
-                  ? {
-                      onEdit: () => setEditTarget(e),
-                      onArchive: () => setConfirmTarget({ event: e, kind: 'archive' }),
-                      onMoveToVoting: () => setConfirmTarget({ event: e, kind: 'voting' }),
-                      onDelete: () => setConfirmTarget({ event: e, kind: 'delete' })
-                    }
-                  : undefined
-              }
-            />
-          ))}
+          {useFeedGroups ? (
+            <>
+              <div className="ts-feed-head ts-feed-head-first">Ближайшие</div>
+              {feedDated.map((e) => renderEventCard(e))}
+              <div className="ts-feed-head">Постоянные и по записи</div>
+              {feedUndated.map((e) => renderEventCard(e))}
+            </>
+          ) : (
+            favEvents.map((e) => renderEventCard(e))
+          )}
         </div>
       )}
 
