@@ -31,6 +31,12 @@ class Runtime:
     _context_cache: dict[int, tuple[float, dict[str, Any]]] = field(default_factory=dict)
     _chat_locks: dict[int, asyncio.Lock] = field(default_factory=dict)
     _last_text: dict[int, tuple[float, str]] = field(default_factory=dict)
+    # Chats that landed here unlinked via the site's "Спросить Барса" deep link
+    # (P1, ask_context.py) — allowed to chat without linking, per "не гейтить
+    # фичи авторизацией" (linking still only personalises, never required for these).
+    # In-memory and process-lifetime only: a restart just means the guest would see
+    # the link prompt again on their next message, not a real regression.
+    _guest_chats: set[int] = field(default_factory=set)
 
     def seen_recently(self, chat_id: int, text: str) -> bool:
         """True when this chat just sent these exact words, and records them either way.
@@ -73,6 +79,12 @@ class Runtime:
 
     def invalidate(self, chat_id: int) -> None:
         self._context_cache.pop(chat_id, None)
+
+    def allow_guest(self, chat_id: int) -> None:
+        self._guest_chats.add(chat_id)
+
+    def is_guest(self, chat_id: int) -> bool:
+        return chat_id in self._guest_chats
 
 
 runtime = Runtime()

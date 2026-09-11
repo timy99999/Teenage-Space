@@ -12,7 +12,7 @@ from typing import Any
 
 from aiogram import F, Router
 from aiogram.filters import Command, CommandObject, CommandStart
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
 from langchain_core.messages import AIMessage, HumanMessage
 
 try:
@@ -29,6 +29,7 @@ except ImportError:  # pragma: no cover - older langchain-core: skip token accou
 
 from . import analytics, plans, sessions, smalltalk
 from .api_client import ApiError, api
+from .ask_context import ask_greeting
 from .catalog import bishkek_today, catalog, parse_date
 from .config import get_settings
 from .formatting import (
@@ -133,6 +134,21 @@ async def _require_linked(message: Message) -> dict[str, Any] | None:
     return None
 
 
+async def _require_linked_or_guest(message: Message) -> dict[str, Any] | None:
+    """Like `_require_linked`, but also lets through chats that arrived unlinked via
+    the site's "Спросить Барса" deep link (`_start_ask` marks them `allow_guest`) —
+    per spec, linking there only personalises answers, it never gates the chat."""
+    context = await chat_context(message.chat.id)
+    if context["linked"] or runtime.is_guest(message.chat.id):
+        return context
+    await message.answer(
+        LINK_INSTRUCTIONS.format(site=get_settings().site_url.rstrip("/")),
+        parse_mode="HTML",
+        disable_web_page_preview=True,
+    )
+    return None
+
+
 async def _keep_typing(message: Message) -> None:
     while True:
         with contextlib.suppress(Exception):
@@ -159,12 +175,15 @@ async def _thread_has_history(thread_id: str) -> bool:
         return False
 
 
-async def _open_conversation(message: Message, greeting: str) -> None:
-    """Explicit restart (/reset, a freshly linked account): one clean thread, one
-    greeting, seeded so the next message continues rather than re-greets."""
+async def _open_conversation(
+    message: Message, greeting: str, *, reply_markup: InlineKeyboardMarkup | None = None
+) -> None:
+    """Explicit restart (/reset, a freshly linked account, a "Спросить Барса" deep
+    link): one clean thread, one greeting, seeded so the next message continues
+    rather than re-greets."""
     async with runtime.chat_lock(message.chat.id):
         thread_id = await sessions.reset(message.chat.id)
-        await message.answer(greeting)
+        await message.answer(greeting, reply_markup=reply_markup)
         await _seed_greeting(thread_id, greeting)
 
 
@@ -330,9 +349,40 @@ async def process(job: Job) -> None:
 # --- commands ---------------------------------------------------------------
 
 
+ASK_PAYLOAD_PREFIX = "ask_"
+
+
+async def _start_ask(message: Message, slug: str) -> None:
+    """Landed here via the site's "Спросить Барса" button (P1, spec (d)) — talks
+    right away, even unlinked. Linked chats get the usual personalised experience;
+    unlinked ones get the same context-aware greeting plus a link to bind their
+    account, and are marked as guests so the free-text handler doesn't gate them."""
+    chat_id = message.chat.id
+    context = await chat_context(chat_id)
+    greeting = ask_greeting(slug)
+    if context["linked"]:
+        await _open_conversation(message, greeting)
+        return
+    runtime.allow_guest(chat_id)
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="🔗 Привязать аккаунт",
+                    url=f"{get_settings().site_url.rstrip('/')}/profile",
+                )
+            ]
+        ]
+    )
+    await _open_conversation(message, greeting, reply_markup=keyboard)
+
+
 @router.message(CommandStart(deep_link=True))
 async def start_with_token(message: Message, command: CommandObject) -> None:
     token = (command.args or "").strip()
+    if token.startswith(ASK_PAYLOAD_PREFIX):
+        await _start_ask(message, token[len(ASK_PAYLOAD_PREFIX) :])
+        return
     chat_id = message.chat.id
     try:
         profile = await api().confirm_link(token, chat_id, message.from_user.username)
@@ -411,7 +461,7 @@ async def plan_command(message: Message) -> None:
 
 @router.message(F.text & ~F.text.startswith("/"))
 async def on_text(message: Message) -> None:
-    if not await _require_linked(message):
+    if not await _require_linked_or_guest(message):
         return
     if runtime.queues is None:
         return
@@ -426,14 +476,14 @@ async def on_text(message: Message) -> None:
 
 @router.message(F.text.startswith("/"))
 async def on_unknown_command(message: Message) -> None:
-    if not await _require_linked(message):
+    if not await _require_linked_or_guest(message):
         return
     await message.answer("Такой команды у меня нет.\n\n" + HELP_TEXT)
 
 
 @router.message()
 async def on_other(message: Message) -> None:
-    if not await _require_linked(message):
+    if not await _require_linked_or_guest(message):
         return
     await message.answer(
         "Я понимаю только текст. Напиши словами, что ищешь — например «хакатон по IT для 15 лет»."

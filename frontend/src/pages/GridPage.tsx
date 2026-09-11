@@ -14,6 +14,7 @@ import { EventCard } from '../components/EventCard';
 import { NewsCard } from '../components/NewsCard';
 import { Chip } from '../components/Chip';
 import { BoltIcon, CheckIcon } from '../components/PresetIcons';
+import { BarsButton } from '../components/BarsButton';
 import { CardSizeSlider } from '../components/CardSizeSlider';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EditEventModal } from '../components/EditEventModal';
@@ -208,6 +209,9 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const presetCtx: PresetContext = { myClassAgeRange };
   const activePresets = PRESETS.filter((p) => presetIsActive(p, params, presetCtx));
   const activePresetSlugs = new Set(activePresets.map((p) => p.slug));
+  // "Спросить Барса" (d) encodes at most one preset in its deep-link slug — with
+  // several active at once the combination is ambiguous, so it's left out.
+  const barsPresetSlug = activePresets.length === 1 ? activePresets[0].slug : null;
 
   const clickPreset = (preset: Preset) => {
     if (preset.slug === 'myclass' && !myClassAgeRange) {
@@ -594,6 +598,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
               Скоро дедлайн
             </button>
           </div>
+          <BarsButton category={category} presetSlug={barsPresetSlug} />
           {anyActive && (
             <button className="ts-reset-all" onClick={resetAll}>
               Сбросить всё
@@ -778,6 +783,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
                       Сбросить фильтры
                     </button>
                   )}
+                  <BarsButton category={category} presetSlug={barsPresetSlug} />
                 </div>
               </>
             ) : isOpps && activePresets.length === 1 && nonSearchFilterCount === 1 && !qApplied ? (
@@ -787,6 +793,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
                   <button className="ts-btn-outline small" onClick={() => removePreset(activePresets[0])}>
                     Убрать пресет
                   </button>
+                  <BarsButton category={category} presetSlug={barsPresetSlug} />
                 </div>
               </>
             ) : anyActive ? (
@@ -805,6 +812,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
                       Показать во всех возможностях
                     </button>
                   )}
+                  {isOpps && <BarsButton category={category} presetSlug={barsPresetSlug} />}
                 </div>
               </>
             ) : isOpps && category ? (

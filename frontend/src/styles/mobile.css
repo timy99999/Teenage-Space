@@ -415,6 +415,14 @@
     flex: 1;
   }
 
+  .ts-bars-btn-full,
+  .ts-bars-btn-hint {
+    display: none;
+  }
+  .ts-bars-btn-short {
+    display: inline;
+  }
+
   .ts-preset-row {
     padding: 10px 16px 0;
     gap: 8px;
