@@ -21,6 +21,7 @@ import { EditEventModal } from '../components/EditEventModal';
 import { carryCatalogSearch } from '../lib/catalogNav';
 import { ageFromBirthDate, ageRangeForPreset } from '../lib/ageFromBirthDate';
 import { PRESETS, presetIsActive, type Preset, type PresetContext } from '../data/presets';
+import { P1_ENABLED } from '../config/featureFlags';
 import type { EventItem } from '../types';
 
 // Возраст-пресеты панели фильтров (b3) — заменяют текстовое поле кнопками-вилками;
@@ -377,7 +378,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
   // там уже действует сортировка по дедлайну.
   const feedDated = isOpps && sort === 'new' ? favEvents.filter((e) => e.eventDate).sort((a, b) => (a.eventDate! < b.eventDate! ? -1 : a.eventDate! > b.eventDate! ? 1 : 0)) : [];
   const feedUndated = isOpps && sort === 'new' ? favEvents.filter((e) => !e.eventDate) : [];
-  const useFeedGroups = feedDated.length > 0 && feedUndated.length > 0 && favEvents.length >= 6;
+  const useFeedGroups = P1_ENABLED && feedDated.length > 0 && feedUndated.length > 0 && favEvents.length >= 6;
 
   const subLabel = isOpps && category ? CATS.find((c) => c.key === category)?.label ?? '' : '';
   const pageTitle = isOpps ? TITLES.opps : TITLES[mode];
@@ -461,29 +462,51 @@ export function GridPage({ mode }: { mode: GridMode }) {
             </div>
             <div className="ts-filter-group">
               <div className="ts-filter-label">Возраст</div>
-              <div className="ts-filter-chips col">
-                {AGE_PRESETS.map((a) => (
-                  <Chip key={a.range} label={a.label} small onGrey active={ageApplied === a.range} onClick={() => clickAgePreset(a.range)} />
-                ))}
-              </div>
-              <button type="button" className="ts-age-custom-toggle" onClick={() => setAgeCustomOpen((v) => !v)}>
-                {showAgeCustom ? 'Указать точно ▾' : 'Указать точно ▸'}
-              </button>
-              {showAgeCustom && (
-                <div className="ts-age-row" style={{ marginTop: 8 }}>
-                  <input
-                    className="ts-age-input"
-                    value={ageInput}
-                    onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') applyAge();
-                    }}
-                    placeholder="15 или 12-15"
-                  />
-                  <button className="ts-age-apply" onClick={applyAge}>
-                    ✓
+              {P1_ENABLED ? (
+                <>
+                  <div className="ts-filter-chips col">
+                    {AGE_PRESETS.map((a) => (
+                      <Chip key={a.range} label={a.label} small onGrey active={ageApplied === a.range} onClick={() => clickAgePreset(a.range)} />
+                    ))}
+                  </div>
+                  <button type="button" className="ts-age-custom-toggle" onClick={() => setAgeCustomOpen((v) => !v)}>
+                    {showAgeCustom ? 'Указать точно ▾' : 'Указать точно ▸'}
                   </button>
-                </div>
+                  {showAgeCustom && (
+                    <div className="ts-age-row" style={{ marginTop: 8 }}>
+                      <input
+                        className="ts-age-input"
+                        value={ageInput}
+                        onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') applyAge();
+                        }}
+                        placeholder="15 или 12-15"
+                      />
+                      <button className="ts-age-apply" onClick={applyAge}>
+                        ✓
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="ts-age-row">
+                    <input
+                      className="ts-age-input"
+                      value={ageInput}
+                      onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') applyAge();
+                      }}
+                      placeholder="15 или 12-15"
+                    />
+                    <button className="ts-age-apply" onClick={applyAge}>
+                      ✓
+                    </button>
+                  </div>
+                  <div className="ts-age-hint">{ageApplied ? `фильтр: ${ageApplied}` : 'например 15 или 12-15'}</div>
+                </>
               )}
             </div>
             <div className="ts-filter-group">
@@ -508,18 +531,20 @@ export function GridPage({ mode }: { mode: GridMode }) {
                 ))}
               </div>
             </div>
-            <div className="ts-filter-group">
-              <div className="ts-filter-label">Формат</div>
-              <div className="ts-filter-chips col">
-                {[
-                  { k: 'offline' as const, l: 'Очно' },
-                  { k: 'online' as const, l: 'Онлайн' },
-                  { k: 'hybrid' as const, l: 'Гибрид' }
-                ].map((m) => (
-                  <Chip key={m.k} label={m.l} small onGrey active={fMode === m.k} onClick={() => toggleMode(m.k)} />
-                ))}
+            {P1_ENABLED && (
+              <div className="ts-filter-group">
+                <div className="ts-filter-label">Формат</div>
+                <div className="ts-filter-chips col">
+                  {[
+                    { k: 'offline' as const, l: 'Очно' },
+                    { k: 'online' as const, l: 'Онлайн' },
+                    { k: 'hybrid' as const, l: 'Гибрид' }
+                  ].map((m) => (
+                    <Chip key={m.k} label={m.l} small onGrey active={fMode === m.k} onClick={() => toggleMode(m.k)} />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </header>
@@ -598,7 +623,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
               Скоро дедлайн
             </button>
           </div>
-          <BarsButton category={category} presetSlug={barsPresetSlug} />
+          {P1_ENABLED && <BarsButton category={category} presetSlug={barsPresetSlug} />}
           {anyActive && (
             <button className="ts-reset-all" onClick={resetAll}>
               Сбросить всё
@@ -607,7 +632,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
         </div>
       )}
 
-      {isOpps && (
+      {isOpps && P1_ENABLED && (
         <div className="ts-preset-row">
           {PRESETS.map((preset) => {
             const active = activePresetSlugs.has(preset.slug);
@@ -674,29 +699,51 @@ export function GridPage({ mode }: { mode: GridMode }) {
 
             <div className="ts-mobile-filter-group">
               <div className="ts-mobile-filter-group-label">Возраст</div>
-              <div className="ts-mobile-filter-chips">
-                {AGE_PRESETS.map((a) => (
-                  <Chip key={a.range} label={a.label} active={ageApplied === a.range} onClick={() => clickAgePreset(a.range)} />
-                ))}
-              </div>
-              <button type="button" className="ts-age-custom-toggle" onClick={() => setAgeCustomOpen((v) => !v)}>
-                {showAgeCustom ? 'Указать точно ▾' : 'Указать точно ▸'}
-              </button>
-              {showAgeCustom && (
-                <div className="ts-mobile-filter-age-row" style={{ marginTop: 8 }}>
-                  <input
-                    className="ts-mobile-age-input"
-                    value={ageInput}
-                    onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') applyAge();
-                    }}
-                    placeholder="15 или 12-15"
-                  />
-                  <button className="ts-mobile-age-apply" onClick={applyAge}>
-                    Применить
+              {P1_ENABLED ? (
+                <>
+                  <div className="ts-mobile-filter-chips">
+                    {AGE_PRESETS.map((a) => (
+                      <Chip key={a.range} label={a.label} active={ageApplied === a.range} onClick={() => clickAgePreset(a.range)} />
+                    ))}
+                  </div>
+                  <button type="button" className="ts-age-custom-toggle" onClick={() => setAgeCustomOpen((v) => !v)}>
+                    {showAgeCustom ? 'Указать точно ▾' : 'Указать точно ▸'}
                   </button>
-                </div>
+                  {showAgeCustom && (
+                    <div className="ts-mobile-filter-age-row" style={{ marginTop: 8 }}>
+                      <input
+                        className="ts-mobile-age-input"
+                        value={ageInput}
+                        onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') applyAge();
+                        }}
+                        placeholder="15 или 12-15"
+                      />
+                      <button className="ts-mobile-age-apply" onClick={applyAge}>
+                        Применить
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className="ts-mobile-filter-age-row">
+                    <input
+                      className="ts-mobile-age-input"
+                      value={ageInput}
+                      onChange={(e) => setAgeInput(e.target.value.replace(/[^0-9-]/g, ''))}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') applyAge();
+                      }}
+                      placeholder="15 или 12-15"
+                    />
+                    <button className="ts-mobile-age-apply" onClick={applyAge}>
+                      Применить
+                    </button>
+                  </div>
+                  <div className="ts-mobile-filter-hint">{ageApplied ? `фильтр: ${ageApplied}` : 'например 15 или 12-15'}</div>
+                </>
               )}
             </div>
 
@@ -724,18 +771,20 @@ export function GridPage({ mode }: { mode: GridMode }) {
               </div>
             </div>
 
-            <div className="ts-mobile-filter-group">
-              <div className="ts-mobile-filter-group-label">Формат</div>
-              <div className="ts-mobile-filter-chips">
-                {[
-                  { k: 'offline' as const, l: 'Очно' },
-                  { k: 'online' as const, l: 'Онлайн' },
-                  { k: 'hybrid' as const, l: 'Гибрид' }
-                ].map((m) => (
-                  <Chip key={m.k} label={m.l} active={fMode === m.k} onClick={() => toggleMode(m.k)} />
-                ))}
+            {P1_ENABLED && (
+              <div className="ts-mobile-filter-group">
+                <div className="ts-mobile-filter-group-label">Формат</div>
+                <div className="ts-mobile-filter-chips">
+                  {[
+                    { k: 'offline' as const, l: 'Очно' },
+                    { k: 'online' as const, l: 'Онлайн' },
+                    { k: 'hybrid' as const, l: 'Гибрид' }
+                  ].map((m) => (
+                    <Chip key={m.k} label={m.l} active={fMode === m.k} onClick={() => toggleMode(m.k)} />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="ts-mobile-filter-actions">
               <button className="ts-mobile-filter-reset" onClick={resetAll}>
@@ -783,10 +832,10 @@ export function GridPage({ mode }: { mode: GridMode }) {
                       Сбросить фильтры
                     </button>
                   )}
-                  <BarsButton category={category} presetSlug={barsPresetSlug} />
+                  {P1_ENABLED && <BarsButton category={category} presetSlug={barsPresetSlug} />}
                 </div>
               </>
-            ) : isOpps && activePresets.length === 1 && nonSearchFilterCount === 1 && !qApplied ? (
+            ) : isOpps && P1_ENABLED && activePresets.length === 1 && nonSearchFilterCount === 1 && !qApplied ? (
               <>
                 <div className="ts-empty-title">Под пресет «{activePresets[0].label}» пока ничего нет</div>
                 <div className="ts-empty-actions">
@@ -812,7 +861,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
                       Показать во всех возможностях
                     </button>
                   )}
-                  {isOpps && <BarsButton category={category} presetSlug={barsPresetSlug} />}
+                  {isOpps && P1_ENABLED && <BarsButton category={category} presetSlug={barsPresetSlug} />}
                 </div>
               </>
             ) : isOpps && category ? (

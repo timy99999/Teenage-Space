@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { CATS, THEMES, fmtDate, fmtEventWhen } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
 import { trackCardView, trackLinkClick } from '../lib/tracking';
+import { P1_ENABLED } from '../config/featureFlags';
 
 function telegramUrl(handle: string): string {
   if (handle.startsWith('http')) return handle;
@@ -47,15 +48,19 @@ export function EventModal() {
     ...(themeLabel ? [{ l: 'Тема', v: themeLabel }] : []),
     { l: 'Возраст', v: event.ageLabel },
     ...(event.format ? [{ l: 'Формат участия', v: event.format }] : []),
-    {
-      l: 'Формат проведения',
-      v:
-        event.attendanceMode === 'online'
-          ? 'Онлайн'
-          : event.attendanceMode === 'hybrid'
-            ? 'Онлайн + очно'
-            : 'Очно'
-    },
+    ...(P1_ENABLED
+      ? [
+          {
+            l: 'Формат проведения',
+            v:
+              event.attendanceMode === 'online'
+                ? 'Онлайн'
+                : event.attendanceMode === 'hybrid'
+                  ? 'Онлайн + очно'
+                  : 'Очно'
+          }
+        ]
+      : []),
     ...(priceLabel ? [{ l: 'Цена', v: priceLabel }] : []),
     { l: 'Уровень', v: event.level === 'local' ? 'Локальное' : 'Международное' },
     ...(event.eventDate ? [{ l: 'Дата', v: fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime) }] : []),

@@ -6,6 +6,7 @@ import { CalendarIcon, CapIcon, GlobeIcon, MonitorIcon } from './MetaIcons';
 import { EventPhoto } from './EventPhoto';
 import { useAuth } from '../contexts/AuthContext';
 import { trackLinkClick } from '../lib/tracking';
+import { P1_ENABLED } from '../config/featureFlags';
 
 function instagramUrl(handle: string): string {
   if (handle.startsWith('http')) return handle;
@@ -90,13 +91,13 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
               {fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime)}
             </span>
           )}
-          {event.attendanceMode === 'online' && (
+          {P1_ENABLED && event.attendanceMode === 'online' && (
             <span className="ts-meta-item">
               <MonitorIcon />
               Онлайн
             </span>
           )}
-          {event.attendanceMode === 'hybrid' && (
+          {P1_ENABLED && event.attendanceMode === 'hybrid' && (
             <span className="ts-meta-item">
               <MonitorIcon />
               Онлайн + очно

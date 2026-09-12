@@ -2,6 +2,7 @@ import { useState, type Dispatch, type SetStateAction } from 'react';
 import { Chip } from './Chip';
 import { ImageUploadField } from './ImageUploadField';
 import { CATS, THEMES } from '../data/constants';
+import { P1_ENABLED } from '../config/featureFlags';
 import type { AttendanceMode, EventItem, PostFormValue } from '../types';
 
 const FORMATS = ['Личное', 'Командное'];
@@ -157,19 +158,21 @@ export function PostSiteInfo({ value: form, onChange: setForm, admin = false }: 
           ))}
         </div>
       </div>
-      <div>
-        <div className="ts-field-label">Формат проведения</div>
-        <div className="ts-filter-chips">
-          {ATTENDANCE.map((m) => (
-            <Chip
-              key={m.k}
-              label={m.l}
-              active={form.attendanceMode === m.k}
-              onClick={() => setForm((v) => ({ ...v, attendanceMode: m.k }))}
-            />
-          ))}
+      {P1_ENABLED && (
+        <div>
+          <div className="ts-field-label">Формат проведения</div>
+          <div className="ts-filter-chips">
+            {ATTENDANCE.map((m) => (
+              <Chip
+                key={m.k}
+                label={m.l}
+                active={form.attendanceMode === m.k}
+                onClick={() => setForm((v) => ({ ...v, attendanceMode: m.k }))}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       <div>
         <div className="ts-field-label">Цена</div>
         <div className="ts-filter-chips">

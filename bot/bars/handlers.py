@@ -32,6 +32,7 @@ from .api_client import ApiError, api
 from .ask_context import ask_greeting
 from .catalog import bishkek_today, catalog, parse_date
 from .config import get_settings
+from .feature_flags import P1_ASK_BARS_ENABLED
 from .formatting import (
     chunks,
     event_ids,
@@ -139,7 +140,7 @@ async def _require_linked_or_guest(message: Message) -> dict[str, Any] | None:
     the site's "Спросить Барса" deep link (`_start_ask` marks them `allow_guest`) —
     per spec, linking there only personalises answers, it never gates the chat."""
     context = await chat_context(message.chat.id)
-    if context["linked"] or runtime.is_guest(message.chat.id):
+    if context["linked"] or (P1_ASK_BARS_ENABLED and runtime.is_guest(message.chat.id)):
         return context
     await message.answer(
         LINK_INSTRUCTIONS.format(site=get_settings().site_url.rstrip("/")),
@@ -357,6 +358,11 @@ async def _start_ask(message: Message, slug: str) -> None:
     right away, even unlinked. Linked chats get the usual personalised experience;
     unlinked ones get the same context-aware greeting plus a link to bind their
     account, and are marked as guests so the free-text handler doesn't gate them."""
+    if not P1_ASK_BARS_ENABLED:
+        # Feature parked (see feature_flags.py) — the deep-link slug is ignored and
+        # this behaves like a plain /start, gated exactly as before P1.
+        await start(message)
+        return
     chat_id = message.chat.id
     context = await chat_context(chat_id)
     greeting = ask_greeting(slug)
