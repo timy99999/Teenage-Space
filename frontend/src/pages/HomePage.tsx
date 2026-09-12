@@ -7,6 +7,7 @@ import { ORBIT_ITEMS } from '../data/heroOrbit';
 import { WANDER_FLOATERS, ORBIT_FLOATERS } from '../data/pageFloaters';
 import { useReveal } from '../hooks/useReveal';
 import { useFloaterRepulsion } from '../hooks/useFloaterRepulsion';
+import { Seo } from '../components/Seo';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export function HomePage() {
 
   return (
     <div className="ts-home">
+      <Seo title="Teenage Space" path="/" />
       <div className="ts-page-floaters" aria-hidden="true">
         {WANDER_FLOATERS.map((f) => (
           <div

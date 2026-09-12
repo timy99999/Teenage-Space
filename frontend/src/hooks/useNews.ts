@@ -44,3 +44,31 @@ export function useNews() {
 
   return { news, loading, reload };
 }
+
+export function useNewsItem(id: string | null) {
+  const cacheKey = id ? `news/${id}` : null;
+  const [item, setItem] = useState<NewsItem | null>(() => (cacheKey ? getCached<NewsItem>(cacheKey) : null));
+
+  useEffect(() => {
+    if (!id || !cacheKey) {
+      setItem(null);
+      return;
+    }
+    let cancelled = false;
+    const cached = getCached<NewsItem>(cacheKey);
+    if (cached) setItem(cached);
+    getOrFetch<NewsItem>(cacheKey, () => api.get<NewsItem>(`/news/${id}`), TTL_MS)
+      .then((data) => {
+        if (!cancelled) setItem(data);
+      })
+      .catch(() => {
+        if (!cancelled && !cached) setItem(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  return item;
+}

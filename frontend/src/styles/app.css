@@ -2279,6 +2279,9 @@ a.ts-card-organizer:hover {
   animation: tsSlide 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
   border: 1px solid var(--ts-line);
 }
+.ts-modal-standalone {
+  margin: 0 auto;
+}
 .ts-modal-close {
   position: absolute;
   top: 18px;

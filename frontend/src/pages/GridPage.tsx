@@ -17,6 +17,7 @@ import { CardSizeSlider } from '../components/CardSizeSlider';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EditEventModal } from '../components/EditEventModal';
 import { carryCatalogSearch } from '../lib/catalogNav';
+import { Seo } from '../components/Seo';
 import type { EventItem } from '../types';
 
 type ConfirmKind = 'archive' | 'voting' | 'delete';
@@ -298,8 +299,11 @@ export function GridPage({ mode }: { mode: GridMode }) {
     patchParams((p) => REMEMBERED_KEYS.forEach((k) => p.delete(k)));
   };
 
+  const gridPath = isOpps ? (category ? `/opportunities/${category}` : '/opportunities') : isFav ? '/favorites' : isVote ? '/vote' : '/news';
+
   return (
     <div className={`ts-grid-page${isOpps || isVote ? ' ts-grid-page-compact' : ''}`}>
+      <Seo title={subLabel ? `${pageTitle} — ${subLabel}` : pageTitle} path={gridPath} noindex={isFav || isVote} />
       <header className="ts-grid-header">
         <div className="ts-grid-title-wrap">
           <h1 className="ts-grid-title">{pageTitle}</h1>
