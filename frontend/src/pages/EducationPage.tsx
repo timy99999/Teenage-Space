@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEducation, useEducationTracks } from '../hooks/useEducation';
+import { Seo } from '../components/Seo';
 
 export function EducationPage() {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ export function EducationPage() {
 
   return (
     <div className="ts-edu-page">
+      <Seo title={title || 'Образование'} description={intro || undefined} path={`/education/${trackId ?? ''}`} />
       <div className="ts-edu-mobile-head">
         <button className="ts-edu-mobile-back" aria-label="Назад" onClick={() => navigate('/')}>
           ←

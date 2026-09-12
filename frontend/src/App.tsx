@@ -10,6 +10,7 @@ import { Toast } from './components/Toast';
 import { EventModal } from './components/EventModal';
 import { NewsModal } from './components/NewsModal';
 import { PolicyGate } from './components/PolicyGate';
+import { Seo } from './components/Seo';
 import { useIsMobile } from './hooks/useIsMobile';
 import { useEducationTracks } from './hooks/useEducation';
 import { useTrackPageView } from './hooks/useTrackPageView';
@@ -20,6 +21,9 @@ import { GridPage } from './pages/GridPage';
 
 const EducationPage = lazy(() => import('./pages/EducationPage').then((m) => ({ default: m.EducationPage })));
 const ArticlePage = lazy(() => import('./pages/ArticlePage').then((m) => ({ default: m.ArticlePage })));
+const EventPage = lazy(() => import('./pages/EventPage').then((m) => ({ default: m.EventPage })));
+const NewsPage = lazy(() => import('./pages/NewsPage').then((m) => ({ default: m.NewsPage })));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 const ProfilePage = lazy(() => import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })));
 const EditAccountPage = lazy(() => import('./pages/EditAccountPage').then((m) => ({ default: m.EditAccountPage })));
 const SettingsPage = lazy(() => import('./pages/SettingsPage').then((m) => ({ default: m.SettingsPage })));
@@ -35,12 +39,20 @@ const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((m) => ({ defa
 function AppLayout() {
   const location = useLocation();
   const path = location.pathname;
-  const noSidebar = path === '/publish' || path.startsWith('/article') || path === '/privacy';
+  const noSidebar =
+    path === '/publish' ||
+    path.startsWith('/article') ||
+    path === '/privacy' ||
+    path.startsWith('/opportunities/event/') ||
+    path.startsWith('/news/');
   useTrackPageView();
   useHeartbeat();
 
   return (
     <div className="ts-shell">
+      {/* Site-wide fallback — react-helmet-async lets a nested page's own <Seo> (rendered
+          under <Outlet /> below) override any of these tags; see components/Seo.tsx. */}
+      <Seo title="Teenage Space" path={path} image="https://teenagespace.com/favicon.png" />
       {!noSidebar && <Sidebar />}
       <main className="ts-main">
         {noSidebar && (
@@ -92,10 +104,12 @@ export default function App() {
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomeGate />} />
           <Route path="news" element={<GridPage mode="news" />} />
+          <Route path="news/:id" element={<NewsPage />} />
           <Route path="opportunities" element={<GridPage mode="opps" />} />
+          <Route path="opportunities/event/:id" element={<EventPage />} />
           <Route path="opportunities/:category" element={<GridPage mode="opps" />} />
           <Route path="favorites" element={<GridPage mode="fav" />} />
-          {/* временно скрыто: страница голосования — /vote уходит в редирект на "/" через catch-all
+          {/* временно скрыто: страница голосования — /vote попадает на catch-all (404)
           <Route path="vote" element={<GridPage mode="vote" />} /> */}
           <Route path="education" element={<EducationIndex />} />
           <Route path="education/:trackId" element={<EducationPage />} />
@@ -110,7 +124,7 @@ export default function App() {
           <Route path="users" element={<UsersPage />} />
           <Route path="users/:id" element={<UserAccountPage />} />
           <Route path="privacy" element={<PrivacyPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </Suspense>

@@ -3,17 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="Teenage Space — каталог мероприятий, новостей и образовательных материалов для подростков Бишкека."
-    />
-    <meta property="og:title" content="Teenage Space" />
-    <meta
-      property="og:description"
-      content="Каталог мероприятий, новостей и образовательных материалов для подростков Бишкека."
-    />
-    <meta property="og:image" content="/favicon.png" />
-    <meta property="og:type" content="website" />
+    <!--
+      No static <meta name="description">/og:* here on purpose: react-helmet-async
+      (see components/Seo.tsx) renders those per page, and it can only override tags
+      it rendered itself — a static tag with the same name/property would sit ahead
+      of Helmet's in document order and win with crawlers that read first-match.
+      AppLayout renders a site-wide default Seo, so every route still gets a value.
+    -->
+    <meta name="google-site-verification" content="%VITE_GOOGLE_SITE_VERIFICATION%" />
+    <meta name="yandex-verification" content="%VITE_YANDEX_VERIFICATION%" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

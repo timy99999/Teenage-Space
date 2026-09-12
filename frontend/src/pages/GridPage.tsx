@@ -22,6 +22,7 @@ import { carryCatalogSearch } from '../lib/catalogNav';
 import { ageFromBirthDate, ageRangeForPreset } from '../lib/ageFromBirthDate';
 import { PRESETS, presetIsActive, type Preset, type PresetContext } from '../data/presets';
 import { P1_ENABLED } from '../config/featureFlags';
+import { Seo } from '../components/Seo';
 import type { EventItem } from '../types';
 
 // Возраст-пресеты панели фильтров (b3) — заменяют текстовое поле кнопками-вилками;
@@ -439,8 +440,11 @@ export function GridPage({ mode }: { mode: GridMode }) {
     />
   );
 
+  const gridPath = isOpps ? (category ? `/opportunities/${category}` : '/opportunities') : isFav ? '/favorites' : isVote ? '/vote' : '/news';
+
   return (
     <div className={`ts-grid-page${isOpps || isVote ? ' ts-grid-page-compact' : ''}`}>
+      <Seo title={subLabel ? `${pageTitle} — ${subLabel}` : pageTitle} path={gridPath} noindex={isFav || isVote} />
       <header className="ts-grid-header">
         <div className="ts-grid-title-wrap">
           <h1 className="ts-grid-title">{pageTitle}</h1>
