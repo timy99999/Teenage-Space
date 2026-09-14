@@ -564,16 +564,16 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/AuthPage.tsx": {
-    "mtime": 1789374295.256496,
-    "seen": 1789374418.9136229,
-    "ast_hash": "3a669e0c0fdc4d87271af4821212ae65",
+    "mtime": 1789373738.9848099,
+    "seen": 1789373885.4720473,
+    "ast_hash": "17b32413c75680adba3cd29a2b1faa0b",
     "semantic_hash": ""
   },
   "frontend/src/pages/EditAccountPage.tsx": {
-    "mtime": 1789374309.2036757,
-    "seen": 1789374418.9136229,
-    "ast_hash": "cfc0f2986ece5bc81aaadd0b090c195f",
-    "semantic_hash": ""
+    "mtime": 1787149755.9980195,
+    "seen": 1787666027.1690547,
+    "ast_hash": "680297c58f411c4f5f736957df24daa7",
+    "semantic_hash": "680297c58f411c4f5f736957df24daa7"
   },
   "frontend/src/pages/EducationPage.tsx": {
     "mtime": 1789222087.4567516,
@@ -1671,12 +1671,6 @@
     "mtime": 1789222099.0003583,
     "seen": 1789373885.4720473,
     "ast_hash": "503c211b30867beed57af962fc2e5a0e",
-    "semantic_hash": ""
-  },
-  "frontend/src/components/DateField.tsx": {
-    "mtime": 1789374145.2909243,
-    "seen": 1789374418.9136229,
-    "ast_hash": "10dd6586cfb1e9fe1d2c13d151ffaeb4",
     "semantic_hash": ""
   }
 }

@@ -5,6 +5,7 @@ import { useUI } from '../contexts/UIContext';
 import { api } from '../lib/api';
 import { supabase } from '../lib/supabase';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { DateField } from '../components/DateField';
 import type { Profile } from '../types';
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
@@ -116,7 +117,7 @@ export function EditAccountPage() {
           {nameHint && <div className="ts-hint">{nameHint}</div>}
 
           <label className="ts-field-label">Дата рождения</label>
-          <input className="ts-input" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
+          <DateField value={birthDate} onChange={setBirthDate} />
 
           <label className="ts-field-label">Username</label>
           <input className="ts-input" value={username} onChange={(e) => setUsername(e.target.value)} disabled={!!usernameHint} />

@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
+import { DateField } from '../components/DateField';
 import type { Profile } from '../types';
 
 type View = 'start' | 'login' | 'reg1' | 'reg2' | 'reg3' | 'forgot1' | 'forgot2' | 'forgot3';
@@ -320,13 +321,7 @@ export function AuthPage() {
             <>
               <input className="ts-input auth" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} />
               <input className="ts-input auth" placeholder="Имя" value={name} onChange={(e) => setName(e.target.value)} />
-              <input
-                className="ts-input auth"
-                placeholder="Укажите дату рождения"
-                type="date"
-                value={birth}
-                onChange={(e) => setBirth(e.target.value)}
-              />
+              <DateField value={birth} onChange={setBirth} placeholder="Укажите дату рождения" />
               <input className="ts-input auth" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </>
           )}

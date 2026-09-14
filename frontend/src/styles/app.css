@@ -2077,6 +2077,41 @@ a.ts-card-organizer:hover {
   padding: 13px 15px;
   border-radius: 12px;
 }
+.ts-date-field {
+  position: relative;
+}
+.ts-date-field .ts-input {
+  padding-right: 44px;
+}
+.ts-date-field-icon {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--ts-muted);
+  cursor: pointer;
+  border-radius: 8px;
+}
+.ts-date-field-icon:hover {
+  color: var(--ts-violet);
+  background: var(--ts-surface);
+}
+.ts-date-field-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  border: none;
+}
 .ts-textarea {
   padding: 12px 14px;
   border-radius: 10px;
