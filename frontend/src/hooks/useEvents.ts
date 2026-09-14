@@ -59,7 +59,22 @@ export function useEvents(filters: EventFilters) {
       if (isSearch) setEvents([]);
     }
     const fetcher = () => api.get<EventItem[]>(`/events?${key}`);
-    const request = isSearch ? fetcher() : getOrFetch<EventItem[]>(cacheKey, fetcher, TTL_MS);
+    // A first-time guest has no cached copy to fall back to (getOrFetch's
+    // stale-while-error only helps once something has been fetched before), so a
+    // single transient blip — a cold Railway container, a dropped request — would
+    // otherwise render as "ничего нет" with no error and no way to recover short of
+    // a manual reload. A couple of quick retries covers that without masking a real
+    // outage (which still ends up empty after these run out).
+    function withRetries(retriesLeft: number): Promise<EventItem[]> {
+      const attempt = isSearch ? fetcher() : getOrFetch<EventItem[]>(cacheKey, fetcher, TTL_MS);
+      if (retriesLeft <= 0) return attempt;
+      return attempt.catch(
+        () => new Promise<EventItem[]>((resolve, reject) => {
+          setTimeout(() => withRetries(retriesLeft - 1).then(resolve, reject), 1500);
+        })
+      );
+    }
+    const request = withRetries(2);
     request
       .then((data) => {
         // A superseded request (key changed) has cancelled === true — its result is dropped,
