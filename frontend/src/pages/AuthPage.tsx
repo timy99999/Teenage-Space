@@ -7,14 +7,14 @@ import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import type { Profile } from '../types';
 
-type View = 'login' | 'reg1' | 'reg2' | 'reg3' | 'forgot1' | 'forgot2' | 'forgot3';
+type View = 'start' | 'login' | 'reg1' | 'reg2' | 'reg3' | 'forgot1' | 'forgot2' | 'forgot3';
 
 export function AuthPage() {
   const navigate = useNavigate();
   const { refreshProfile } = useAuth();
   const { flash } = useUI();
 
-  const [view, setView] = useState<View>('login');
+  const [view, setView] = useState<View>('start');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [resendLeft, setResendLeft] = useState(0);
@@ -23,6 +23,7 @@ export function AuthPage() {
   const [loginUser, setLoginUser] = useState('');
   const [loginPass, setLoginPass] = useState('');
 
+  const [lastName, setLastName] = useState('');
   const [name, setName] = useState('');
   const [birth, setBirth] = useState('');
   const [email, setEmail] = useState('');
@@ -76,7 +77,7 @@ export function AuthPage() {
   }
 
   async function onReg1() {
-    if (!name || !birth || !email) {
+    if (!lastName || !name || !birth || !email) {
       setError('Заполните все поля');
       return;
     }
@@ -138,7 +139,7 @@ export function AuthPage() {
     try {
       const { error: pwError } = await supabase.auth.updateUser({ password: pw });
       if (pwError) throw pwError;
-      await api.patch<Profile>('/profile', { username, name, birthDate: birth, policyAccepted: true });
+      await api.patch<Profile>('/profile', { username, name, lastName, birthDate: birth, policyAccepted: true });
       flash('Аккаунт создан');
       await finishSignIn();
     } catch (e) {
@@ -228,6 +229,7 @@ export function AuthPage() {
     View,
     { title: string; hint: string; primary: string; google: boolean; switchLabel: string; resend?: boolean }
   > = {
+    start: { title: 'Teenage Space', hint: 'Войдите, чтобы сохранять мероприятия и голосовать', primary: '', google: false, switchLabel: '' },
     login: { title: 'Вход', hint: 'Войдите, чтобы сохранять мероприятия и голосовать', primary: 'Войти', google: true, switchLabel: 'Создать аккаунт' },
     reg1: { title: 'Создать аккаунт', hint: 'Шаг 1 из 3 — расскажите о себе', primary: 'Продолжить', google: true, switchLabel: 'Войти в существующий аккаунт' },
     reg2: { title: 'Подтвердите email', hint: `Мы отправили код на ${email || 'вашу почту'}`, primary: 'Продолжить', google: false, switchLabel: 'Назад', resend: true },
@@ -282,6 +284,16 @@ export function AuthPage() {
           <div className="ts-auth-hint">{c.hint}</div>
         </div>
         <div className="ts-auth-form">
+          {view === 'start' && (
+            <>
+              <button className="ts-btn-plain-outline" onClick={() => setView('reg1')}>
+                Создать аккаунт
+              </button>
+              <button className="ts-btn-plain-outline" onClick={() => setView('login')}>
+                Войти
+              </button>
+            </>
+          )}
           {view === 'login' && (
             <>
               <input className="ts-input auth" placeholder="Username" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} />
@@ -306,8 +318,15 @@ export function AuthPage() {
           )}
           {view === 'reg1' && (
             <>
+              <input className="ts-input auth" placeholder="Фамилия" value={lastName} onChange={(e) => setLastName(e.target.value)} />
               <input className="ts-input auth" placeholder="Имя" value={name} onChange={(e) => setName(e.target.value)} />
-              <input className="ts-input auth" placeholder="Дата рождения" type="date" value={birth} onChange={(e) => setBirth(e.target.value)} />
+              <input
+                className="ts-input auth"
+                placeholder="Укажите дату рождения"
+                type="date"
+                value={birth}
+                onChange={(e) => setBirth(e.target.value)}
+              />
               <input className="ts-input auth" placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </>
           )}
@@ -347,29 +366,33 @@ export function AuthPage() {
             </>
           )}
 
-          {error && <div className="ts-auth-error">{error}</div>}
-          {c.resend && (
+          {view !== 'start' && error && <div className="ts-auth-error">{error}</div>}
+          {view !== 'start' && c.resend && (
             <button className="ts-auth-resend" onClick={onResend}>
               {resendLeft > 0 ? `Отправить ещё раз через ${resendLeft} с` : 'Отправить ещё раз'}
             </button>
           )}
 
-          <button
-            className="ts-btn-plain-outline"
-            style={{ marginTop: 6, border: '1.5px solid var(--ts-violet)', color: 'var(--ts-blue)' }}
-            onClick={onPrimary}
-            disabled={busy || (view === 'reg3' && !policyAccepted)}
-          >
-            {c.primary}
-          </button>
-          {c.google && (
+          {view !== 'start' && (
+            <button
+              className="ts-btn-plain-outline"
+              style={{ marginTop: 6, border: '1.5px solid var(--ts-violet)', color: 'var(--ts-blue)' }}
+              onClick={onPrimary}
+              disabled={busy || (view === 'reg3' && !policyAccepted)}
+            >
+              {c.primary}
+            </button>
+          )}
+          {view !== 'start' && c.google && (
             <button className="ts-btn-plain-outline" onClick={onGoogle}>
               Продолжить с Google
             </button>
           )}
-          <button className="ts-auth-switch" onClick={onSwitch}>
-            {c.switchLabel}
-          </button>
+          {view !== 'start' && (
+            <button className="ts-auth-switch" onClick={onSwitch}>
+              {c.switchLabel}
+            </button>
+          )}
         </div>
       </div>
     </div>
