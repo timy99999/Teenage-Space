@@ -234,7 +234,10 @@
   inset: auto;
   z-index: auto;
   background: transparent;
-  padding: 56px 0;
+  /* Matches .ts-empty: stretch to fill the page's remaining height (its parent,
+     .ts-grid-page, is a flex column) and centre within that, not just pad from the top. */
+  flex: 1;
+  padding: 40px 0;
   gap: 22px;
 }
 .ts-loader-inline .ts-loader-ring {
