@@ -18,6 +18,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EditEventModal } from '../components/EditEventModal';
 import { carryCatalogSearch } from '../lib/catalogNav';
 import { Seo } from '../components/Seo';
+import { Loader } from '../components/Loader';
 import type { EventItem } from '../types';
 
 type ConfirmKind = 'archive' | 'voting' | 'delete';
@@ -276,6 +277,10 @@ export function GridPage({ mode }: { mode: GridMode }) {
   const favEvents = isFav ? events.filter((e) => favorites.has(e.id)) : events;
   // While a request is in flight, don't flash the "nothing here" state.
   const isEmpty = isNews ? news.length === 0 : !loading && favEvents.length === 0;
+  // Nothing to show yet on the very first load (as opposed to revalidating an
+  // already-populated grid, which just dims it below) — fill that gap with the
+  // site's own loading animation instead of a blank strip.
+  const showInitialLoader = !isNews && loading && favEvents.length === 0;
 
   const subLabel = isOpps && category ? CATS.find((c) => c.key === category)?.label ?? '' : '';
   const pageTitle = isOpps ? TITLES.opps : TITLES[mode];
@@ -527,7 +532,9 @@ export function GridPage({ mode }: { mode: GridMode }) {
         </div>
       )}
 
-      {isEmpty && (
+      {showInitialLoader && <Loader inline />}
+
+      {!showInitialLoader && isEmpty && (
         <div className="ts-empty">
           <div>
             {!isNews && loadError ? (
@@ -586,7 +593,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
         </div>
       )}
 
-      {!isEmpty && !isNews && (
+      {!showInitialLoader && !isEmpty && !isNews && (
         <div
           className="ts-card-grid"
           /* Dim + lock the grid while a request is in flight so a search never

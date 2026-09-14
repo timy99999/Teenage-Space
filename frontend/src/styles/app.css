@@ -227,6 +227,28 @@
   border-radius: 50%;
   animation: tsDot 1.1s ease-in-out infinite;
 }
+/* Compact drop-in for a content area (e.g. the catalogue grid while it loads),
+   instead of the boot screen's fixed full-viewport overlay. */
+.ts-loader-inline {
+  position: static;
+  inset: auto;
+  z-index: auto;
+  background: transparent;
+  padding: 56px 0;
+  gap: 22px;
+}
+.ts-loader-inline .ts-loader-ring {
+  width: 96px;
+  height: 96px;
+}
+.ts-loader-inline .ts-loader-logo {
+  width: 64px;
+  height: 64px;
+}
+.ts-loader-inline .ts-loader-spin {
+  inset: 3px;
+  border-width: 2px;
+}
 
 /* ---- home ---- */
 .ts-home {
