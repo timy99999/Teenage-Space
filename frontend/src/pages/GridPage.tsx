@@ -225,7 +225,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params, isOpps]);
 
-  const { events: fetchedEvents, loading } = useEvents({
+  const { events: fetchedEvents, loading, error: loadError, retry: retryEvents } = useEvents({
     scope,
     category: isOpps ? category : undefined,
     categories: isVote ? fCats : undefined,
@@ -530,7 +530,17 @@ export function GridPage({ mode }: { mode: GridMode }) {
       {isEmpty && (
         <div className="ts-empty">
           <div>
-            {isFav ? (
+            {!isNews && loadError ? (
+              <>
+                <div className="ts-empty-title">Не удалось загрузить мероприятия</div>
+                <div className="ts-empty-hint">Проверьте соединение с интернетом и попробуйте ещё раз</div>
+                <div className="ts-empty-actions">
+                  <button className="ts-btn-outline small" onClick={retryEvents}>
+                    Повторить попытку
+                  </button>
+                </div>
+              </>
+            ) : isFav ? (
               <>
                 <div className="ts-empty-title">Ничего нет</div>
                 <div className="ts-empty-hint">Отмечайте мероприятия звездой — они появятся здесь</div>

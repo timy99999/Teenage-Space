@@ -44,11 +44,17 @@ export function useEvents(filters: EventFilters) {
     isSearch ? [] : getCached<EventItem[]>(`events?${key}`) ?? []
   );
   const [loading, setLoading] = useState(() => isSearch || !getCached<EventItem[]>(`events?${key}`));
+  // True only once the retries below are exhausted with no cached fallback to show
+  // instead — i.e. the grid really is empty because loading failed, not because
+  // there's nothing to show. Lets the UI say so instead of pretending "ничего нет".
+  const [error, setError] = useState(false);
+  const [retryTick, setRetryTick] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     const cacheKey = `events?${key}`;
     const cached = isSearch ? null : getCached<EventItem[]>(cacheKey);
+    setError(false);
     if (cached) {
       setEvents(cached);
       setLoading(false);
@@ -88,14 +94,15 @@ export function useEvents(filters: EventFilters) {
         if (!cancelled && !cached) {
           setEvents([]);
           setLoading(false);
+          setError(true);
         }
       });
     return () => {
       cancelled = true;
     };
-  }, [key, isSearch]);
+  }, [key, isSearch, retryTick]);
 
-  return { events, loading };
+  return { events, loading, error, retry: () => setRetryTick((n) => n + 1) };
 }
 
 export function useEvent(id: string | null) {
