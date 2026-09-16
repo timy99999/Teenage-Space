@@ -14,6 +14,8 @@ interface TelegramLinkStatus {
   available: boolean;
   linked: boolean;
   telegramUsername?: string | null;
+  /** The bot's own @username, used to build a t.me link for already-linked accounts. */
+  botUsername?: string | null;
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -80,16 +82,8 @@ export function ProfilePage() {
     }
   }
 
-  async function unlinkTelegram() {
-    setTelegramBusy(true);
-    try {
-      await api.del('/profile/telegram-link');
-      await loadTelegram();
-    } catch (err) {
-      setTelegramError(err instanceof Error ? err.message : 'Не удалось отвязать');
-    } finally {
-      setTelegramBusy(false);
-    }
+  function openBot() {
+    if (telegram?.botUsername) window.open(`https://t.me/${telegram.botUsername}`, '_blank', 'noopener');
   }
 
   async function onLogout() {
@@ -179,9 +173,9 @@ export function ProfilePage() {
             <button
               className="open-link"
               disabled={telegramBusy}
-              onClick={telegram.linked ? unlinkTelegram : linkTelegram}
+              onClick={telegram.linked ? openBot : linkTelegram}
             >
-              {telegram.linked ? 'отвязать' : 'привязать →'}
+              {telegram.linked ? 'перейти в бота →' : 'привязать →'}
             </button>
           </div>
         )}

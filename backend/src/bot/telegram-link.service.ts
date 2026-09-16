@@ -57,7 +57,8 @@ export class TelegramLinkService {
    * that can only fail.
    */
   async status(userId: string) {
-    const available = this.botUsername !== null;
+    const botUsername = this.botUsername;
+    const available = botUsername !== null;
     const { data, error } = await this.supabase.client
       .from('telegram_links')
       .select('telegram_id, telegram_username, linked_at')
@@ -70,7 +71,8 @@ export class TelegramLinkService {
       linked: true as const,
       telegramId: String(data.telegram_id),
       telegramUsername: data.telegram_username,
-      linkedAt: data.linked_at
+      linkedAt: data.linked_at,
+      botUsername
     };
   }
 

@@ -366,10 +366,10 @@
     "semantic_hash": "96cd73dca9f0bd1f9e66d04f2b44a183"
   },
   "frontend/src/components/Loader.tsx": {
-    "mtime": 1789384728.0887465,
-    "seen": 1789571462.8592732,
-    "ast_hash": "e577e4d530e71e4030e27360f7b4af4d",
-    "semantic_hash": ""
+    "mtime": 1787062854.3072784,
+    "seen": 1787666027.1690547,
+    "ast_hash": "2d39ac6acccc5c588d039900581c4661",
+    "semantic_hash": "2d39ac6acccc5c588d039900581c4661"
   },
   "frontend/src/components/NewsCard.tsx": {
     "mtime": 1787915382.91756,
@@ -474,9 +474,9 @@
     "semantic_hash": "df5f9107de817a81bcd160c9f14e482a"
   },
   "frontend/src/hooks/useEvents.ts": {
-    "mtime": 1789384183.198115,
-    "seen": 1789571462.8592732,
-    "ast_hash": "a4d7556b6b64353716da9d790ee911fa",
+    "mtime": 1789366226.8825326,
+    "seen": 1789373885.4720473,
+    "ast_hash": "4b09d236b6a494783516f62d795518d4",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useFavorites.ts": {
@@ -582,9 +582,9 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/GridPage.tsx": {
-    "mtime": 1789384766.1736312,
-    "seen": 1789571462.8592732,
-    "ast_hash": "56f98684170226a4fc3f9fa3a6481430",
+    "mtime": 1789366226.8951273,
+    "seen": 1789373885.4720473,
+    "ast_hash": "91935065c81c236cb53890ae0e3387d2",
     "semantic_hash": ""
   },
   "frontend/src/pages/HomePage.tsx": {
@@ -600,9 +600,9 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/ProfilePage.tsx": {
-    "mtime": 1789571321.2220693,
-    "seen": 1789571462.8592732,
-    "ast_hash": "a261222e7c1791fb410375cbd6263568",
+    "mtime": 1788485341.5588467,
+    "seen": 1788485403.794482,
+    "ast_hash": "9f186ffb58cb5a7f842f96bb68006c3f",
     "semantic_hash": ""
   },
   "frontend/src/pages/PublishPage.tsx": {
@@ -996,9 +996,9 @@
     "semantic_hash": ""
   },
   "backend/src/bot/telegram-link.service.ts": {
-    "mtime": 1789571282.9016469,
-    "seen": 1789571462.8592732,
-    "ast_hash": "34493c355a570b5beeacee2b3ccff321",
+    "mtime": 1788010023.8926387,
+    "seen": 1788010451.5254133,
+    "ast_hash": "20ee5054e7256ad73e347a4c91b496e2",
     "semantic_hash": ""
   },
   "bot/bars/__init__.py": {
