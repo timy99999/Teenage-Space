@@ -162,6 +162,23 @@ export function HomePage() {
         </div>
       </section>
 
+      <section className="ts-bars-promo">
+        <div>
+          <div className="ts-bars-promo-title">Бот Барс</div>
+          <div className="ts-bars-promo-sub">
+            Спросите у Барса про мероприятия, гранты и волонтёрство — прямо в Telegram, в любое время.
+          </div>
+        </div>
+        <a
+          className="ts-btn-outline"
+          href="https://t.me/bars_teenagespace_bot"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Написать Барсу →
+        </a>
+      </section>
+
       <section
         ref={ctaReveal.ref}
         className={`ts-cta ts-reveal-cta${ctaReveal.visible ? ' is-visible' : ''}`}

@@ -857,6 +857,31 @@
   color: var(--ts-muted);
 }
 
+.ts-bars-promo {
+  margin: 12px 44px 0;
+  padding: 28px 34px;
+  border-radius: 22px;
+  background: rgba(139, 92, 246, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.ts-bars-promo-title {
+  font-family: 'Bryndan Write', 'Comfortaa', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--ts-blue);
+}
+.ts-bars-promo-sub {
+  margin-top: 6px;
+  max-width: 480px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
+  color: var(--ts-muted);
+}
+
 /* ---- scroll-in reveal animations (home page) ---- */
 .ts-reveal-section .ts-section-head,
 .ts-reveal-section .ts-section-head-row {
