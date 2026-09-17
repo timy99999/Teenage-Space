@@ -600,7 +600,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
              flashes the previous/unfiltered list as if it were the result. */
           style={loading ? { opacity: 0.45, pointerEvents: 'none', transition: 'opacity .15s' } : undefined}
         >
-          {favEvents.map((e) => (
+          {favEvents.map((e, index) => (
             <EventCard
               key={e.id}
               event={e}
@@ -611,6 +611,7 @@ export function GridPage({ mode }: { mode: GridMode }) {
               rating={ratings[e.id] ?? 0}
               onRate={(n) => rate(e.id, n)}
               viewCount={isSuperAdmin ? cardViewCounts[cardViewKey('event', e.id)] : undefined}
+              priority={index < 4}
               admin={
                 canEditCards
                   ? {

@@ -5,6 +5,7 @@ import { useUI } from '../contexts/UIContext';
 import { useSubmissions } from '../hooks/useSubmissions';
 import { api } from '../lib/api';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { Loader } from '../components/Loader';
 import type { Profile } from '../types';
 
 /** Shape of GET/POST /api/profile/telegram-link — the deep link that hands this
@@ -35,25 +36,13 @@ function PencilIcon() {
 
 export function ProfilePage() {
   const navigate = useNavigate();
-  const { session, profile, isAdmin, isSuperAdmin, refreshProfile, signOut } = useAuth();
+  const { session, profile, loading, isAdmin, isSuperAdmin, refreshProfile, signOut } = useAuth();
   const { theme, setTheme } = useUI();
   const { submissions } = useSubmissions();
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [telegram, setTelegram] = useState<TelegramLinkStatus | null>(null);
   const [telegramBusy, setTelegramBusy] = useState(false);
   const [telegramError, setTelegramError] = useState('');
-
-  if (!session) return <Navigate to="/auth" replace />;
-
-  async function setThemeAndPersist(next: 'light' | 'dark') {
-    setTheme(next);
-    await api.patch<Profile>('/profile', { theme: next }).then(refreshProfile).catch(() => {});
-  }
-
-  async function toggleNotif() {
-    if (!profile) return;
-    await api.patch<Profile>('/profile', { notifOptIn: !profile.notifOptIn }).then(refreshProfile).catch(() => {});
-  }
 
   const loadTelegram = useCallback(async () => {
     // A missing/misconfigured bot must not break the profile page, so failures here
@@ -67,6 +56,19 @@ export function ProfilePage() {
   useEffect(() => {
     if (session) void loadTelegram();
   }, [session, loadTelegram]);
+
+  if (loading) return <Loader />;
+  if (!session) return <Navigate to="/auth" replace />;
+
+  async function setThemeAndPersist(next: 'light' | 'dark') {
+    setTheme(next);
+    await api.patch<Profile>('/profile', { theme: next }).then(refreshProfile).catch(() => {});
+  }
+
+  async function toggleNotif() {
+    if (!profile) return;
+    await api.patch<Profile>('/profile', { notifOptIn: !profile.notifOptIn }).then(refreshProfile).catch(() => {});
+  }
 
   async function linkTelegram() {
     setTelegramBusy(true);

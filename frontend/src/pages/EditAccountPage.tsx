@@ -6,6 +6,7 @@ import { api } from '../lib/api';
 import { supabase } from '../lib/supabase';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { DateField } from '../components/DateField';
+import { Loader } from '../components/Loader';
 import type { Profile } from '../types';
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
@@ -19,7 +20,7 @@ function cooldownHint(changedAt: string | null): string | null {
 
 export function EditAccountPage() {
   const navigate = useNavigate();
-  const { session, profile, refreshProfile, signOut } = useAuth();
+  const { session, profile, loading, refreshProfile, signOut } = useAuth();
   const { flash } = useUI();
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -31,6 +32,7 @@ export function EditAccountPage() {
   const [uploading, setUploading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
+  if (loading) return <Loader />;
   if (!session) return <Navigate to="/auth" replace />;
 
   const nameHint = cooldownHint(profile?.nameChangedAt ?? null);

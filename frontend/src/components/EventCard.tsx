@@ -29,9 +29,11 @@ interface EventCardProps {
   admin?: EventCardAdminActions;
   /** Unique-view count, super_admin only — shown as a badge on the card. */
   viewCount?: number;
+  /** Forwarded to EventPhoto for cards visible on first paint (see EventPhoto). */
+  priority?: boolean;
 }
 
-export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, admin, viewCount }: EventCardProps) {
+export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, rating, onRate, admin, viewCount, priority }: EventCardProps) {
   const priceLabel = event.price === 'free' ? 'Бесплатно' : event.cost ?? '';
   const deadline = deadlineBadge(event.deadlineDate, { isPast: event.isPast || isVoteMode });
   const { session } = useAuth();
@@ -40,7 +42,7 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
     <article className="ts-card">
       <div className="ts-card-img-wrap">
         <button className="ts-card-img" onClick={onOpen}>
-          <EventPhoto src={event.imageUrl} alt={event.title} />
+          <EventPhoto src={event.imageUrl} alt={event.title} priority={priority} />
         </button>
         {event.organizerName &&
           (event.organizerUrl ? (

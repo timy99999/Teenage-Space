@@ -92,9 +92,11 @@ function EducationIndex() {
 }
 
 export default function App() {
-  const { loading, banInfo } = useAuth();
+  const { banInfo } = useAuth();
 
-  if (loading) return <Loader />;
+  // No top-level wait on auth here: that would block every public page (home,
+  // catalog, event/news detail) behind a Supabase session round-trip. Pages that
+  // actually need auth to decide anything check `loading` themselves instead.
   if (banInfo) return <BannedGate info={banInfo} />;
 
   return (

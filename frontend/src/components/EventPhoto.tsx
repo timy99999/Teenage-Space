@@ -1,10 +1,19 @@
 interface EventPhotoProps {
   src: string | null;
   alt: string;
+  /** Set for cards visible on first paint — skips lazy-loading and raises fetch
+   *  priority so this LCP candidate isn't deprioritised behind off-screen images. */
+  priority?: boolean;
 }
 
-export function EventPhoto({ src, alt }: EventPhotoProps) {
-  if (src) return <img src={src} alt={alt} loading="lazy" />;
+export function EventPhoto({ src, alt, priority }: EventPhotoProps) {
+  if (src) {
+    return priority ? (
+      <img src={src} alt={alt} loading="eager" fetchPriority="high" />
+    ) : (
+      <img src={src} alt={alt} loading="lazy" />
+    );
+  }
   return (
     <div
       style={{
