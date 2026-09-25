@@ -300,22 +300,22 @@
     "semantic_hash": "6d397bd7b7c051bcc6520e403ace91d9"
   },
   "frontend/package.json": {
-    "mtime": 1790348441.595299,
-    "seen": 1790348947.4266915,
+    "mtime": 1789221825.9103777,
+    "seen": 1789373885.4720473,
     "ast_hash": "a4687d8a569e7afb07e566d851caef41",
     "semantic_hash": ""
   },
   "frontend/src/App.tsx": {
-    "mtime": 1790347938.3686063,
-    "seen": 1790348947.4266915,
-    "ast_hash": "255d8004c83671fe535baf09b1725f3f",
+    "mtime": 1789659237.8283699,
+    "seen": 1789659777.5114214,
+    "ast_hash": "668bf3899ab5642db14d18dfb9d7111e",
     "semantic_hash": ""
   },
   "frontend/src/components/BottomNav.tsx": {
-    "mtime": 1790347978.4295022,
-    "seen": 1790348947.4266915,
-    "ast_hash": "93781bc4bc115fbddceb636e16c62a46",
-    "semantic_hash": ""
+    "mtime": 1787230495.3287437,
+    "seen": 1787666027.1690547,
+    "ast_hash": "b3482e62ed7b2863b2557ea96d5b1466",
+    "semantic_hash": "b3482e62ed7b2863b2557ea96d5b1466"
   },
   "frontend/src/components/CardSizeSlider.tsx": {
     "mtime": 1787062962.3222983,
@@ -492,10 +492,10 @@
     "semantic_hash": "32e60940ff839ec5cfa0ae57d0c8a03c"
   },
   "frontend/src/hooks/useIsMobile.ts": {
-    "mtime": 1790348750.6526022,
-    "seen": 1790348947.4286988,
-    "ast_hash": "727227fa1fabeab461f5f1d7a8bd0c42",
-    "semantic_hash": ""
+    "mtime": 1787104867.6203263,
+    "seen": 1787666027.1690547,
+    "ast_hash": "5782e86e91c170455fc43cb1def772e5",
+    "semantic_hash": "5782e86e91c170455fc43cb1def772e5"
   },
   "frontend/src/hooks/useNews.ts": {
     "mtime": 1789221952.675537,
@@ -582,15 +582,15 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/GridPage.tsx": {
-    "mtime": 1790347923.885345,
-    "seen": 1790348947.4286988,
-    "ast_hash": "8b014f3bc9fca9c3396d24fd816b0175",
+    "mtime": 1789659455.167992,
+    "seen": 1789659777.5114214,
+    "ast_hash": "079d8f073b7a2081bf913e37064de10e",
     "semantic_hash": ""
   },
   "frontend/src/pages/HomePage.tsx": {
-    "mtime": 1790347953.9960268,
-    "seen": 1790348947.4286988,
-    "ast_hash": "2ed22be2dea2edba2fdca871fcbc5e41",
+    "mtime": 1789651879.6078136,
+    "seen": 1789652162.3183954,
+    "ast_hash": "8e7d613da74a502ba69c377d8077b930",
     "semantic_hash": ""
   },
   "frontend/src/pages/PrivacyPage.tsx": {
@@ -1632,9 +1632,9 @@
     "semantic_hash": ""
   },
   "frontend/src/components/Seo.tsx": {
-    "mtime": 1790348459.634832,
-    "seen": 1790348947.4286988,
-    "ast_hash": "15232d37d900750efe5d9f91a36a85b0",
+    "mtime": 1789221843.8060277,
+    "seen": 1789373885.4720473,
+    "ast_hash": "487065d0749f14fc622de2f6b866d290",
     "semantic_hash": ""
   },
   "frontend/src/lib/catalogNav.ts": {
@@ -1677,12 +1677,6 @@
     "mtime": 1789374145.2909243,
     "seen": 1789374418.9136229,
     "ast_hash": "10dd6586cfb1e9fe1d2c13d151ffaeb4",
-    "semantic_hash": ""
-  },
-  "frontend/src/data/homeSeo.ts": {
-    "mtime": 1790347894.49395,
-    "seen": 1790348947.4286988,
-    "ast_hash": "e721a798f1421cf9ec9f6bc04c998459",
     "semantic_hash": ""
   }
 }
