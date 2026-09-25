@@ -2455,6 +2455,10 @@ a.ts-card-organizer:hover {
   line-height: 1.7;
   color: var(--ts-fg);
   text-wrap: pretty;
+  /* Переносы строк, которые автор набрал в textarea, должны сохраняться: без этого
+     абзацы склеивались в сплошной текст. pre-line сохраняет перевод строки, но
+     по-прежнему сворачивает лишние пробелы и переносит длинные строки по ширине. */
+  white-space: pre-line;
 }
 .ts-modal-audience {
   margin-top: 16px;
