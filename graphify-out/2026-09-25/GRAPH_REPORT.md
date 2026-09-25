@@ -1,21 +1,21 @@
-# Graph Report - Teenage Space  (2026-09-17)
+# Graph Report - Teenage Space  (2026-09-25)
 
 ## Corpus Check
-- 271 files · ~90,154 words
+- 272 files · ~90,520 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2027 nodes · 3987 edges · 134 communities (76 shown, 51 thin omitted)
+- 2033 nodes · 4002 edges · 144 communities (85 shown, 52 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 104 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1a961b6f`
+- Built from commit: `f6fd9b7d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- types.ts
+- useAuth
 - useUI
 - 20260828103623_traffic_analytics.sql
 - dependencies
@@ -26,23 +26,23 @@
 - events.service.ts
 - mappers.ts
 - traffic.service.ts
-- AdminPage.tsx
+- PostForm.tsx
 - ratings.controller.ts
 - compilerOptions
 - compilerOptions
 - backend/package.json
 - supabase-auth.guard.ts
 - App.tsx
-- db.py
+- execute
 - app.module.ts
 - test_agent.py
 - AuthPage
 - users-admin.service.ts
 - devDependencies
-- FakeCatalog
+- conftest.py
 - handlers.py
-- useAuth
-- runtime.py
+- tracking.ts
+- ChatQueues
 - UpdateSubmissionDto
 - CapacityService
 - CurrentUser
@@ -57,7 +57,7 @@
 - AnalyticsPage.tsx
 - retrieval.py
 - CreateEventDto
-- truncate_to_last_complete_line
+- formatting.py
 - SupabaseAuthGuard
 - plans.py
 - constants.ts
@@ -67,8 +67,8 @@
 - Supabase
 - AdminService
 - deploy
-- UserAccountPage.tsx
-- system_prompt
+- UsersPage.tsx
+- agent.py
 - UpdateEventDto
 - TestCannedReply
 - Changelog
@@ -85,11 +85,11 @@
 - deploy
 - Барс — Telegram-агент Teenage Space
 - Supabase Postgres Best Practices
-- ChatQueues
+- Runtime
 - _clean_due_date
 - bars
 - Body
-- PrivacyPage.tsx
+- types.ts
 - advanced-full-text-search.md
 - advanced-jsonb-indexing.md
 - conn-idle-timeout.md
@@ -142,6 +142,16 @@
 - rxjs
 - Settings
 - AuthController
+- AdminPage.tsx
+- HomePage.tsx
+- useEducation.ts
+- test_smalltalk.py
+- ProfilePage.tsx
+- embeddings.py
+- EventPage.tsx
+- BottomNav.tsx
+- deadline.ts
+- UserAccountPage
 
 ## God Nodes (most connected - your core abstractions)
 1. `useAuth()` - 77 edges
@@ -175,15 +185,15 @@
 - **TS Brand Logo Asset Usage** — frontend_public_favicon_tslogomark, frontend_src_assets_logo_ts_tslogomark, frontend_index_htmlentrypoint, frontend_index_seometatags [INFERRED 0.80]
 - **Push-to-Main Auto-Deploy Pipeline** — claude_autopushagreement, github_workflows_ci_buildcheckworkflow, github_workflows_supabase_migrations_migratejob, readme_migrationsautomation [INFERRED 0.85]
 
-## Communities (134 total, 51 thin omitted)
+## Communities (144 total, 52 thin omitted)
 
-### Community 0 - "types.ts"
-Cohesion: 0.10
-Nodes (30): BannedGate(), periodText(), AuthContext, AuthContextValue, api, authHeader(), reportNetworkTrouble(), request() (+22 more)
+### Community 0 - "useAuth"
+Cohesion: 0.12
+Nodes (26): BanModal(), BanModalProps, OPTIONS, PolicyGate(), ROLE_BADGE, UsersManagerProps, AuthContext, AuthContextValue (+18 more)
 
 ### Community 1 - "useUI"
-Cohesion: 0.09
-Nodes (24): EditAccountPage, ProfilePage, CardSizeSlider(), ConfirmDialog(), ConfirmDialogProps, ImageUploadField(), onPick(), ImageUploadFieldProps (+16 more)
+Cohesion: 0.11
+Nodes (16): CardSizeSlider(), ImageUploadField(), onPick(), ImageUploadFieldProps, NetTroubleToast(), Toast(), Theme, UIContext (+8 more)
 
 ### Community 2 - "20260828103623_traffic_analytics.sql"
 Cohesion: 0.08
@@ -206,8 +216,8 @@ Cohesion: 0.06
 Nodes (30): dependencies, react, react-dom, react-helmet-async, react-router-dom, @supabase/supabase-js, devDependencies, @types/react (+22 more)
 
 ### Community 7 - "useEvents.ts"
-Cohesion: 0.16
-Nodes (17): NewsPage, buildQuery(), EventFilters, useEvents(), withRetries(), useNews(), useNewsItem(), CacheEntry (+9 more)
+Cohesion: 0.20
+Nodes (16): NewsModal(), buildQuery(), EventFilters, useEvents(), withRetries(), useNews(), useNewsItem(), CacheEntry (+8 more)
 
 ### Community 8 - "events.service.ts"
 Cohesion: 0.08
@@ -221,9 +231,9 @@ Nodes (40): mapNews(), mapSubmission(), mapSubmissionAdmin(), NewsRow, Submissio
 Cohesion: 0.06
 Nodes (40): DEVICE_TYPES, HeartbeatDto, IsBoolean, IsIn, IsUUID, DEVICE_TYPES, TARGET_TYPES, TrackCardViewDto (+32 more)
 
-### Community 11 - "AdminPage.tsx"
-Cohesion: 0.05
-Nodes (46): AdminPage, PublishPage, EditEventModal(), save(), EditEventModalProps, emptyPostForm(), eventToPostForm(), FORMATS (+38 more)
+### Community 11 - "PostForm.tsx"
+Cohesion: 0.14
+Nodes (20): EditEventModal(), save(), EditEventModalProps, emptyPostForm(), eventToPostForm(), FORMATS, LEVELS, parseAge() (+12 more)
 
 ### Community 12 - "ratings.controller.ts"
 Cohesion: 0.11
@@ -247,11 +257,11 @@ Nodes (14): SetRoleDto, IsIn, AdminGuard, Injectable, PermissionGuard, Injectabl
 
 ### Community 17 - "App.tsx"
 Cohesion: 0.09
-Nodes (24): App(), ArticlePage, AuthPage, EducationIndex(), EducationPage, EventPage, HomeGate(), NotFoundPage (+16 more)
+Nodes (22): AdminPage, ArticlePage, AuthPage, BarsPage, EditAccountPage, HomeGate(), NewsPage, NotFoundPage (+14 more)
 
-### Community 18 - "db.py"
-Cohesion: 0.13
-Nodes (27): _clip(), log_turn(), Quality-control journal and token accounting for Барс. Two bot-owned tables…, Fold this turn's Gemini token counts into the daily rollup. `usage_by_model` is…, Book a catalogue re-embed against the system chat, for the balance estimate., Drop journalled turns past the retention window. Called from sessions.sweep()., Append one exchange — the user's line and the assistant's — to the journal.…, record_embedding_usage() (+19 more)
+### Community 18 - "execute"
+Cohesion: 0.15
+Nodes (23): _clip(), log_turn(), Quality-control journal and token accounting for Барс. Two bot-owned tables…, Fold this turn's Gemini token counts into the daily rollup. `usage_by_model` is…, Book a catalogue re-embed against the system chat, for the balance estimate., Drop journalled turns past the retention window. Called from sessions.sweep()., Append one exchange — the user's line and the assistant's — to the journal.…, record_embedding_usage() (+15 more)
 
 ### Community 19 - "app.module.ts"
 Cohesion: 0.11
@@ -263,7 +273,7 @@ Nodes (23): _call_signature(), _calls_this_turn(), _collected_tool_output(), _cu
 
 ### Community 21 - "AuthPage"
 Cohesion: 0.06
-Nodes (37): onLogout(), ErrorBoundary, Props, State, onAccept(), AuthProvider(), checkBanStatus(), refreshProfile() (+29 more)
+Nodes (37): App(), ErrorBoundary, Props, State, onAccept(), AuthProvider(), checkBanStatus(), refreshProfile() (+29 more)
 
 ### Community 22 - "users-admin.service.ts"
 Cohesion: 0.08
@@ -273,17 +283,21 @@ Nodes (26): BAN_DURATIONS, BanDuration, BanUserDto, IsIn, IsOptional, IsString, 
 Cohesion: 0.22
 Nodes (9): devDependencies, @nestjs/cli, @types/express, @types/node, typescript, typescript, @nestjs/cli, @types/express (+1 more)
 
-### Community 24 - "FakeCatalog"
+### Community 24 - "conftest.py"
 Cohesion: 0.15
-Nodes (14): clear_cache(), clear_search_cache(), _event(), events(), fake_catalog(), FakeCatalog, no_vector_search(), Any (+6 more)
+Nodes (16): clear_cache(), clear_search_cache(), _event(), events(), fake_catalog(), FakeCatalog, no_vector_search(), Any (+8 more)
 
 ### Community 25 - "handlers.py"
-Cohesion: 0.09
-Nodes (46): api(), ApiError, event_keyboard(), plan_keyboard(), Any, Turning the model's answer into a Telegram message. The model never emits URLs…, Telegram rejects an entire message over one malformed button URL, which would…, render_plan() (+38 more)
+Cohesion: 0.11
+Nodes (37): api(), ApiError, chat_context(), _finish_reason(), get_usage_metadata_callback(), help_command(), Job, _keep_typing() (+29 more)
 
-### Community 26 - "useAuth"
-Cohesion: 0.20
-Nodes (18): AppLayout(), EventModal(), NewsModal(), useAuth(), useEvent(), useFavorites(), useHeartbeat(), EXCLUDED_PREFIXES (+10 more)
+### Community 26 - "tracking.ts"
+Cohesion: 0.24
+Nodes (11): AppLayout(), useHeartbeat(), EXCLUDED_PREFIXES, useTrackPageView(), base(), DeviceType, getDeviceType(), getSessionId() (+3 more)
+
+### Community 27 - "ChatQueues"
+Cohesion: 0.24
+Nodes (5): ChatQueues, Any, Per-chat ordering, cross-chat parallelism. One worker per active chat means a…, Process-wide singletons wired up at boot by main.py. Kept in one small module…, Queue
 
 ### Community 28 - "UpdateSubmissionDto"
 Cohesion: 0.20
@@ -302,8 +316,8 @@ Cohesion: 0.33
 Nodes (5): collection, compilerOptions, deleteOutDir, $schema, sourceRoot
 
 ### Community 32 - "tools.py"
-Cohesion: 0.16
-Nodes (21): _ctx(), get_event(), link_hint(), PlanStep, BaseModel, What Барс can actually do. Every tool is read-only against the catalogue or…, Показать полную карточку одного мероприятия по его id., Сохранить план подготовки к мероприятию и включить напоминания. Вызывай ТОЛЬКО… (+13 more)
+Cohesion: 0.11
+Nodes (26): _ctx(), get_event(), link_hint(), PlanStep, BaseModel, What Барс can actually do. Every tool is read-only against the catalogue or…, Показать полную карточку одного мероприятия по его id., Сохранить план подготовки к мероприятию и включить напоминания. Вызывай ТОЛЬКО… (+18 more)
 
 ### Community 33 - "tsconfig.build.json"
 Cohesion: 0.33
@@ -318,40 +332,40 @@ Cohesion: 0.08
 Nodes (20): TrafficQueryDto, IsInt, IsOptional, Max, Min, Type, TrafficAdminController, Controller (+12 more)
 
 ### Community 40 - "AnalyticsPage.tsx"
-Cohesion: 0.08
-Nodes (37): AnalyticsPage, BarsPage, BarChart(), BarChartProps, setBarsCredit(), useBarsAnalytics(), useBarsChat(), useBarsChats() (+29 more)
+Cohesion: 0.12
+Nodes (24): AnalyticsPage, BarChart(), BarChartProps, setBarsCredit(), useBarsAnalytics(), useCapacity(), useTrafficOnline(), useTrafficSummary() (+16 more)
 
 ### Community 41 - "retrieval.py"
-Cohesion: 0.09
-Nodes (26): embedding_text(), What gets embedded. Title and description carry most of the signal; category,…, pgvector accepts its text form, so no extra type-registration dependency is…, to_vector_literal(), _cache_key(), describe(), find_by_title(), _keyword_rank() (+18 more)
+Cohesion: 0.10
+Nodes (20): embedding_text(), What gets embedded. Title and description carry most of the signal; category,…, _cache_key(), find_by_title(), _keyword_rank(), _normalise_title(), _order(), Any (+12 more)
 
 ### Community 42 - "CreateEventDto"
 Cohesion: 0.15
 Nodes (11): deriveAgeLabel(), deriveShortDesc(), CreateEventDto, IsArray, IsBoolean, IsIn, IsInt, IsOptional (+3 more)
 
-### Community 43 - "truncate_to_last_complete_line"
-Cohesion: 0.13
-Nodes (11): chunks(), event_ids(), Cut a budget-truncated answer back to its last complete thought. The model…, Split on paragraph boundaries so a long answer never breaks mid-tag., Referenced ids, in the order the model mentioned them, deduplicated., to_html(), truncate_to_last_complete_line(), Message shaping: recovering a truncated answer, and splitting a long one. (+3 more)
+### Community 43 - "formatting.py"
+Cohesion: 0.10
+Nodes (19): chunks(), event_ids(), event_keyboard(), plan_keyboard(), Any, Turning the model's answer into a Telegram message. The model never emits URLs…, Cut a budget-truncated answer back to its last complete thought. The model…, Split on paragraph boundaries so a long answer never breaks mid-tag. (+11 more)
 
 ### Community 44 - "SupabaseAuthGuard"
 Cohesion: 0.31
 Nodes (4): jwtExpiryMs(), SupabaseAuthGuard, Inject, Injectable
 
 ### Community 45 - "plans.py"
-Cohesion: 0.19
-Nodes (20): One connection, one atomic unit, for a change that spans several statements.…, transaction(), _add_reminder(), create_plan(), due_reminders(), _fire_at(), get_plan(), mark_failed() (+12 more)
+Cohesion: 0.17
+Nodes (23): fetch_all(), Any, One connection, one atomic unit, for a change that spans several statements.…, transaction(), site_url(), _add_reminder(), create_plan(), due_reminders() (+15 more)
 
 ### Community 46 - "constants.ts"
-Cohesion: 0.07
-Nodes (40): CardMenu(), EventCard(), EventCardAdminActions, EventCardProps, instagramUrl(), EventDetails(), EventDetailsProps, instagramUrl() (+32 more)
+Cohesion: 0.12
+Nodes (27): CardMenu(), EventCard(), EventCardAdminActions, EventCardProps, instagramUrl(), EventDetails(), EventDetailsProps, instagramUrl() (+19 more)
 
 ### Community 47 - "DateField.tsx"
 Cohesion: 0.36
 Nodes (6): DateField(), handleTextChange(), DateFieldProps, displayToIso(), isoToDisplay(), maskDigitsAsDate()
 
 ### Community 48 - "GridPage.tsx"
-Cohesion: 0.13
-Nodes (17): Chip(), ChipProps, Sidebar(), NAV_CATS, useDebouncedValue(), useRatings(), cardViewKey(), useCardViewCounts() (+9 more)
+Cohesion: 0.11
+Nodes (20): Chip(), ChipProps, hasPerm(), CATS, useDebouncedValue(), useRatings(), cardViewKey(), useCardViewCounts() (+12 more)
 
 ### Community 49 - "CreateMaterialDto"
 Cohesion: 0.33
@@ -369,13 +383,13 @@ Nodes (12): AdminController, Controller, Delete, Get, HttpCode, Param, Post, Que
 Cohesion: 0.29
 Nodes (6): deploy, healthcheckPath, healthcheckTimeout, restartPolicyMaxRetries, restartPolicyType, $schema
 
-### Community 53 - "UserAccountPage.tsx"
-Cohesion: 0.08
-Nodes (20): UserAccountPage, UsersPage, BanModal(), BanModalProps, OPTIONS, ROLE_BADGE, UsersManager(), UsersManagerProps (+12 more)
+### Community 53 - "UsersPage.tsx"
+Cohesion: 0.20
+Nodes (7): UsersPage, UsersManager(), useAdmins(), AdminsTab(), TabKey, TABS, UsersPage()
 
-### Community 54 - "system_prompt"
-Cohesion: 0.11
-Nodes (9): Барс: who he is, and the hard rules that keep him useful. The persona is…, The agent's system message. The category and theme *vocabularies* used to be…, system_prompt(), Guards against the bot naming an event the catalogue does not contain.…, The census must inform the model, never licence it to answer without tools., TestCensusWording, TestGetEventOnAClosedEvent, TestSearchNeverSurfacesClosedEvents (+1 more)
+### Community 54 - "agent.py"
+Cohesion: 0.10
+Nodes (17): build_graph(), _chat_model(), GuardVerdict, AsyncConnectionPool, BaseModel, The graph itself: guard -> agent -> tools -> agent -> end, with a finalize…, _router_model(), BarsState (+9 more)
 
 ### Community 55 - "UpdateEventDto"
 Cohesion: 0.22
@@ -398,11 +412,11 @@ Cohesion: 0.12
 Nodes (15): 1. Concrete Transformation Patterns, 2. Error-First Structure, 3. Quantified Impact, 4. Self-Contained Examples, 5. Semantic Naming, Code Example Standards, Comments, Impact Level Guidelines (+7 more)
 
 ### Community 61 - "get_settings"
-Cohesion: 0.08
-Nodes (47): AsyncIOScheduler, close_api(), Thin async client for the Teenage Space NestJS API. Public catalogue reads go…, get_settings(), All configuration in one place, loaded from the environment (or bot/.env…, clean_dsn(), close_pool(), init_pool() (+39 more)
+Cohesion: 0.11
+Nodes (35): AsyncIOScheduler, close_api(), Thin async client for the Teenage Space NestJS API. Public catalogue reads go…, get_settings(), All configuration in one place, loaded from the environment (or bot/.env…, clean_dsn(), close_pool(), init_pool() (+27 more)
 
 ### Community 62 - "ApiClient"
-Cohesion: 0.33
+Cohesion: 0.27
 Nodes (3): ApiClient, Any, Full snapshot including archived rows — used by the embedding indexer.
 
 ### Community 63 - "admin.service.ts"
@@ -437,9 +451,9 @@ Nodes (8): Барс — Telegram-агент Teenage Space, Деплой, Зап�
 Cohesion: 0.33
 Nodes (5): How to Use, References, Rule Categories by Priority, Supabase Postgres Best Practices, When to Apply
 
-### Community 71 - "ChatQueues"
-Cohesion: 0.12
-Nodes (9): ChatQueues, Any, Any, True when this chat just sent these exact words, and records them either way.…, Serialises conversation-state changes for one chat across *every* handler — the…, Drop idle locks so the map does not grow without bound. Called from the sweep., Runtime, Lock (+1 more)
+### Community 71 - "Runtime"
+Cohesion: 0.18
+Nodes (6): Any, True when this chat just sent these exact words, and records them either way.…, Serialises conversation-state changes for one chat across *every* handler — the…, Drop idle locks so the map does not grow without bound. Called from the sweep., Runtime, Lock
 
 ### Community 72 - "_clean_due_date"
 Cohesion: 0.11
@@ -449,9 +463,9 @@ Nodes (11): The LangGraph agent behind Барс., _clean_due_date(), _plan_horiz
 Cohesion: 0.24
 Nodes (5): Body, Patch, CreateEducationTrackDto, IsOptional, IsString
 
-### Community 75 - "PrivacyPage.tsx"
-Cohesion: 0.33
-Nodes (4): PrivacyPage, Block, Section, SECTIONS
+### Community 75 - "types.ts"
+Cohesion: 0.10
+Nodes (26): BannedGate(), onLogout(), periodText(), useBarsChat(), useBarsChats(), BarsPage(), chatTitle(), fmtWhen() (+18 more)
 
 ### Community 108 - "bars-admin.service.ts"
 Cohesion: 0.05
@@ -470,8 +484,8 @@ Cohesion: 0.19
 Nodes (9): SeoModule, Module, buildSitemapXml(), escapeXml(), SitemapController, Controller, Get, Header (+1 more)
 
 ### Community 128 - "catalog.py"
-Cohesion: 0.08
-Nodes (32): age_fits(), age_requirement(), availability(), availability_line(), bishkek_now(), bishkek_today(), Catalog, deadline_in_days() (+24 more)
+Cohesion: 0.12
+Nodes (21): age_fits(), age_requirement(), bishkek_now(), bishkek_today(), Catalog, deadline_in_days(), is_open(), matches() (+13 more)
 
 ### Community 132 - "Settings"
 Cohesion: 0.29
@@ -481,10 +495,42 @@ Nodes (4): BaseSettings, Railway injects RAILWAY_PUBLIC_DOMAIN; a custom domain 
 Cohesion: 0.25
 Nodes (6): AuthController, Controller, Get, Query, Throttle, UseGuards
 
+### Community 134 - "AdminPage.tsx"
+Cohesion: 0.09
+Nodes (21): TrashIcon(), useAdminAnalytics(), useAdminArchivedEvents(), useAdminSubmissions(), AnalyticsTab(), ArchiveTab(), bodyToText(), buildFormFromSubmission() (+13 more)
+
+### Community 135 - "HomePage.tsx"
+Cohesion: 0.15
+Nodes (14): SITE_URL, iconProps, ORBIT_ITEMS, HOME_DESCRIPTION, HOME_JSON_LD, HOME_TITLE, Floater, iconProps (+6 more)
+
+### Community 136 - "useEducation.ts"
+Cohesion: 0.22
+Nodes (10): EducationIndex(), EducationPage, Sidebar(), EducationData, useEducation(), useEducationTracks(), carryCatalogSearch(), TrackMaterials() (+2 more)
+
+### Community 137 - "test_smalltalk.py"
+Cohesion: 0.23
+Nodes (8): availability(), availability_line(), How many open events sit in each catalogue category, zeros included. The zeros…, The one-line catalogue census handed to the model on every turn., fixture, Canned answers: what gets intercepted, and — more importantly — what must not.…, reset_rotation(), TestAvailability
+
+### Community 138 - "ProfilePage.tsx"
+Cohesion: 0.22
+Nodes (7): ConfirmDialog(), ConfirmDialogProps, FULL_DOT_COLORS, INLINE_DOT_COLORS, Loader(), STATUS_LABEL, TelegramLinkStatus
+
+### Community 139 - "embeddings.py"
+Cohesion: 0.28
+Nodes (8): embed_documents(), embed_query(), _embedder(), Gemini embeddings, wrapped so the rest of the code never touches the SDK…, task_type defaults to RETRIEVAL_QUERY here, RETRIEVAL_DOCUMENT below —…, _ranked_ids(), Vector ranking, or None when it is unavailable (empty index, API hiccup)., GoogleGenerativeAIEmbeddings
+
+### Community 140 - "EventPage.tsx"
+Cohesion: 0.54
+Nodes (6): EventPage, EventModal(), useEvent(), useFavorites(), trackCardView(), EventPage()
+
+### Community 142 - "deadline.ts"
+Cohesion: 0.60
+Nodes (5): plural(), dateToUTCDay(), deadlineBadge, deadlineState, todayInBishkekUTCDay()
+
 ## Knowledge Gaps
-- **326 isolated node(s):** `$schema`, `collection`, `sourceRoot`, `deleteOutDir`, `name` (+321 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 797 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **51 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **327 isolated node(s):** `$schema`, `collection`, `sourceRoot`, `deleteOutDir`, `name` (+322 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 798 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **52 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -493,13 +539,13 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Why does `CurrentUser` connect `CurrentUser` to `TelegramLinkService`, `SupabaseService`, `AuthController`, `mappers.ts`, `ratings.controller.ts`, `supabase-auth.guard.ts`, `users-admin.service.ts`?**
   _High betweenness centrality (0.014) - this node is a cross-community bridge._
-- **Why does `useAuth()` connect `useAuth` to `types.ts`, `useUI`, `useEvents.ts`, `AnalyticsPage.tsx`, `AdminPage.tsx`, `constants.ts`, `GridPage.tsx`, `App.tsx`, `UserAccountPage.tsx`, `AuthPage`?**
-  _High betweenness centrality (0.010) - this node is a cross-community bridge._
+- **Why does `useAuth()` connect `useAuth` to `AdminPage.tsx`, `useEvents.ts`, `useEducation.ts`, `AnalyticsPage.tsx`, `ProfilePage.tsx`, `types.ts`, `EventPage.tsx`, `BottomNav.tsx`, `constants.ts`, `PostForm.tsx`, `GridPage.tsx`, `App.tsx`, `UserAccountPage`, `AuthPage`, `UsersPage.tsx`, `tracking.ts`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **What connects `$schema`, `collection`, `sourceRoot` to the rest of the system?**
-  _326 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `types.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.10144927536231885 - nodes in this community are weakly interconnected._
+  _327 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `useAuth` be split into smaller, more focused modules?**
+  _Cohesion score 0.12121212121212122 - nodes in this community are weakly interconnected._
 - **Should `useUI` be split into smaller, more focused modules?**
-  _Cohesion score 0.08907563025210084 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11076923076923077 - nodes in this community are weakly interconnected._
 - **Should `20260828103623_traffic_analytics.sql` be split into smaller, more focused modules?**
   _Cohesion score 0.0797979797979798 - nodes in this community are weakly interconnected._

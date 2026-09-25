@@ -354,16 +354,16 @@
     "semantic_hash": ""
   },
   "frontend/src/components/EventPhoto.tsx": {
-    "mtime": 1789659432.9259448,
-    "seen": 1789659777.5114214,
-    "ast_hash": "14a8a64e27e61ff1dfa0b3ba1a19c4b1",
+    "mtime": 1790353106.4326866,
+    "seen": 1790353245.9733899,
+    "ast_hash": "b45478f4d481e6965a1347eb34cd6123",
     "semantic_hash": ""
   },
   "frontend/src/components/ImageUploadField.tsx": {
-    "mtime": 1787222929.1296475,
-    "seen": 1787666027.1690547,
-    "ast_hash": "96cd73dca9f0bd1f9e66d04f2b44a183",
-    "semantic_hash": "96cd73dca9f0bd1f9e66d04f2b44a183"
+    "mtime": 1790353122.680689,
+    "seen": 1790353245.9733899,
+    "ast_hash": "ffeb056a3fece5364db9e5a5d92ba967",
+    "semantic_hash": ""
   },
   "frontend/src/components/Loader.tsx": {
     "mtime": 1789384728.0887465,
@@ -1683,6 +1683,12 @@
     "mtime": 1790347894.49395,
     "seen": 1790348947.4286988,
     "ast_hash": "e721a798f1421cf9ec9f6bc04c998459",
+    "semantic_hash": ""
+  },
+  "frontend/src/lib/photoFit.ts": {
+    "mtime": 1790353091.4890945,
+    "seen": 1790353245.9733899,
+    "ast_hash": "6fa37af0692c5f1e90604d4175a33e0f",
     "semantic_hash": ""
   }
 }
