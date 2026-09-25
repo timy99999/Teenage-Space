@@ -18,6 +18,7 @@ import { useHeartbeat } from './hooks/useHeartbeat';
 import { useAuth } from './contexts/AuthContext';
 import { HomePage } from './pages/HomePage';
 import { GridPage } from './pages/GridPage';
+import { HOME_TITLE, HOME_DESCRIPTION, HOME_JSON_LD } from './data/homeSeo';
 
 const EducationPage = lazy(() => import('./pages/EducationPage').then((m) => ({ default: m.EducationPage })));
 const ArticlePage = lazy(() => import('./pages/ArticlePage').then((m) => ({ default: m.ArticlePage })));
@@ -81,7 +82,20 @@ function AppLayout() {
 
 function HomeGate() {
   const isMobile = useIsMobile();
-  if (isMobile) return <Navigate to="/opportunities" replace />;
+  // Раньше мобильная ветка делала <Navigate to="/opportunities" replace />, и это
+  // выбивало главную из поиска: Google индексирует mobile-first, его основной
+  // краулер получал на "/" клиентский редирект, а на /opportunities — canonical
+  // на /opportunities, так что "/" оставался «страницей с переадресацией» и в
+  // выдачу вместо главной попадали случайные внутренние страницы.
+  // Теперь мобильная версия рендерит тот же каталог, но URL и canonical — "/".
+  if (isMobile) {
+    return (
+      <GridPage
+        mode="opps"
+        seo={{ title: HOME_TITLE, description: HOME_DESCRIPTION, path: '/', jsonLd: HOME_JSON_LD }}
+      />
+    );
+  }
   return <HomePage />;
 }
 

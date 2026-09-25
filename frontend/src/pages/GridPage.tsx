@@ -61,7 +61,17 @@ const URL_FILTER_KEYS = ['themes', 'cats', 'price', 'level', 'age', 'q', 'sort']
 const REMEMBERED_KEYS = ['themes', 'cats', 'price', 'level', 'age'] as const;
 const FILTERS_LS_KEY = 'ts-opps-filters-v1';
 
-export function GridPage({ mode }: { mode: GridMode }) {
+/** Переопределение SEO-тегов для случая, когда каталог смонтирован не на своём
+ *  адресе: мобильная главная рендерит <GridPage mode="opps" /> прямо на "/". */
+export interface GridSeoOverride {
+  title?: string;
+  description?: string;
+  /** Канонический путь — без него на "/" уехал бы canonical на /opportunities. */
+  path?: string;
+  jsonLd?: object | object[];
+}
+
+export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride }) {
   const navigate = useNavigate();
   const { category } = useParams();
   const [params, setParams] = useSearchParams();
@@ -308,7 +318,13 @@ export function GridPage({ mode }: { mode: GridMode }) {
 
   return (
     <div className={`ts-grid-page${isOpps || isVote ? ' ts-grid-page-compact' : ''}`}>
-      <Seo title={subLabel ? `${pageTitle} — ${subLabel}` : pageTitle} path={gridPath} noindex={isFav || isVote} />
+      <Seo
+        title={seo?.title ?? (subLabel ? `${pageTitle} — ${subLabel}` : pageTitle)}
+        description={seo?.description}
+        path={seo?.path ?? gridPath}
+        jsonLd={seo?.jsonLd}
+        noindex={isFav || isVote}
+      />
       <header className="ts-grid-header">
         <div className="ts-grid-title-wrap">
           <h1 className="ts-grid-title">{pageTitle}</h1>

@@ -8,6 +8,7 @@ import { WANDER_FLOATERS, ORBIT_FLOATERS } from '../data/pageFloaters';
 import { useReveal } from '../hooks/useReveal';
 import { useFloaterRepulsion } from '../hooks/useFloaterRepulsion';
 import { Seo } from '../components/Seo';
+import { HOME_TITLE, HOME_DESCRIPTION, HOME_JSON_LD } from '../data/homeSeo';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export function HomePage() {
 
   return (
     <div className="ts-home">
-      <Seo title="Teenage Space" path="/" />
+      <Seo title={HOME_TITLE} description={HOME_DESCRIPTION} path="/" jsonLd={HOME_JSON_LD} />
       <div className="ts-page-floaters" aria-hidden="true">
         {WANDER_FLOATERS.map((f) => (
           <div
@@ -69,7 +70,7 @@ export function HomePage() {
         <div className="ts-hero-glow" />
         <div className="ts-hero-brand">
           <img src={logo} alt="" className="ts-hero-brand-mark" />
-          <span>Teenage Space</span>
+          <h1 className="ts-hero-brand-title">Teenage Space</h1>
         </div>
 
         <div className="ts-hero-stage">

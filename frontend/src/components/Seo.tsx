@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 
 const SITE_NAME = 'Teenage Space';
-const SITE_URL = 'https://teenagespace.com';
+export const SITE_URL = 'https://teenagespace.com';
 const DEFAULT_DESCRIPTION =
   'Teenage Space — каталог мероприятий, новостей и образовательных материалов для подростков Бишкека.';
 
@@ -24,7 +24,11 @@ export function Seo({ title, description = DEFAULT_DESCRIPTION, path, image, typ
   const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 
   return (
-    <Helmet>
+    // defer={false} — по умолчанию Helmet применяет теги в requestAnimationFrame.
+    // Кадр не наступает в скрытой вкладке и может не наступить у краулера, который
+    // снимает DOM сразу после загрузки, так что canonical/description/JSON-LD
+    // рискуют не попасть в снимок. Синхронная запись такого риска не имеет.
+    <Helmet defer={false}>
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />

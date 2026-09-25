@@ -573,6 +573,14 @@
   color: var(--ts-blue);
   animation: tsUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
+/* Бренд в хиро — это <h1> страницы (нужен для поиска), поэтому гасим дефолты
+   заголовка и наследуем типографику от .ts-hero-brand. */
+.ts-hero-brand-title {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
 .ts-hero-brand-mark {
   width: clamp(26px, 2.6vw, 32px);
   height: clamp(26px, 2.6vw, 32px);
