@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { photoFit, type PhotoFit } from '../lib/photoFit';
+
 interface EventPhotoProps {
   src: string | null;
   alt: string;
@@ -6,12 +9,30 @@ interface EventPhotoProps {
   priority?: boolean;
 }
 
+/** Единственная точка, через которую на сайт попадают фото постов (карточки,
+ *  главная, модалка, новости), поэтому правило кадрирования живёт здесь. */
 export function EventPhoto({ src, alt, priority }: EventPhotoProps) {
+  // Слот всегда 3:4. Фото близкого формата обрезаем по слоту, а горизонтальное
+  // или сильно вытянутое показываем целиком — пустоту закрывает серый фон слота.
+  // См. photoFit: там же граница, после которой обрезка перестаёт быть безобидной.
+  const [fit, setFit] = useState<PhotoFit>('cover');
+
   if (src) {
-    return priority ? (
-      <img src={src} alt={alt} loading="eager" fetchPriority="high" />
-    ) : (
-      <img src={src} alt={alt} loading="lazy" />
+    // Через ref, а не только onLoad: у фото из кеша load успевает пройти до
+    // навешивания обработчика, и тогда остался бы дефолтный 'cover'.
+    const measure = (img: HTMLImageElement | null) => {
+      if (img?.complete) setFit(photoFit(img.naturalWidth, img.naturalHeight));
+    };
+    return (
+      <img
+        src={src}
+        alt={alt}
+        ref={measure}
+        onLoad={(e) => measure(e.currentTarget)}
+        style={{ objectFit: fit }}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : undefined}
+      />
     );
   }
   return (

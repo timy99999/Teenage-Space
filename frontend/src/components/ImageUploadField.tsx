@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { useUI } from '../contexts/UIContext';
 import { uploadPostImage } from '../lib/uploadPostImage';
+import { EventPhoto } from './EventPhoto';
 
 interface ImageUploadFieldProps {
   value: string | null;
@@ -29,24 +30,7 @@ export function ImageUploadField({ value, onChange }: ImageUploadFieldProps) {
 
   return (
     <div className="ts-publish-photo" style={{ position: 'relative' }}>
-      {value ? (
-        <img src={value} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} />
-      ) : (
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'grid',
-            placeItems: 'center',
-            fontFamily: "'Open Sans', sans-serif",
-            fontSize: 12,
-            color: 'var(--ts-fg)',
-            opacity: 0.45
-          }}
-        >
-          Фото 3:4
-        </div>
-      )}
+      <EventPhoto src={value} alt="" />
       <input ref={fileInput} type="file" accept="image/*" hidden onChange={onPick} />
       <button
         type="button"
