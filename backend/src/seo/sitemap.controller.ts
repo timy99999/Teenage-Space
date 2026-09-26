@@ -3,6 +3,9 @@ import { SupabaseService } from '../supabase/supabase.service';
 
 const SITE_URL = 'https://teenagespace.com';
 
+// Разделы каталога (/opportunities/:category); ключи совпадают с NAV_CATS на фронте.
+const CATEGORY_KEYS = ['volunteering', 'social', 'eduevent', 'contest', 'hackathon', 'olympiad', 'internship'];
+
 interface UrlEntry {
   loc: string;
   lastmod?: string | null;
@@ -35,6 +38,7 @@ export class SitemapController {
     const staticUrls: UrlEntry[] = [
       { loc: `${SITE_URL}/` },
       { loc: `${SITE_URL}/opportunities` },
+      ...CATEGORY_KEYS.map((k) => ({ loc: `${SITE_URL}/opportunities/${k}` })),
       { loc: `${SITE_URL}/news` },
       { loc: `${SITE_URL}/education` }
     ];

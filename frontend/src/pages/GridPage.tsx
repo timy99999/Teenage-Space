@@ -9,6 +9,7 @@ import { useCardViewCounts, cardViewKey } from '../hooks/useTraffic';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { api } from '../lib/api';
+import { CATEGORY_SEO, categoryJsonLd } from '../data/categorySeo';
 import { CATS, NAV_CATS, THEMES, TITLES, plural } from '../data/constants';
 import { EventCard } from '../components/EventCard';
 import { NewsCard } from '../components/NewsCard';
@@ -294,6 +295,7 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
 
   const subLabel = isOpps && category ? CATS.find((c) => c.key === category)?.label ?? '' : '';
   const pageTitle = isOpps ? TITLES.opps : TITLES[mode];
+  const catSeo = isOpps && category ? CATEGORY_SEO[category] : undefined;
 
   const activeFilterCount =
     fThemes.length + fCats.length + (fPrice ? 1 : 0) + (fLevel ? 1 : 0) + (ageApplied ? 1 : 0) + (qApplied ? 1 : 0);
@@ -319,10 +321,10 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
   return (
     <div className={`ts-grid-page${isOpps || isVote ? ' ts-grid-page-compact' : ''}`}>
       <Seo
-        title={seo?.title ?? (subLabel ? `${pageTitle} — ${subLabel}` : pageTitle)}
-        description={seo?.description}
+        title={seo?.title ?? catSeo?.title ?? (subLabel ? `${pageTitle} — ${subLabel}` : pageTitle)}
+        description={seo?.description ?? catSeo?.description}
         path={seo?.path ?? gridPath}
-        jsonLd={seo?.jsonLd}
+        jsonLd={seo?.jsonLd ?? (catSeo && category ? categoryJsonLd(category, subLabel, catSeo) : undefined)}
         noindex={isFav || isVote}
       />
       <header className="ts-grid-header">
@@ -387,6 +389,12 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
           </div>
         )}
       </header>
+
+      {catSeo && !qApplied && (
+        <p className="ts-grid-intro" style={{ maxWidth: 820, margin: '0 0 16px', lineHeight: 1.5, opacity: 0.85 }}>
+          {catSeo.intro}
+        </p>
+      )}
 
       <div className="ts-mobile-topbar">
         <header className="ts-mobile-pageheader">
