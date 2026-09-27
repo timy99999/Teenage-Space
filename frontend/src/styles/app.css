@@ -1427,7 +1427,6 @@ a.ts-card-organizer:hover {
 }
 .ts-deadline-badge {
   display: inline-block;
-  margin-top: 9px;
   padding: 2px 9px;
   border-radius: 999px;
   font-family: 'Open Sans', sans-serif;
@@ -1435,6 +1434,15 @@ a.ts-card-organizer:hover {
   font-weight: 600;
   line-height: 1.5;
   white-space: nowrap;
+  /* Sits next to the registration button in a fixed-height footer — it must
+     shrink and truncate instead of wrapping or pushing the row wider/taller. */
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ts-deadline-badge-short {
+  display: none;
 }
 .ts-deadline-badge--urgent {
   background: #fee2e2;
@@ -1477,6 +1485,16 @@ a.ts-card-organizer:hover {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+}
+.ts-card-foot-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.ts-card-foot-right .ts-btn-outline.small {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .ts-stars {
   display: flex;
@@ -1527,6 +1545,7 @@ a.ts-card-organizer:hover {
 .ts-icon-link {
   width: 32px;
   height: 32px;
+  flex-shrink: 0;
   border-radius: 9px;
   display: grid;
   place-items: center;

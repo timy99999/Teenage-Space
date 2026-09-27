@@ -39,6 +39,8 @@ export function deadlineState(deadlineDate: string | null | undefined): Deadline
 
 export interface DeadlineBadge {
   text: string;
+  /** Compact form for tight layouts (mobile card footer) — swapped in by CSS. */
+  shortText: string;
   /** CSS modifier: ts-deadline-badge--{tone} */
   tone: 'urgent' | 'soon' | 'closed';
 }
@@ -54,15 +56,15 @@ export function deadlineBadge(
 ): DeadlineBadge | null {
   const s = deadlineState(deadlineDate);
   if (opts.isPast) {
-    return s.kind === 'none' ? null : { text: 'Регистрация закрыта', tone: 'closed' };
+    return s.kind === 'none' ? null : { text: 'Регистрация закрыта', shortText: 'Закрыто', tone: 'closed' };
   }
   switch (s.kind) {
     case 'today':
-      return { text: 'Дедлайн сегодня', tone: 'urgent' };
+      return { text: 'Дедлайн сегодня', shortText: 'Сегодня', tone: 'urgent' };
     case 'soon':
-      return { text: `Дедлайн через ${plural(s.days, 'день', 'дня', 'дней')}`, tone: 'soon' };
+      return { text: `Дедлайн через ${plural(s.days, 'день', 'дня', 'дней')}`, shortText: `${s.days} дн.`, tone: 'soon' };
     case 'closed':
-      return { text: 'Регистрация закрыта', tone: 'closed' };
+      return { text: 'Регистрация закрыта', shortText: 'Закрыто', tone: 'closed' };
     default:
       return null;
   }

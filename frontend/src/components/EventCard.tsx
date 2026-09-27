@@ -76,9 +76,6 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
       <button className="ts-card-body" onClick={onOpen}>
         <h3 className="ts-card-title">{event.title}</h3>
         <p className="ts-card-short">{event.short}</p>
-        {deadline && (
-          <span className={`ts-deadline-badge ts-deadline-badge--${deadline.tone}`}>{deadline.text}</span>
-        )}
         <div className="ts-card-meta">
           {event.eventDate && <span>{fmtEventWhen(event.eventDate, event.eventDateEnd, event.eventTime)}</span>}
           <span>{event.ageLabel}</span>
@@ -111,7 +108,7 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
             ★
           </button>
         )}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="ts-card-foot-right">
           {event.instagram && (
             <a
               href={instagramUrl(event.instagram)}
@@ -130,6 +127,12 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
                 <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"></circle>
               </svg>
             </a>
+          )}
+          {deadline && (
+            <span className={`ts-deadline-badge ts-deadline-badge--${deadline.tone}`}>
+              <span className="ts-deadline-badge-full">{deadline.text}</span>
+              <span className="ts-deadline-badge-short">{deadline.shortText}</span>
+            </span>
           )}
           {event.registrationUrl && (
             <a
