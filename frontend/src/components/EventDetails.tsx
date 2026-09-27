@@ -1,7 +1,9 @@
 import type { EventItem } from '../types';
 import { CATS, THEMES, fmtDate, fmtEventWhen } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
+import { ShareButton } from './ShareButton';
 import { trackLinkClick } from '../lib/tracking';
+import { SITE_URL } from './Seo';
 
 function telegramUrl(handle: string): string {
   if (handle.startsWith('http')) return handle;
@@ -84,6 +86,7 @@ export function EventDetails({ event, fav, onToggleFav, loggedIn }: EventDetails
           <button className={`ts-fav-btn big${fav ? ' on' : ''}`} onClick={onToggleFav}>
             ★
           </button>
+          <ShareButton url={`${SITE_URL}/opportunities/event/${event.id}`} title={event.title} />
           {event.registrationUrl && (
             <a
               href={event.registrationUrl}

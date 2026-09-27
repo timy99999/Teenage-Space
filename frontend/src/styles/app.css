@@ -1517,6 +1517,13 @@ a.ts-card-organizer:hover {
   font-size: 20px;
   background: transparent;
 }
+.ts-share-btn {
+  transition: color 0.18s, border-color 0.18s;
+}
+.ts-share-btn:hover {
+  color: var(--ts-violet);
+  border-color: var(--ts-violet);
+}
 .ts-icon-link {
   width: 32px;
   height: 32px;

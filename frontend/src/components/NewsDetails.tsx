@@ -1,7 +1,9 @@
 import type { NewsItem } from '../types';
 import { fmtDate } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
+import { ShareButton } from './ShareButton';
 import { trackLinkClick } from '../lib/tracking';
+import { SITE_URL } from './Seo';
 
 interface NewsDetailsProps {
   item: NewsItem;
@@ -21,8 +23,9 @@ export function NewsDetails({ item, loggedIn }: NewsDetailsProps) {
         <h1 className="ts-modal-title">{item.title}</h1>
         <div className="ts-modal-field-label">{fmtDate(item.date)}</div>
         <p className="ts-modal-desc">{item.short}</p>
-        {item.linkUrl && (
-          <div className="ts-modal-actions">
+        <div className="ts-modal-actions">
+          <ShareButton url={`${SITE_URL}/news/${item.id}`} title={item.title} />
+          {item.linkUrl && (
             <a
               href={item.linkUrl}
               target="_blank"
@@ -32,8 +35,8 @@ export function NewsDetails({ item, loggedIn }: NewsDetailsProps) {
             >
               {item.linkTitle || 'Подробнее'}
             </a>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

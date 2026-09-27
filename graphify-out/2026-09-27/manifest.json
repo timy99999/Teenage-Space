@@ -306,9 +306,9 @@
     "semantic_hash": ""
   },
   "frontend/src/App.tsx": {
-    "mtime": 1790347938.3686063,
-    "seen": 1790348947.4266915,
-    "ast_hash": "255d8004c83671fe535baf09b1725f3f",
+    "mtime": 1790492231.3989372,
+    "seen": 1790492416.7614279,
+    "ast_hash": "e5549d2b6a6f2ba40af68627217a29a4",
     "semantic_hash": ""
   },
   "frontend/src/components/BottomNav.tsx": {
@@ -576,9 +576,9 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/EducationPage.tsx": {
-    "mtime": 1789222087.4567516,
-    "seen": 1789373885.4720473,
-    "ast_hash": "c38eb34d42cd4c2cae6a3c4163c1c7dd",
+    "mtime": 1790492175.00911,
+    "seen": 1790492416.7614279,
+    "ast_hash": "257d1619c9fb892b97d10377e2bc047b",
     "semantic_hash": ""
   },
   "frontend/src/pages/GridPage.tsx": {
@@ -1695,6 +1695,12 @@
     "mtime": 1790436632.26622,
     "seen": 1790436723.646551,
     "ast_hash": "dce31c9896b7e41bcf7cb7b380be0668",
+    "semantic_hash": ""
+  },
+  "frontend/src/data/educationSeo.ts": {
+    "mtime": 1790492149.1000497,
+    "seen": 1790492416.7614279,
+    "ast_hash": "b3b02d4911cdd838d3a0b4945e2fd5b2",
     "semantic_hash": ""
   }
 }
