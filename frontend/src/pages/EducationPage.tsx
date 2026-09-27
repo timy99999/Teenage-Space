@@ -1,16 +1,40 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEducation, useEducationTracks } from '../hooks/useEducation';
 import { Seo } from '../components/Seo';
+import { EDUCATION_TRACK_SEO, educationBreadcrumbJsonLd, educationCollectionJsonLd } from '../data/educationSeo';
 
 export function EducationPage() {
   const navigate = useNavigate();
   const { trackId } = useParams<{ trackId: string }>();
   const { title, intro, items } = useEducation(trackId ?? '');
   const { tracks } = useEducationTracks();
+  const seo = trackId ? EDUCATION_TRACK_SEO[trackId] : undefined;
+  const path = `/education/${trackId ?? ''}`;
 
   return (
     <div className="ts-edu-page">
-      <Seo title={title || 'Образование'} description={intro || undefined} path={`/education/${trackId ?? ''}`} />
+      <Seo
+        title={seo?.title ?? title ?? 'Образование'}
+        description={seo?.description ?? intro ?? undefined}
+        path={path}
+        jsonLd={
+          title
+            ? [
+                educationCollectionJsonLd({
+                  name: seo?.title ?? title,
+                  description: seo?.description ?? intro,
+                  path,
+                  itemNames: items.map((m) => m.title)
+                }),
+                educationBreadcrumbJsonLd([
+                  { name: 'Teenage Space', path: '/' },
+                  { name: 'Образование', path: '/education' },
+                  { name: title, path }
+                ])
+              ]
+            : undefined
+        }
+      />
       <div className="ts-edu-mobile-head">
         <button className="ts-edu-mobile-back" aria-label="Назад" onClick={() => navigate('/')}>
           ←

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { BottomNav } from './components/BottomNav';
 import { BannedGate } from './components/BannedGate';
@@ -19,6 +19,12 @@ import { useAuth } from './contexts/AuthContext';
 import { HomePage } from './pages/HomePage';
 import { GridPage } from './pages/GridPage';
 import { HOME_TITLE, HOME_DESCRIPTION, HOME_JSON_LD } from './data/homeSeo';
+import {
+  EDUCATION_INDEX_TITLE,
+  EDUCATION_INDEX_DESCRIPTION,
+  educationCollectionJsonLd,
+  educationBreadcrumbJsonLd
+} from './data/educationSeo';
 
 const EducationPage = lazy(() => import('./pages/EducationPage').then((m) => ({ default: m.EducationPage })));
 const ArticlePage = lazy(() => import('./pages/ArticlePage').then((m) => ({ default: m.ArticlePage })));
@@ -99,10 +105,45 @@ function HomeGate() {
   return <HomePage />;
 }
 
+/** Real, indexable hub for "/education" — was <Navigate to first track /> before, which meant
+ *  "/education" never rendered its own title/description and only ever showed up to
+ *  Google as a redirect (same trap the homepage was in — see HomeGate above). */
 function EducationIndex() {
   const { tracks } = useEducationTracks();
   if (tracks.length === 0) return null;
-  return <Navigate to={`/education/${tracks[0].id}`} replace />;
+  return (
+    <div className="ts-edu-page">
+      <Seo
+        title={EDUCATION_INDEX_TITLE}
+        description={EDUCATION_INDEX_DESCRIPTION}
+        path="/education"
+        jsonLd={[
+          educationCollectionJsonLd({
+            name: EDUCATION_INDEX_TITLE,
+            description: EDUCATION_INDEX_DESCRIPTION,
+            path: '/education',
+            itemNames: tracks.map((t) => t.title)
+          }),
+          educationBreadcrumbJsonLd([
+            { name: 'Teenage Space', path: '/' },
+            { name: 'Образование', path: '/education' }
+          ])
+        ]}
+      />
+      <h1 className="ts-edu-title">{EDUCATION_INDEX_TITLE}</h1>
+      <div className="ts-edu-intro">{EDUCATION_INDEX_DESCRIPTION}</div>
+      <div className="ts-material-list">
+        {tracks.map((t, i) => (
+          <Link key={t.id} className="ts-material-row" to={`/education/${t.id}`}>
+            <span className="ts-material-n">{String(i + 1).padStart(2, '0')}</span>
+            <span className="ts-material-title">{t.title}</span>
+            <span className="ts-material-meta">{t.intro}</span>
+            <span className="ts-material-arrow">→</span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function App() {
