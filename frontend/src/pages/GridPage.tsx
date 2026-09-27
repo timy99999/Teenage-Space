@@ -648,7 +648,7 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
       {catSeo && !qApplied && (
         <p
           className="ts-grid-intro"
-          style={{ maxWidth: 820, margin: '24px auto 0', textAlign: 'center', lineHeight: 1.5, opacity: 0.85 }}
+          style={{ maxWidth: 820, margin: '24px auto 32px', textAlign: 'center', lineHeight: 1.5, opacity: 0.85 }}
         >
           {catSeo.intro}
         </p>
