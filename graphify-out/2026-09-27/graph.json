@@ -2204,7 +2204,7 @@
       "file_type": "code",
       "norm_label": "deadlinebadge",
       "source_file": "frontend/src/lib/deadline.ts",
-      "source_location": "L51"
+      "source_location": "L53"
     },
     {
       "id": "frontend_src_lib_photofit_photofit",
@@ -8870,7 +8870,7 @@
       "file_type": "code",
       "norm_label": "cardmenu()",
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L154"
+      "source_location": "L157"
     },
     {
       "id": "frontend_src_components_eventcard_cardmenu_pick",
@@ -8882,7 +8882,7 @@
       "file_type": "code",
       "norm_label": "pick()",
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L167"
+      "source_location": "L170"
     },
     {
       "id": "frontend_src_components_eventcard_eventcard",
@@ -29288,7 +29288,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L117",
+      "source_location": "L114",
       "weight": 1.0
     },
     {
@@ -29300,7 +29300,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L124",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -29336,7 +29336,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L83",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -30320,7 +30320,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/lib/deadline.ts",
-      "source_location": "L63",
+      "source_location": "L65",
       "weight": 1.0
     },
     {
@@ -31772,7 +31772,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L167",
+      "source_location": "L170",
       "weight": 1.0
     },
     {
@@ -60430,7 +60430,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/components/EventCard.tsx",
-      "source_location": "L154",
+      "source_location": "L157",
       "weight": 1.0
     },
     {
@@ -62014,7 +62014,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/lib/deadline.ts",
-      "source_location": "L51",
+      "source_location": "L53",
       "weight": 1.0
     },
     {
@@ -71637,5 +71637,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "b7e6a5e9f97f5821ccb6d110429d1aafa9dcaa0c"
+  "built_at_commit": "c4a6d19e5d6d233cc61ae8c46daa417d187d5f42"
 }

@@ -420,17 +420,10 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
-  /* Narrow 2-up cards have no room for the full "Дедлайн через N дней" —
-     swap to a short form so it doesn't crowd out the registration button. */
+  /* Narrow 2-up cards have no room for the deadline badge next to the
+     registration button — drop it on mobile entirely. */
   .ts-deadline-badge {
-    padding: 2px 6px;
-    font-size: 10px;
-  }
-  .ts-deadline-badge-full {
     display: none;
-  }
-  .ts-deadline-badge-short {
-    display: inline;
   }
   .ts-card-foot {
     padding: 8px 10px 10px;

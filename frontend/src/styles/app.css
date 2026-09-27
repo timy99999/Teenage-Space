@@ -1441,9 +1441,6 @@ a.ts-card-organizer:hover {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.ts-deadline-badge-short {
-  display: none;
-}
 .ts-deadline-badge--urgent {
   background: #fee2e2;
   color: #b91c1c;

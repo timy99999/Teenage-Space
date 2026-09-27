@@ -129,10 +129,7 @@ export function EventCard({ event, onOpen, isVoteMode, favActive, onToggleFav, r
             </a>
           )}
           {deadline && (
-            <span className={`ts-deadline-badge ts-deadline-badge--${deadline.tone}`}>
-              <span className="ts-deadline-badge-full">{deadline.text}</span>
-              <span className="ts-deadline-badge-short">{deadline.shortText}</span>
-            </span>
+            <span className={`ts-deadline-badge ts-deadline-badge--${deadline.tone}`}>{deadline.text}</span>
           )}
           {event.registrationUrl && (
             <a

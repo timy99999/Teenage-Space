@@ -1,7 +1,7 @@
 # Graph Report - Teenage Space  (2026-09-27)
 
 ## Corpus Check
-- 277 files · ~92,132 words
+- 277 files · ~92,156 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b7e6a5e9`
+- Built from commit: `c4a6d19e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
