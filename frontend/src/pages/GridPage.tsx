@@ -390,12 +390,6 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
         )}
       </header>
 
-      {catSeo && !qApplied && (
-        <p className="ts-grid-intro" style={{ maxWidth: 820, margin: '0 0 16px', lineHeight: 1.5, opacity: 0.85 }}>
-          {catSeo.intro}
-        </p>
-      )}
-
       <div className="ts-mobile-topbar">
         <header className="ts-mobile-pageheader">
           <div className="ts-mobile-pagetitle-wrap">
@@ -649,6 +643,15 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
             />
           ))}
         </div>
+      )}
+
+      {catSeo && !qApplied && (
+        <p
+          className="ts-grid-intro"
+          style={{ maxWidth: 820, margin: '24px auto 0', textAlign: 'center', lineHeight: 1.5, opacity: 0.85 }}
+        >
+          {catSeo.intro}
+        </p>
       )}
 
       {confirmTarget && (
