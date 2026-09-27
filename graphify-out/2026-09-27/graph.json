@@ -31213,7 +31213,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L421",
+      "source_location": "L415",
       "weight": 1.0
     },
     {
@@ -31225,7 +31225,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L615",
+      "source_location": "L609",
       "weight": 1.0
     },
     {
@@ -71040,5 +71040,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "993956c89c255f51be409f6dea61639c7cf13f01"
+  "built_at_commit": "793f85bb35b35c98f24459196f7152b0c0f52cc7"
 }

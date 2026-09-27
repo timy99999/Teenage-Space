@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "/index.html", "destination": "/", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "https://backend-production-f9da.up.railway.app/api/sitemap.xml" },
     { "source": "/(.*)", "destination": "/index.html" }

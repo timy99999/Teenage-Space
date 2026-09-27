@@ -636,9 +636,9 @@
     "semantic_hash": "ffa21762ab92b116febeb319077b6a4e"
   },
   "frontend/vercel.json": {
-    "mtime": 1789222110.5225756,
-    "seen": 1789373885.4720473,
-    "ast_hash": "cac0b7a4f658e621f9b4049fa17cfcc0",
+    "mtime": 1790489503.7292125,
+    "seen": 1790489538.079382,
+    "ast_hash": "7e59513a8dc1cf5857f625282acd3427",
     "semantic_hash": ""
   },
   "frontend/vite.config.ts": {
