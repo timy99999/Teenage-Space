@@ -1,5 +1,12 @@
 import { useState } from 'react';
 import { photoFit, type PhotoFit } from '../lib/photoFit';
+import { supabaseImageSrcSet } from '../lib/supabaseImageSrcSet';
+
+// Card grid (--ts-card: 300px, auto-fill) and modal grid (max-width 1000px,
+// auto-fit minmax(300px,1fr) — 2x500px at widest) both land in ~300-500px;
+// below 600px the modal goes edge-to-edge. See supabaseImageSrcSet.ts for the
+// matching width candidates.
+const SIZES = '(max-width: 600px) 100vw, 500px';
 
 interface EventPhotoProps {
   src: string | null;
@@ -23,9 +30,12 @@ export function EventPhoto({ src, alt, priority }: EventPhotoProps) {
     const measure = (img: HTMLImageElement | null) => {
       if (img?.complete) setFit(photoFit(img.naturalWidth, img.naturalHeight));
     };
+    const srcSet = supabaseImageSrcSet(src);
     return (
       <img
         src={src}
+        srcSet={srcSet}
+        sizes={srcSet ? SIZES : undefined}
         alt={alt}
         ref={measure}
         onLoad={(e) => measure(e.currentTarget)}
