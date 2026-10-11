@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { api } from '../lib/api';
+import { compressImage } from '../lib/compressImage';
 import { supabase } from '../lib/supabase';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { DateField } from '../components/DateField';
@@ -52,9 +53,11 @@ export function EditAccountPage() {
     }
     setUploading(true);
     try {
-      const ext = file.name.split('.').pop() ?? 'jpg';
+      const { blob, ext, contentType } = await compressImage(file, 512);
       const path = `${session.user.id}/${Date.now()}.${ext}`;
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(path, file, { upsert: true });
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(path, blob, { upsert: true, contentType, cacheControl: '31536000' });
       if (uploadError) throw uploadError;
       const { data } = supabase.storage.from('avatars').getPublicUrl(path);
       await api.patch<Profile>('/profile', { avatarUrl: data.publicUrl });
