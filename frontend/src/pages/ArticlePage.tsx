@@ -23,6 +23,7 @@ export function ArticlePage() {
         path={`/article/${article.id}`}
         type="article"
         jsonLd={jsonLd}
+        noindex
       />
       <div className="ts-article-inner">
         <div className="ts-article-kicker">{article.meta}</div>

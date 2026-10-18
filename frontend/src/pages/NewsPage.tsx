@@ -41,6 +41,7 @@ export function NewsPage() {
         image={item.imageUrl ?? undefined}
         type="article"
         jsonLd={jsonLd}
+        noindex
       />
       <div className="ts-modal ts-modal-standalone">
         <NewsDetails item={item} loggedIn={!!session} />

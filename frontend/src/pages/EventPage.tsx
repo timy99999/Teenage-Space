@@ -58,6 +58,7 @@ export function EventPage() {
         image={event.imageUrl ?? undefined}
         type="article"
         jsonLd={jsonLd}
+        noindex
       />
       <div className="ts-modal ts-modal-standalone">
         <EventDetails event={event} fav={favorites.has(event.id)} onToggleFav={() => toggle(event.id)} loggedIn={!!session} />
