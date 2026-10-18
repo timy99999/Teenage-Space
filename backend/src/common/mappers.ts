@@ -1,5 +1,10 @@
 import { normalizeKgPhone, whatsappLink } from './phone';
 
+export interface ExtraLinkRow {
+  title: string | null;
+  url: string;
+}
+
 export interface EventRow {
   id: string;
   title: string;
@@ -24,8 +29,7 @@ export interface EventRow {
   description: string;
   instagram: string | null;
   registration_url: string | null;
-  extra_link_title: string | null;
-  extra_link_url: string | null;
+  extra_links: ExtraLinkRow[] | null;
   organizer_name: string | null;
   organizer_url: string | null;
   telegram: string | null;
@@ -61,8 +65,7 @@ export function mapEvent(row: EventRow) {
     description: row.description,
     instagram: row.instagram,
     registrationUrl: row.registration_url,
-    extraLinkTitle: row.extra_link_title,
-    extraLinkUrl: row.extra_link_url,
+    extraLinks: row.extra_links ?? [],
     organizerName: row.organizer_name,
     organizerUrl: row.organizer_url,
     telegram: row.telegram,
@@ -230,8 +233,7 @@ export interface SubmissionAdminRow extends SubmissionRow {
   audience: string | null;
   description: string | null;
   registration_url: string | null;
-  extra_link_title: string | null;
-  extra_link_url: string | null;
+  extra_links: ExtraLinkRow[] | null;
   instagram: string | null;
   telegram: string | null;
   whatsapp: string | null;
@@ -271,8 +273,7 @@ export function mapSubmissionAdmin(row: SubmissionAdminRow, submitter?: Submitte
     audience: row.audience,
     description: row.description,
     registrationUrl: row.registration_url,
-    extraLinkTitle: row.extra_link_title,
-    extraLinkUrl: row.extra_link_url,
+    extraLinks: row.extra_links ?? [],
     instagram: row.instagram,
     telegram: row.telegram,
     // Show the +996-normalised form when the raw value parses, so pre-existing

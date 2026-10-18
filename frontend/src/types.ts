@@ -2,6 +2,11 @@ export type PriceType = 'free' | 'paid';
 export type Level = 'local' | 'intl';
 export type Format = 'Личное' | 'Командное';
 
+export interface ExtraLink {
+  title: string | null;
+  url: string;
+}
+
 export interface EventItem {
   id: string;
   title: string;
@@ -27,8 +32,7 @@ export interface EventItem {
   description: string;
   instagram: string | null;
   registrationUrl: string | null;
-  extraLinkTitle: string | null;
-  extraLinkUrl: string | null;
+  extraLinks: ExtraLink[];
   organizerName: string | null;
   organizerUrl: string | null;
   telegram: string | null;
@@ -160,8 +164,7 @@ export interface AdminSubmission {
   audience: string | null;
   description: string | null;
   registrationUrl: string | null;
-  extraLinkTitle: string | null;
-  extraLinkUrl: string | null;
+  extraLinks: ExtraLink[];
   instagram: string | null;
   telegram: string | null;
   whatsapp: string | null;
@@ -350,8 +353,7 @@ export interface PostFormValue {
   organizerName: string;
   organizerUrl: string;
   registrationUrl: string;
-  extraLinkTitle: string;
-  extraLinkUrl: string;
+  extraLinks: { title: string; url: string }[];
   instagram: string;
   telegram: string;
 }

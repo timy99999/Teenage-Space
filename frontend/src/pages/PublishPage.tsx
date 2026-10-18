@@ -54,8 +54,7 @@ export function PublishPage() {
         audience: form.audience,
         description: form.description,
         registrationUrl: form.registrationUrl || null,
-        extraLinkTitle: form.extraLinkTitle || null,
-        extraLinkUrl: form.extraLinkUrl || null,
+        extraLinks: form.extraLinks.filter((l) => l.url.trim()).map((l) => ({ title: l.title.trim() || null, url: l.url.trim() })),
         instagram: form.instagram || null,
         telegram: form.telegram || null,
         whatsapp: whatsapp || null

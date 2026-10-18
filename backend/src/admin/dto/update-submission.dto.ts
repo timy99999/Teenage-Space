@@ -1,5 +1,7 @@
-import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 import { IsLooseUrl } from '../../common/url';
+import { ExtraLinkDto } from '../../common/extra-link.dto';
 
 export class UpdateSubmissionDto {
   @IsOptional()
@@ -83,12 +85,10 @@ export class UpdateSubmissionDto {
   registrationUrl?: string | null;
 
   @IsOptional()
-  @IsString()
-  extraLinkTitle?: string | null;
-
-  @IsOptional()
-  @IsLooseUrl()
-  extraLinkUrl?: string | null;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ExtraLinkDto)
+  extraLinks?: ExtraLinkDto[];
 
   @IsOptional()
   @IsString()

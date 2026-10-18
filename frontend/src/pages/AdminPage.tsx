@@ -59,8 +59,7 @@ function buildFormFromSubmission(s: AdminSubmission): PostFormValue {
     organizerName: '',
     organizerUrl: '',
     registrationUrl: s.registrationUrl ?? '',
-    extraLinkTitle: s.extraLinkTitle ?? '',
-    extraLinkUrl: s.extraLinkUrl ?? '',
+    extraLinks: s.extraLinks.length ? s.extraLinks.map((l) => ({ title: l.title ?? '', url: l.url })) : [{ title: '', url: '' }],
     instagram: s.instagram ?? '',
     telegram: s.telegram ?? ''
   };

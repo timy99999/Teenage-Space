@@ -40,26 +40,68 @@ export function EventDetails({ event, fav, onToggleFav, loggedIn }: EventDetails
     ...(event.place ? [{ l: 'Адрес', v: event.place }] : [])
   ];
 
+  const hasLinkButtons = !!event.instagram || !!event.telegram || event.extraLinks.length > 0;
+
   return (
     <div className="ts-modal-grid">
-      <div className="ts-modal-img">
-        <EventPhoto src={event.imageUrl} alt={event.title} />
-        {event.organizerName &&
-          (event.organizerUrl ? (
-            <a
-              className="ts-card-organizer"
-              href={event.organizerUrl}
-              target="_blank"
-              rel="noreferrer"
-              title={event.organizerName}
-            >
-              {event.organizerName}
-            </a>
-          ) : (
-            <span className="ts-card-organizer" title={event.organizerName}>
-              {event.organizerName}
-            </span>
-          ))}
+      <div className="ts-modal-media">
+        <div className="ts-modal-img">
+          <EventPhoto src={event.imageUrl} alt={event.title} />
+          {event.organizerName &&
+            (event.organizerUrl ? (
+              <a
+                className="ts-card-organizer"
+                href={event.organizerUrl}
+                target="_blank"
+                rel="noreferrer"
+                title={event.organizerName}
+              >
+                {event.organizerName}
+              </a>
+            ) : (
+              <span className="ts-card-organizer" title={event.organizerName}>
+                {event.organizerName}
+              </span>
+            ))}
+        </div>
+        {hasLinkButtons && (
+          <div className="ts-modal-media-links">
+            {event.instagram && (
+              <a
+                href={instagramUrl(event.instagram)}
+                target="_blank"
+                rel="noreferrer"
+                className="ts-pill-link ghost insta"
+                onClick={() => trackLinkClick('instagram', loggedIn, { targetType: 'event', targetId: event.id })}
+              >
+                Instagram
+              </a>
+            )}
+            {event.telegram && (
+              <a
+                href={telegramUrl(event.telegram)}
+                target="_blank"
+                rel="noreferrer"
+                className="ts-pill-link ghost"
+                onClick={() => trackLinkClick('telegram', loggedIn, { targetType: 'event', targetId: event.id })}
+              >
+                Telegram
+              </a>
+            )}
+            {event.extraLinks.map((link, i) => (
+              <a
+                key={i}
+                href={link.url}
+                target="_blank"
+                rel="noreferrer"
+                className="ts-pill-link ghost"
+                onClick={() => trackLinkClick('extra_link', loggedIn, { targetType: 'event', targetId: event.id })}
+              >
+                {link.title || 'Ссылка'}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
       <div className="ts-modal-body">
         <div className="ts-modal-cat">
@@ -97,39 +139,6 @@ export function EventDetails({ event, fav, onToggleFav, loggedIn }: EventDetails
               onClick={() => trackLinkClick('registration', loggedIn, { targetType: 'event', targetId: event.id })}
             >
               Регистрация
-            </a>
-          )}
-          {event.instagram && (
-            <a
-              href={instagramUrl(event.instagram)}
-              target="_blank"
-              rel="noreferrer"
-              className="ts-pill-link ghost insta"
-              onClick={() => trackLinkClick('instagram', loggedIn, { targetType: 'event', targetId: event.id })}
-            >
-              Instagram
-            </a>
-          )}
-          {event.telegram && (
-            <a
-              href={telegramUrl(event.telegram)}
-              target="_blank"
-              rel="noreferrer"
-              className="ts-pill-link ghost"
-              onClick={() => trackLinkClick('telegram', loggedIn, { targetType: 'event', targetId: event.id })}
-            >
-              Telegram
-            </a>
-          )}
-          {event.extraLinkUrl && (
-            <a
-              href={event.extraLinkUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="ts-pill-link ghost"
-              onClick={() => trackLinkClick('extra_link', loggedIn, { targetType: 'event', targetId: event.id })}
-            >
-              {event.extraLinkTitle || 'Ссылка'}
             </a>
           )}
         </div>

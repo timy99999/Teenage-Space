@@ -2229,6 +2229,23 @@ a.ts-card-organizer:hover {
 .ts-link-row {
   display: flex;
   gap: 10px;
+  align-items: center;
+}
+.ts-link-remove {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ts-line);
+  border-radius: 10px;
+  background: var(--ts-surface2);
+  color: var(--ts-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.ts-link-remove:hover {
+  color: var(--ts-fg);
+  background: var(--ts-ph);
 }
 .ts-publish-photo {
   aspect-ratio: 3 / 4;
@@ -2443,6 +2460,16 @@ a.ts-card-organizer:hover {
 .ts-modal-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.ts-modal-media {
+  display: flex;
+  flex-direction: column;
+}
+.ts-modal-media-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px 4px 0;
 }
 .ts-modal-img {
   aspect-ratio: 3 / 4;

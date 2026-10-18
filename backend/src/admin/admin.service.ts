@@ -142,8 +142,7 @@ export class AdminService {
     if (dto.audience !== undefined) patch.audience = dto.audience;
     if (dto.description !== undefined) patch.description = dto.description;
     if (dto.registrationUrl !== undefined) patch.registration_url = dto.registrationUrl;
-    if (dto.extraLinkTitle !== undefined) patch.extra_link_title = dto.extraLinkTitle;
-    if (dto.extraLinkUrl !== undefined) patch.extra_link_url = dto.extraLinkUrl;
+    if (dto.extraLinks !== undefined) patch.extra_links = dto.extraLinks;
     if (dto.instagram !== undefined) patch.instagram = dto.instagram;
     if (dto.telegram !== undefined) patch.telegram = dto.telegram;
     if (dto.whatsapp !== undefined) patch.whatsapp = dto.whatsapp;
@@ -212,8 +211,7 @@ export class AdminService {
         organizer_url: dto.organizerUrl || null,
         instagram: dto.instagram || null,
         registration_url: dto.registrationUrl || null,
-        extra_link_title: dto.extraLinkTitle || null,
-        extra_link_url: dto.extraLinkUrl || null,
+        extra_links: dto.extraLinks ?? [],
         telegram: dto.telegram || null,
         is_past: false,
         image_url: dto.imageUrl,
@@ -254,8 +252,7 @@ export class AdminService {
     if (dto.organizerName !== undefined) patch.organizer_name = dto.organizerName || null;
     if (dto.organizerUrl !== undefined) patch.organizer_url = dto.organizerUrl || null;
     if (dto.registrationUrl !== undefined) patch.registration_url = dto.registrationUrl || null;
-    if (dto.extraLinkTitle !== undefined) patch.extra_link_title = dto.extraLinkTitle || null;
-    if (dto.extraLinkUrl !== undefined) patch.extra_link_url = dto.extraLinkUrl || null;
+    if (dto.extraLinks !== undefined) patch.extra_links = dto.extraLinks;
     if (dto.instagram !== undefined) patch.instagram = dto.instagram || null;
     if (dto.telegram !== undefined) patch.telegram = dto.telegram || null;
 

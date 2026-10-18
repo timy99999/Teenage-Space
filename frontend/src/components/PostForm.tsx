@@ -239,6 +239,25 @@ export function PostSiteInfo({ value: form, onChange: setForm, admin = false }: 
 }
 
 export function PostCardInfo({ value: form, onChange: setForm }: PostFormFieldsProps) {
+  const extraLinks = form.extraLinks.length ? form.extraLinks : [{ title: '', url: '' }];
+
+  function updateExtraLink(i: number, patch: Partial<{ title: string; url: string }>) {
+    setForm((v) => ({
+      ...v,
+      extraLinks: (v.extraLinks.length ? v.extraLinks : [{ title: '', url: '' }]).map((l, j) =>
+        j === i ? { ...l, ...patch } : l
+      )
+    }));
+  }
+
+  function addExtraLink() {
+    setForm((v) => ({ ...v, extraLinks: [...(v.extraLinks.length ? v.extraLinks : [{ title: '', url: '' }]), { title: '', url: '' }] }));
+  }
+
+  function removeExtraLink(i: number) {
+    setForm((v) => ({ ...v, extraLinks: v.extraLinks.filter((_, j) => j !== i) }));
+  }
+
   return (
     <>
       <ImageUploadField value={form.imageUrl} onChange={(imageUrl) => setForm((v) => ({ ...v, imageUrl }))} />
@@ -271,20 +290,33 @@ export function PostCardInfo({ value: form, onChange: setForm }: PostFormFieldsP
           value={form.registrationUrl}
           onChange={(e) => setForm((v) => ({ ...v, registrationUrl: e.target.value }))}
         />
-        <div className="ts-link-row">
-          <input
-            className="ts-input"
-            placeholder="Название ссылки"
-            value={form.extraLinkTitle}
-            onChange={(e) => setForm((v) => ({ ...v, extraLinkTitle: e.target.value }))}
-          />
-          <input
-            className="ts-input"
-            placeholder="URL"
-            value={form.extraLinkUrl}
-            onChange={(e) => setForm((v) => ({ ...v, extraLinkUrl: e.target.value }))}
-          />
-        </div>
+        {extraLinks.map((link, i) => (
+          <div className="ts-link-row" key={i}>
+            <input
+              className="ts-input"
+              placeholder="Название ссылки"
+              value={link.title}
+              onChange={(e) => updateExtraLink(i, { title: e.target.value })}
+            />
+            <input
+              className="ts-input"
+              placeholder="URL"
+              value={link.url}
+              onChange={(e) => updateExtraLink(i, { url: e.target.value })}
+            />
+            <button
+              type="button"
+              className="ts-link-remove"
+              aria-label="Удалить ссылку"
+              onClick={() => removeExtraLink(i)}
+            >
+              ×
+            </button>
+          </div>
+        ))}
+        <button type="button" className="ts-btn-outline small" style={{ alignSelf: 'flex-start' }} onClick={addExtraLink}>
+          + Добавить ссылку
+        </button>
         <input
           className="ts-input"
           placeholder="Instagram"
@@ -325,14 +357,14 @@ export function emptyPostForm(): PostFormValue {
     organizerName: '',
     organizerUrl: '',
     registrationUrl: '',
-    extraLinkTitle: '',
-    extraLinkUrl: '',
+    extraLinks: [{ title: '', url: '' }],
     instagram: '',
     telegram: ''
   };
 }
 
-/** Coerces the "empty while typing" age state to a number before sending to the API. */
+/** Coerces the "empty while typing" age state to a number before sending to the API,
+ *  and drops any extra-link row the admin/user left blank. */
 export function postFormPayload(form: PostFormValue) {
   return {
     ...form,
@@ -340,7 +372,10 @@ export function postFormPayload(form: PostFormValue) {
     categories: form.categories,
     ageMin: form.ageMin === '' ? 0 : form.ageMin,
     ageMax: form.ageMax === '' ? 0 : form.ageMax,
-    charity: form.price === 'paid' ? form.charity : false
+    charity: form.price === 'paid' ? form.charity : false,
+    extraLinks: form.extraLinks
+      .filter((l) => l.url.trim())
+      .map((l) => ({ title: l.title.trim() || null, url: l.url.trim() }))
   };
 }
 
@@ -368,8 +403,9 @@ export function eventToPostForm(event: EventItem): PostFormValue {
     organizerName: event.organizerName ?? '',
     organizerUrl: event.organizerUrl ?? '',
     registrationUrl: event.registrationUrl ?? '',
-    extraLinkTitle: event.extraLinkTitle ?? '',
-    extraLinkUrl: event.extraLinkUrl ?? '',
+    extraLinks: event.extraLinks.length
+      ? event.extraLinks.map((l) => ({ title: l.title ?? '', url: l.url }))
+      : [{ title: '', url: '' }],
     instagram: event.instagram ?? '',
     telegram: event.telegram ?? ''
   };
