@@ -582,9 +582,9 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/HomePage.tsx": {
-    "mtime": 1792320725.7080235,
-    "seen": 1792320870.7381284,
-    "ast_hash": "0b4609d9a07fbb46a9972194d01d9d11",
+    "mtime": 1792321003.510293,
+    "seen": 1792321041.5779088,
+    "ast_hash": "080091fd463fe9a8bbd6ff72bf1022d1",
     "semantic_hash": ""
   },
   "frontend/src/pages/PrivacyPage.tsx": {
@@ -702,9 +702,9 @@
     "semantic_hash": "16cc0daf1d0fa66c39b885287519d0e9"
   },
   "frontend/src/assets/logo-ts.png": {
-    "mtime": 1792316726.5710318,
-    "seen": 1792316758.3755145,
-    "ast_hash": "e30caf528d179b587fb59f6f461c84a5",
+    "mtime": 1792321003.5041437,
+    "seen": 1792321041.5779088,
+    "ast_hash": "16cc0daf1d0fa66c39b885287519d0e9",
     "semantic_hash": ""
   },
   "backend/src/auth/super-admin.guard.ts": {
@@ -1769,10 +1769,10 @@
     "ast_hash": "10f89864a6119271a2db4941db1077e6",
     "semantic_hash": ""
   },
-  "frontend/src/assets/logo-ts-light.png": {
-    "mtime": 1792320809.0627139,
-    "seen": 1792320870.7381284,
-    "ast_hash": "c78499e569a43ffe10dd478a77c0c65e",
+  "frontend/src/data/heroOrbit.tsx": {
+    "mtime": 1792321003.5071578,
+    "seen": 1792321041.5779088,
+    "ast_hash": "2b1f4c2b2541c7a335f16b40f8fd38f3",
     "semantic_hash": ""
   }
 }

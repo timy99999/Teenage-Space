@@ -1,13 +1,12 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import logoDark from '../assets/logo-ts.png';
-import logoLight from '../assets/logo-ts-light.png';
+import logo from '../assets/logo-ts.png';
 import { useEvents } from '../hooks/useEvents';
 import { NAV_CATS, CATN, fmtEventWhen } from '../data/constants';
 import { EventPhoto } from '../components/EventPhoto';
+import { ORBIT_ITEMS } from '../data/heroOrbit';
 import { WANDER_FLOATERS, ORBIT_FLOATERS } from '../data/pageFloaters';
 import { useReveal } from '../hooks/useReveal';
 import { useFloaterRepulsion } from '../hooks/useFloaterRepulsion';
-import { useUI } from '../contexts/UIContext';
 import { Seo } from '../components/Seo';
 import { HOME_TITLE, HOME_DESCRIPTION, HOME_JSON_LD } from '../data/homeSeo';
 
@@ -15,8 +14,6 @@ export function HomePage() {
   const navigate = useNavigate();
   const [, setParams] = useSearchParams();
   const { events } = useEvents({ scope: 'upcoming' });
-  const { theme } = useUI();
-  const logo = theme === 'dark' ? logoDark : logoLight;
 
   const openEvent = (id: string) => setParams({ event: id });
 
@@ -77,9 +74,33 @@ export function HomePage() {
         </div>
 
         <div className="ts-hero-stage">
-          <div className="ts-hero-orb-wrap">
-            <div className="ts-hero-orb">
-              <img src={logo} alt="Teenage Space" className="ts-hero-orb-logo" />
+          <div className="ts-hero-orbit">
+            <div className="ts-orbit-ring">
+              {ORBIT_ITEMS.map((item, i) => (
+                <div
+                  key={item.key}
+                  className="ts-orbit-item"
+                  style={
+                    {
+                      '--i': i,
+                      '--n': ORBIT_ITEMS.length,
+                      animationDelay: `${0.5 + i * 0.08}s`
+                    } as React.CSSProperties
+                  }
+                >
+                  <div className="ts-orbit-icon" title={item.label}>
+                    {item.icon}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="ts-hero-orb-wrap">
+              <div className="ts-hero-orb">
+                <div className="ts-hero-orb-ring" />
+                <div className="ts-hero-orb-inner">
+                  <img src={logo} alt="Teenage Space" />
+                </div>
+              </div>
             </div>
           </div>
 
