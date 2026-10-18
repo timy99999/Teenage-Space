@@ -8,6 +8,7 @@ const TTL_MS = 60000;
 export interface EventFilters {
   scope: 'upcoming' | 'past' | 'all';
   category?: string;
+  excludeCategory?: string;
   categories?: string[];
   themes?: string[];
   price?: 'free' | 'paid' | null;
@@ -22,6 +23,7 @@ function buildQuery(filters: EventFilters): string {
   const params = new URLSearchParams();
   params.set('scope', filters.scope);
   if (filters.category) params.set('category', filters.category);
+  if (filters.excludeCategory) params.set('excludeCategory', filters.excludeCategory);
   if (filters.categories?.length) params.set('categories', filters.categories.join(','));
   if (filters.themes?.length) params.set('themes', filters.themes.join(','));
   if (filters.price) params.set('price', filters.price);

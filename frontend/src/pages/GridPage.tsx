@@ -237,9 +237,12 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params, isOpps]);
 
+  // Стажировки видны под своей вкладкой (/opportunities/internship), но не должны
+  // попадать в общую сетку "Все" — заказчик хочет их отдельно от общего каталога.
   const { events: fetchedEvents, loading, error: loadError, retry: retryEvents } = useEvents({
     scope,
     category: isOpps ? category : undefined,
+    excludeCategory: isOpps && !category ? 'internship' : undefined,
     categories: isVote ? fCats : undefined,
     themes: fThemes,
     price: fPrice,

@@ -79,6 +79,7 @@ export class EventsService implements OnModuleInit {
     else if (query.scope === 'past') q = q.eq('is_past', true);
 
     if (query.category) q = q.contains('categories', [query.category]);
+    if (query.excludeCategory) q = q.not('categories', 'cs', `{${query.excludeCategory}}`);
     if (query.price) q = q.eq('price', query.price);
     if (query.level) q = q.eq('level', query.level);
 

@@ -150,15 +150,15 @@
     "semantic_hash": "d2a8aecf68bda72c746ef6a948a3504e"
   },
   "backend/src/events/events.service.ts": {
-    "mtime": 1789366226.8423035,
-    "seen": 1789373885.4720473,
-    "ast_hash": "d73ed5f7c1e6353321f7334991aabc0d",
+    "mtime": 1792306292.774716,
+    "seen": 1792306358.7280858,
+    "ast_hash": "0347c3da01cf959da735b559bb8a3371",
     "semantic_hash": ""
   },
   "backend/src/events/query-events.dto.ts": {
-    "mtime": 1789366226.8459165,
-    "seen": 1789373885.4720473,
-    "ast_hash": "83d1940d0ce0ad116dac74c7f87ad1b3",
+    "mtime": 1792306289.1648932,
+    "seen": 1792306358.7280858,
+    "ast_hash": "563cce9a0c80f624b6f981d79008aa72",
     "semantic_hash": ""
   },
   "backend/src/favorites/favorites.controller.ts": {
@@ -474,9 +474,9 @@
     "semantic_hash": "df5f9107de817a81bcd160c9f14e482a"
   },
   "frontend/src/hooks/useEvents.ts": {
-    "mtime": 1789384183.198115,
-    "seen": 1789571462.8592732,
-    "ast_hash": "a4d7556b6b64353716da9d790ee911fa",
+    "mtime": 1792306299.8421762,
+    "seen": 1792306358.7280858,
+    "ast_hash": "30aa54b9c7e133cfb3e1ff4a37058aa6",
     "semantic_hash": ""
   },
   "frontend/src/hooks/useFavorites.ts": {
@@ -582,9 +582,9 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/GridPage.tsx": {
-    "mtime": 1790488847.205866,
-    "seen": 1790488907.0684288,
-    "ast_hash": "67c5c07b77cad9c929bbba46f3ac013b",
+    "mtime": 1792306304.9211988,
+    "seen": 1792306358.7280858,
+    "ast_hash": "da319e8bad7e873d5f17fb2aa517383f",
     "semantic_hash": ""
   },
   "frontend/src/pages/HomePage.tsx": {

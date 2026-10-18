@@ -14,6 +14,12 @@ export class QueryEventsDto {
   @IsString()
   categories?: string;
 
+  /** Drops events tagged with this category — used to keep internships out of the
+   *  unfiltered "Все" catalog view while still showing them under their own tab. */
+  @IsOptional()
+  @IsString()
+  excludeCategory?: string;
+
   @IsOptional()
   @IsString()
   themes?: string;

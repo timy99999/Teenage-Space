@@ -354,9 +354,9 @@
     "semantic_hash": ""
   },
   "frontend/src/components/EventPhoto.tsx": {
-    "mtime": 1790353106.4326866,
-    "seen": 1790353245.9733899,
-    "ast_hash": "b45478f4d481e6965a1347eb34cd6123",
+    "mtime": 1791731293.0571692,
+    "seen": 1792305789.1085594,
+    "ast_hash": "70303d8e9a8a28238b5c93fa359c5228",
     "semantic_hash": ""
   },
   "frontend/src/components/ImageUploadField.tsx": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/ArticlePage.tsx": {
-    "mtime": 1789222094.0951235,
-    "seen": 1789373885.4720473,
-    "ast_hash": "6742d36ee63bca07a1859b22c3eb5399",
+    "mtime": 1792305700.8080654,
+    "seen": 1792305789.1085594,
+    "ast_hash": "818f4e8e204ce3abd0f569d17341a3e0",
     "semantic_hash": ""
   },
   "frontend/src/pages/AuthPage.tsx": {
@@ -642,8 +642,8 @@
     "semantic_hash": ""
   },
   "frontend/vite.config.ts": {
-    "mtime": 1787062648.7629933,
-    "seen": 1787666027.1690547,
+    "mtime": 1791712856.745005,
+    "seen": 1792305789.1085594,
     "ast_hash": "2471ef6b7b3e880a5ee3a19b92cc872d",
     "semantic_hash": "2471ef6b7b3e880a5ee3a19b92cc872d"
   },
@@ -690,9 +690,9 @@
     "semantic_hash": ""
   },
   "frontend/index.html": {
-    "mtime": 1789659496.540763,
-    "seen": 1789659777.5114214,
-    "ast_hash": "fd5b0aa67ddb6c6f772dc89a1d721326",
+    "mtime": 1791712134.6779263,
+    "seen": 1792305789.1085594,
+    "ast_hash": "9d97c29d3e955a2b356f6b9f81f964b3",
     "semantic_hash": ""
   },
   "\u041f\u043e\u043b\u0438\u0442\u0438\u043a\u0430 \u043a\u043e\u043d\u0444\u0435\u0434\u0438\u0446\u0438\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u0438.pdf": {
@@ -954,9 +954,9 @@
     "semantic_hash": ""
   },
   "backend/src/health/health.module.ts": {
-    "mtime": 1787922122.1830826,
-    "seen": 1787922366.6936677,
-    "ast_hash": "6c891b2b63b86e18c882ab1c56d7c5f7",
+    "mtime": 1791713377.8264594,
+    "seen": 1792305789.1085594,
+    "ast_hash": "b091fe67d059b544f84d3af364251b94",
     "semantic_hash": ""
   },
   "frontend/src/components/NetTroubleToast.tsx": {
@@ -1614,9 +1614,9 @@
     "semantic_hash": ""
   },
   "backend/src/seo/sitemap.controller.ts": {
-    "mtime": 1790436632.686149,
-    "seen": 1790436723.646551,
-    "ast_hash": "d60a3b5fb0c42dff65b424afe326edb4",
+    "mtime": 1792305716.8521516,
+    "seen": 1792305789.1085594,
+    "ast_hash": "6af48025bda4e842572ee662149babd9",
     "semantic_hash": ""
   },
   "frontend/src/components/EventDetails.tsx": {
@@ -1650,15 +1650,15 @@
     "semantic_hash": ""
   },
   "frontend/src/pages/EventPage.tsx": {
-    "mtime": 1789366226.889901,
-    "seen": 1789373885.4720473,
-    "ast_hash": "8cc252041bf691cc3ea79015925f5748",
+    "mtime": 1792305693.2111495,
+    "seen": 1792305789.1085594,
+    "ast_hash": "fc004005647bd43f22c62cf5f1ff216e",
     "semantic_hash": ""
   },
   "frontend/src/pages/NewsPage.tsx": {
-    "mtime": 1789221971.6399026,
-    "seen": 1789373885.4720473,
-    "ast_hash": "39f975fe06e082a2f52418a22d2f84c9",
+    "mtime": 1792305697.13755,
+    "seen": 1792305789.1085594,
+    "ast_hash": "5cf3bf7939eb07fa0b365e872ca32ccc",
     "semantic_hash": ""
   },
   "frontend/src/pages/NotFoundPage.tsx": {
@@ -1725,6 +1725,18 @@
     "mtime": 1791700837.6025975,
     "seen": 1791704054.2317936,
     "ast_hash": "93fcbd2d1fd52d46f0af28d6009ebb16",
+    "semantic_hash": ""
+  },
+  "backend/src/health/keepalive.service.ts": {
+    "mtime": 1791713373.989669,
+    "seen": 1792305789.1085594,
+    "ast_hash": "4f7652c37072a017d95a838b7312c2bb",
+    "semantic_hash": ""
+  },
+  "frontend/public/llms.txt": {
+    "mtime": 1791712147.1146066,
+    "seen": 1792305789.1085594,
+    "ast_hash": "3afe20193fdfe81851f6f3390f8bfaca",
     "semantic_hash": ""
   }
 }
