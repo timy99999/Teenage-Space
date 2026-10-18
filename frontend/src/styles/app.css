@@ -2518,6 +2518,15 @@ a.ts-card-organizer:hover {
   gap: 10px;
   align-items: center;
 }
+.ts-publish-info {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid var(--ts-line);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ts-muted);
+}
 .ts-edit-event-body {
   padding: 20px 26px 30px;
   display: flex;

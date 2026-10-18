@@ -2,6 +2,7 @@ import type { NewsItem } from '../types';
 import { fmtDate } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
 import { ShareButton } from './ShareButton';
+import { PublishInfo } from './PublishInfo';
 import { trackLinkClick } from '../lib/tracking';
 import { SITE_URL } from './Seo';
 
@@ -37,6 +38,7 @@ export function NewsDetails({ item, loggedIn }: NewsDetailsProps) {
             </a>
           )}
         </div>
+        <PublishInfo kind="news" id={item.id} />
       </div>
     </div>
   );

@@ -12,9 +12,9 @@
     "semantic_hash": ""
   },
   "backend/src/admin/admin.controller.ts": {
-    "mtime": 1787917394.395114,
-    "seen": 1787917839.4785504,
-    "ast_hash": "f14d547fc279157126173f3d1747498d",
+    "mtime": 1792306870.6138809,
+    "seen": 1792306980.7107172,
+    "ast_hash": "2546fef9f3a8b75435874f7fdf3b4222",
     "semantic_hash": ""
   },
   "backend/src/admin/admin.module.ts": {
@@ -24,9 +24,9 @@
     "semantic_hash": ""
   },
   "backend/src/admin/admin.service.ts": {
-    "mtime": 1789366226.8221986,
-    "seen": 1789373885.4720473,
-    "ast_hash": "0340ccb8c01d5056fed415963fa718f6",
+    "mtime": 1792306853.3494327,
+    "seen": 1792306980.7107172,
+    "ast_hash": "eb8c5323314290e2cd7411b03a24adda",
     "semantic_hash": ""
   },
   "backend/src/admin/dto/create-education-track.dto.ts": {
@@ -114,9 +114,9 @@
     "semantic_hash": "ce2ba3ae9d9f1adfcd223dfa594389df"
   },
   "backend/src/common/mappers.ts": {
-    "mtime": 1789366226.8382912,
-    "seen": 1789373885.4720473,
-    "ast_hash": "b7bcad973e860d34f69ad9679e1c3f47",
+    "mtime": 1792306824.9530127,
+    "seen": 1792306980.7107172,
+    "ast_hash": "7d99545f8aecfc5ddd39c7e28f980fb7",
     "semantic_hash": ""
   },
   "backend/src/education/education.controller.ts": {
@@ -1620,15 +1620,15 @@
     "semantic_hash": ""
   },
   "frontend/src/components/EventDetails.tsx": {
-    "mtime": 1790493060.006197,
-    "seen": 1790493123.0649543,
-    "ast_hash": "cf56e90bc6519a306046a05eab661128",
+    "mtime": 1792306906.879052,
+    "seen": 1792306980.7119837,
+    "ast_hash": "c0d9b481561f5b57d1a272feebff5c22",
     "semantic_hash": ""
   },
   "frontend/src/components/NewsDetails.tsx": {
-    "mtime": 1790493071.0013845,
-    "seen": 1790493123.0649543,
-    "ast_hash": "a9354f74096fc721b410426b193fcd59",
+    "mtime": 1792306914.7037077,
+    "seen": 1792306980.7119837,
+    "ast_hash": "fb0f00db2279193cd669ddc5a64908af",
     "semantic_hash": ""
   },
   "frontend/src/components/Seo.tsx": {
@@ -1737,6 +1737,24 @@
     "mtime": 1791712147.1146066,
     "seen": 1792305789.1085594,
     "ast_hash": "3afe20193fdfe81851f6f3390f8bfaca",
+    "semantic_hash": ""
+  },
+  "frontend/src/components/PublishInfo.tsx": {
+    "mtime": 1792306898.5833716,
+    "seen": 1792306980.7119837,
+    "ast_hash": "f656e959a535814ad756b9de86907378",
+    "semantic_hash": ""
+  },
+  "frontend/src/hooks/usePublishInfo.ts": {
+    "mtime": 1792306892.3575387,
+    "seen": 1792306980.7119837,
+    "ast_hash": "3cac3269719d551b31d65c9d5d709d0b",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261018120000_publish_attribution.sql": {
+    "mtime": 1792306766.6432643,
+    "seen": 1792306980.7119837,
+    "ast_hash": "6f5f039a025c10f84bec465a00223c61",
     "semantic_hash": ""
   }
 }

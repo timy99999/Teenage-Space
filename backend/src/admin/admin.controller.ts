@@ -1,6 +1,9 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import type { User } from '@supabase/supabase-js';
 import { SupabaseAuthGuard } from '../auth/supabase-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
+import { SuperAdminGuard } from '../auth/super-admin.guard';
+import { CurrentUser } from '../auth/supabase-user.decorator';
 import { AdminService } from './admin.service';
 import { UpdateSubmissionDto } from './dto/update-submission.dto';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -27,8 +30,8 @@ export class AdminController {
   }
 
   @Post('submissions/:id/publish')
-  publishSubmission(@Param('id') id: string, @Body() dto: CreateEventDto) {
-    return this.admin.publishSubmission(id, dto);
+  publishSubmission(@Param('id') id: string, @Body() dto: CreateEventDto, @CurrentUser() user: User) {
+    return this.admin.publishSubmission(id, dto, user.id);
   }
 
   @Post('submissions/:id/reject')
@@ -37,13 +40,19 @@ export class AdminController {
   }
 
   @Post('events')
-  createEvent(@Body() dto: CreateEventDto) {
-    return this.admin.createEvent(dto);
+  createEvent(@Body() dto: CreateEventDto, @CurrentUser() user: User) {
+    return this.admin.createEvent(dto, user.id);
   }
 
   @Get('events/archived')
   listArchivedEvents() {
     return this.admin.listArchivedEvents();
+  }
+
+  @Get('events/:id/publish-info')
+  @UseGuards(SuperAdminGuard)
+  getEventPublishInfo(@Param('id') id: string) {
+    return this.admin.getEventPublishInfo(id);
   }
 
   @Patch('events/:id')
@@ -76,8 +85,14 @@ export class AdminController {
   }
 
   @Post('news')
-  createNews(@Body() dto: CreateNewsDto) {
-    return this.admin.createNews(dto);
+  createNews(@Body() dto: CreateNewsDto, @CurrentUser() user: User) {
+    return this.admin.createNews(dto, user.id);
+  }
+
+  @Get('news/:id/publish-info')
+  @UseGuards(SuperAdminGuard)
+  getNewsPublishInfo(@Param('id') id: string) {
+    return this.admin.getNewsPublishInfo(id);
   }
 
   @Delete('news/:id')

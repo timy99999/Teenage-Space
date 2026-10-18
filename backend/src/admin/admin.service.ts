@@ -50,14 +50,14 @@ export class AdminService {
     const { data, error } = await query;
     if (error) throw error;
     const rows = data as SubmissionAdminRow[];
-    const submitters = await this.submitterMap(rows.map((r) => r.user_id));
+    const submitters = await this.profilesByIds(rows.map((r) => r.user_id));
     return rows.map((r) => mapSubmissionAdmin(r, submitters.get(r.user_id)));
   }
 
-  /** username/email for each given user id — so the review screen can show who
-   *  sent a submission. Failures degrade to an empty map rather than 500. */
-  private async submitterMap(userIds: string[]) {
-    const unique = [...new Set(userIds.filter(Boolean))];
+  /** username/email for each given id — so an admin screen can show who's behind a
+   *  submission or a publish. Failures degrade to an empty map rather than 500. */
+  private async profilesByIds(ids: string[]) {
+    const unique = [...new Set(ids.filter(Boolean))];
     const map = new Map<string, { username: string | null; email: string | null }>();
     if (unique.length === 0) return map;
     const { data, error } = await this.supabase.client
@@ -69,6 +69,56 @@ export class AdminService {
       map.set(p.id, { username: p.username, email: p.email });
     }
     return map;
+  }
+
+  /** Who published this card and when — plus, for an event that came from a user's
+   *  submission, who applied and when. Surfaced only to the super admin (see
+   *  SuperAdminGuard on the controller route). */
+  async getEventPublishInfo(id: string) {
+    const { data: event, error } = await this.supabase.client
+      .from('events')
+      .select('created_at, published_by')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) throw error;
+    if (!event) throw new NotFoundException('Событие не найдено');
+
+    const { data: submission } = await this.supabase.client
+      .from('submissions')
+      .select('user_id, created_at')
+      .eq('published_event_id', id)
+      .maybeSingle();
+
+    const row = event as { created_at: string; published_by: string | null };
+    const sub = submission as { user_id: string; created_at: string } | null;
+    const profiles = await this.profilesByIds([row.published_by, sub?.user_id].filter(Boolean) as string[]);
+
+    return {
+      publishedBy: row.published_by ? profiles.get(row.published_by) ?? null : null,
+      publishedAt: row.created_at,
+      submission: sub
+        ? { submittedBy: profiles.get(sub.user_id) ?? null, submittedAt: sub.created_at }
+        : null
+    };
+  }
+
+  /** Same as above, for news — which has no submission flow. */
+  async getNewsPublishInfo(id: string) {
+    const { data: news, error } = await this.supabase.client
+      .from('news')
+      .select('created_at, published_by')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) throw error;
+    if (!news) throw new NotFoundException('Новость не найдена');
+
+    const row = news as { created_at: string; published_by: string | null };
+    const profiles = row.published_by ? await this.profilesByIds([row.published_by]) : new Map();
+
+    return {
+      publishedBy: row.published_by ? profiles.get(row.published_by) ?? null : null,
+      publishedAt: row.created_at
+    };
   }
 
   async updateSubmission(id: string, dto: UpdateSubmissionDto) {
@@ -108,7 +158,7 @@ export class AdminService {
     return mapSubmissionAdmin(data as SubmissionAdminRow);
   }
 
-  async publishSubmission(id: string, dto: CreateEventDto) {
+  async publishSubmission(id: string, dto: CreateEventDto, publishedBy: string) {
     const { data: submission, error: subError } = await this.supabase.client
       .from('submissions')
       .select('id')
@@ -117,7 +167,7 @@ export class AdminService {
     if (subError) throw subError;
     if (!submission) throw new NotFoundException('Заявка не найдена');
 
-    const event = await this.insertEvent(dto);
+    const event = await this.insertEvent(dto, publishedBy);
 
     const { error: updateError } = await this.supabase.client
       .from('submissions')
@@ -128,11 +178,11 @@ export class AdminService {
     return event;
   }
 
-  async createEvent(dto: CreateEventDto) {
-    return this.insertEvent(dto);
+  async createEvent(dto: CreateEventDto, publishedBy: string) {
+    return this.insertEvent(dto, publishedBy);
   }
 
-  private async insertEvent(dto: CreateEventDto) {
+  private async insertEvent(dto: CreateEventDto, publishedBy: string) {
     const categories = dto.categories?.length ? dto.categories : dto.category ? [dto.category] : [];
     const { data: event, error: eventError } = await this.supabase.client
       .from('events')
@@ -166,7 +216,8 @@ export class AdminService {
         extra_link_url: dto.extraLinkUrl || null,
         telegram: dto.telegram || null,
         is_past: false,
-        image_url: dto.imageUrl
+        image_url: dto.imageUrl,
+        published_by: publishedBy
       })
       .select('*')
       .single();
@@ -330,7 +381,7 @@ export class AdminService {
     await this.cache.clear();
   }
 
-  async createNews(dto: CreateNewsDto) {
+  async createNews(dto: CreateNewsDto, publishedBy: string) {
     const { data, error } = await this.supabase.client
       .from('news')
       .insert({
@@ -340,7 +391,8 @@ export class AdminService {
         short_desc: dto.shortDesc,
         image_url: dto.imageUrl ?? null,
         link_title: dto.linkTitle || null,
-        link_url: dto.linkUrl || null
+        link_url: dto.linkUrl || null,
+        published_by: publishedBy
       })
       .select('*')
       .single();

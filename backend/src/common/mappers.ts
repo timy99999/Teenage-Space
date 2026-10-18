@@ -33,6 +33,7 @@ export interface EventRow {
   archived: boolean;
   image_url: string | null;
   created_at: string;
+  published_by: string | null;
 }
 
 export function mapEvent(row: EventRow) {
@@ -79,6 +80,8 @@ export interface NewsRow {
   image_url: string | null;
   link_title: string | null;
   link_url: string | null;
+  created_at: string;
+  published_by: string | null;
 }
 
 export function mapNews(row: NewsRow) {

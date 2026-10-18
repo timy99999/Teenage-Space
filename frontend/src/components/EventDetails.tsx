@@ -2,6 +2,7 @@ import type { EventItem } from '../types';
 import { CATS, THEMES, fmtDate, fmtEventWhen } from '../data/constants';
 import { EventPhoto } from './EventPhoto';
 import { ShareButton } from './ShareButton';
+import { PublishInfo } from './PublishInfo';
 import { trackLinkClick } from '../lib/tracking';
 import { SITE_URL } from './Seo';
 
@@ -132,6 +133,7 @@ export function EventDetails({ event, fav, onToggleFav, loggedIn }: EventDetails
             </a>
           )}
         </div>
+        <PublishInfo kind="event" id={event.id} />
       </div>
     </div>
   );

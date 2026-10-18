@@ -5260,7 +5260,7 @@
       "file_type": "code",
       "norm_label": "buildquery()",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L21"
+      "source_location": "L22"
     },
     {
       "id": "frontend_src_hooks_useevents_useevents",
@@ -5272,7 +5272,7 @@
       "file_type": "code",
       "norm_label": "useevents()",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L37"
+      "source_location": "L39"
     },
     {
       "id": "frontend_src_hooks_useevents_useevents_withretries",
@@ -5284,7 +5284,7 @@
       "file_type": "code",
       "norm_label": "withretries()",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L74"
+      "source_location": "L76"
     },
     {
       "id": "frontend_src_hooks_usefloaterrepulsion_usefloaterrepulsion",
@@ -6112,7 +6112,7 @@
       "file_type": "code",
       "norm_label": "useevent()",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L108"
+      "source_location": "L110"
     },
     {
       "id": "frontend_src_hooks_usefavorites_usefavorites",
@@ -9340,7 +9340,7 @@
       "file_type": "code",
       "norm_label": "runconfirmedaction()",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L264"
+      "source_location": "L267"
     },
     {
       "id": "frontend_src_pages_settingspage_settingspage",
@@ -11512,7 +11512,7 @@
       "file_type": "code",
       "norm_label": ".archiveexpiredevents()",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L137"
+      "source_location": "L138"
     },
     {
       "id": "backend_src_events_events_service_eventsservice_constructor",
@@ -11536,7 +11536,7 @@
       "file_type": "code",
       "norm_label": ".findone()",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L123"
+      "source_location": "L124"
     },
     {
       "id": "backend_src_events_events_service_eventsservice_list",
@@ -25201,7 +25201,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L138",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -25213,7 +25213,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L139",
+      "source_location": "L140",
       "weight": 1.0
     },
     {
@@ -25225,7 +25225,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L127",
+      "source_location": "L128",
       "weight": 1.0
     },
     {
@@ -25237,7 +25237,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L107",
+      "source_location": "L108",
       "weight": 1.0
     },
     {
@@ -25249,7 +25249,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L119",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -25261,7 +25261,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L119",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -30109,7 +30109,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L110",
+      "source_location": "L112",
       "weight": 1.0
     },
     {
@@ -30121,7 +30121,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L120",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -30133,7 +30133,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L38",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -30145,7 +30145,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L44",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -30157,7 +30157,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L75",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -31513,7 +31513,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L240",
+      "source_location": "L242",
       "weight": 1.0
     },
     {
@@ -31525,7 +31525,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L252",
+      "source_location": "L255",
       "weight": 1.0
     },
     {
@@ -31537,7 +31537,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L253",
+      "source_location": "L256",
       "weight": 1.0
     },
     {
@@ -31549,7 +31549,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L254",
+      "source_location": "L257",
       "weight": 1.0
     },
     {
@@ -31561,7 +31561,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L327",
+      "source_location": "L330",
       "weight": 1.0
     },
     {
@@ -31573,7 +31573,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L335",
+      "source_location": "L338",
       "weight": 1.0
     },
     {
@@ -31585,7 +31585,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L415",
+      "source_location": "L418",
       "weight": 1.0
     },
     {
@@ -31597,7 +31597,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L609",
+      "source_location": "L612",
       "weight": 1.0
     },
     {
@@ -31981,7 +31981,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L74",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -34789,7 +34789,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L136",
+      "source_location": "L137",
       "weight": 1.0
     },
     {
@@ -34825,7 +34825,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "backend/src/events/query-events.dto.ts",
-      "source_location": "L26",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -34837,7 +34837,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "backend/src/events/query-events.dto.ts",
-      "source_location": "L41",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -34849,7 +34849,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "backend/src/events/query-events.dto.ts",
-      "source_location": "L44",
+      "source_location": "L50",
       "weight": 1.0
     },
     {
@@ -34861,7 +34861,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "backend/src/events/query-events.dto.ts",
-      "source_location": "L52",
+      "source_location": "L58",
       "weight": 1.0
     },
     {
@@ -34873,7 +34873,7 @@
       "confidence_score": 1.0,
       "context": "decorator",
       "source_file": "backend/src/events/query-events.dto.ts",
-      "source_location": "L53",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -61900,7 +61900,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L108",
+      "source_location": "L110",
       "weight": 1.0
     },
     {
@@ -61911,7 +61911,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -61922,7 +61922,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/hooks/useEvents.ts",
-      "source_location": "L37",
+      "source_location": "L39",
       "weight": 1.0
     },
     {
@@ -63484,7 +63484,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "frontend/src/pages/GridPage.tsx",
-      "source_location": "L264",
+      "source_location": "L267",
       "weight": 1.0
     },
     {
@@ -66488,7 +66488,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L123",
+      "source_location": "L124",
       "weight": 1.0
     },
     {
@@ -66499,7 +66499,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L137",
+      "source_location": "L138",
       "weight": 1.0
     },
     {
@@ -71056,7 +71056,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "backend/src/events/events.service.ts",
-      "source_location": "L120",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -71974,5 +71974,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "5001484784972493083e45ef166a4119baac6ee9"
+  "built_at_commit": "4b2cfa4b1a2bec22a3213290f4644f1211b12925"
 }
