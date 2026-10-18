@@ -612,8 +612,15 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: brightness(1.35) saturate(1.4) drop-shadow(0 0 32px rgba(139, 92, 246, 0.45));
+  filter: saturate(1.2) drop-shadow(0 0 28px rgba(139, 92, 246, 0.35));
   animation: tsFloat 7s ease-in-out infinite;
+}
+/* The dark-theme logo keeps its original pale cyan letters, which need the
+   brightness boost to pop against the black page background; the light-theme
+   variant's letters are already a solid saturated purple and wash out if
+   brightened the same way. */
+:root[data-ts-theme='dark'] .ts-hero-orb-logo {
+  filter: brightness(1.35) saturate(1.4) drop-shadow(0 0 32px rgba(139, 92, 246, 0.45));
 }
 .ts-hero-lead {
   max-width: 720px;

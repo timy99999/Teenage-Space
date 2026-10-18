@@ -1,11 +1,13 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import logo from '../assets/logo-ts.png';
+import logoDark from '../assets/logo-ts.png';
+import logoLight from '../assets/logo-ts-light.png';
 import { useEvents } from '../hooks/useEvents';
 import { NAV_CATS, CATN, fmtEventWhen } from '../data/constants';
 import { EventPhoto } from '../components/EventPhoto';
 import { WANDER_FLOATERS, ORBIT_FLOATERS } from '../data/pageFloaters';
 import { useReveal } from '../hooks/useReveal';
 import { useFloaterRepulsion } from '../hooks/useFloaterRepulsion';
+import { useUI } from '../contexts/UIContext';
 import { Seo } from '../components/Seo';
 import { HOME_TITLE, HOME_DESCRIPTION, HOME_JSON_LD } from '../data/homeSeo';
 
@@ -13,6 +15,8 @@ export function HomePage() {
   const navigate = useNavigate();
   const [, setParams] = useSearchParams();
   const { events } = useEvents({ scope: 'upcoming' });
+  const { theme } = useUI();
+  const logo = theme === 'dark' ? logoDark : logoLight;
 
   const openEvent = (id: string) => setParams({ event: id });
 

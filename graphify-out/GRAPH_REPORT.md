@@ -1,37 +1,37 @@
 # Graph Report - Teenage Space  (2026-10-18)
 
 ## Corpus Check
-- 285 files · ~93,169 words
+- 285 files · ~94,968 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2099 nodes · 4145 edges · 164 communities (99 shown, 54 thin omitted)
+- 2099 nodes · 4148 edges · 163 communities (98 shown, 54 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 106 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c7fdc205`
+- Built from commit: `19528cb4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- types.ts
-- ArticlePage.tsx
+- useBars.ts
+- ProfilePage.tsx
 - 20260828103623_traffic_analytics.sql
 - dependencies
 - Platform Description (Privacy Policy Section 1)
 - ProfileController
 - frontend/package.json
-- ImageUploadField.tsx
+- TrackLinkClickDto
 - events.service.ts
 - BarsAdminService
-- traffic.service.ts
+- traffic.module.ts
 - truncate_to_last_complete_line
 - RatingsService
 - compilerOptions
 - compilerOptions
 - backend/package.json
-- FavoritesService
+- FavoritesController
 - retrieval.py
 - execute
 - app.module.ts
@@ -62,7 +62,7 @@
 - formatting.py
 - EventDetails.tsx
 - DateField.tsx
-- GridPage.tsx
+- useAuth
 - BarsCreditDto
 - Supabase
 - AdminController
@@ -80,7 +80,7 @@
 - IsLooseUrl
 - Section Definitions
 - checkpoints
-- tracking.ts
+- TrafficService
 - TelegramLinkService
 - deploy
 - Барс — Telegram-агент Teenage Space
@@ -89,7 +89,7 @@
 - _clean_due_date
 - bars
 - admin.controller.ts
-- useAuth
+- TrafficController
 - advanced-full-text-search.md
 - advanced-jsonb-indexing.md
 - conn-idle-timeout.md
@@ -123,7 +123,7 @@
 - security-rls-performance.md
 - _template.md
 - BarsQueryDto
-- auth.controller.ts
+- AuthController
 - public.get_user_capacity_stats
 - class-transformer
 - sitemap.controller.ts
@@ -140,22 +140,22 @@
 - @nestjs/schedule
 - rxjs
 - test_smalltalk.py
-- HealthController
+- SupabaseService
 - AdminPage.tsx
 - App.tsx
-- getOrFetch
+- useEducation.ts
 - bishkek_today
-- AuthContext.tsx
+- types.ts
 - SubmissionsService
 - CreateMaterialDto
-- HomePage.tsx
+- TrafficQueryDto
 - users-admin.service.ts
 - UserAccountPage.tsx
 - AdminService
-- usePublishInfo.ts
+- TrackCardViewDto
 - find_by_title
-- SupabaseService
-- EventCard.tsx
+- admin.service.ts
+- TrackViewDto
 - ErrorBoundary
 - HttpCode
 - TestSearchEventsTool
@@ -167,12 +167,11 @@
 - TestGetEventOnAnUnknownId
 - traffic-admin.service.ts
 - TrafficCleanupService
-- Sidebar.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `useAuth()` - 79 edges
 2. `SupabaseService` - 48 edges
-3. `useUI()` - 39 edges
+3. `useUI()` - 41 edges
 4. `AdminService` - 31 edges
 5. `get_settings()` - 30 edges
 6. `api` - 30 edges
@@ -201,15 +200,15 @@
 - **TS Brand Logo Asset Usage** — frontend_public_favicon_tslogomark, frontend_src_assets_logo_ts_tslogomark, frontend_index_htmlentrypoint, frontend_index_seometatags [INFERRED 0.80]
 - **Push-to-Main Auto-Deploy Pipeline** — claude_autopushagreement, github_workflows_ci_buildcheckworkflow, github_workflows_supabase_migrations_migratejob, readme_migrationsautomation [INFERRED 0.85]
 
-## Communities (164 total, 54 thin omitted)
+## Communities (163 total, 54 thin omitted)
 
-### Community 0 - "types.ts"
-Cohesion: 0.11
-Nodes (24): BarsPage, useBarsChat(), useBarsChats(), useSubmissions(), BarsPage(), chatTitle(), fmtWhen(), STATUS_LABELS (+16 more)
+### Community 0 - "useBars.ts"
+Cohesion: 0.19
+Nodes (14): BarsPage, useBarsAnalytics(), useBarsChat(), useBarsChats(), BarsPage(), chatTitle(), fmtWhen(), STATUS_LABELS (+6 more)
 
-### Community 1 - "ArticlePage.tsx"
-Cohesion: 0.67
-Nodes (3): ArticlePage, useArticle(), ArticlePage()
+### Community 1 - "ProfilePage.tsx"
+Cohesion: 0.17
+Nodes (10): ProfilePage, PublishPage, FULL_DOT_COLORS, INLINE_DOT_COLORS, Loader(), useSubmissions(), STATUS_LABEL, TelegramLinkStatus (+2 more)
 
 ### Community 2 - "20260828103623_traffic_analytics.sql"
 Cohesion: 0.08
@@ -224,16 +223,16 @@ Cohesion: 0.08
 Nodes (33): Auto-Push Working Agreement, Backend Build Job, Build Check Workflow, Frontend Build Job, Check Required Secrets Step, Link Project Step, Migrate Job, Push Migrations Step (+25 more)
 
 ### Community 5 - "ProfileController"
-Cohesion: 0.12
-Nodes (11): ProfileController, Body, Controller, Delete, Get, HttpCode, Patch, UseGuards (+3 more)
+Cohesion: 0.10
+Nodes (13): mapProfile(), ProfileController, Body, Controller, Delete, Get, HttpCode, Patch (+5 more)
 
 ### Community 6 - "frontend/package.json"
 Cohesion: 0.06
 Nodes (30): dependencies, react, react-dom, react-helmet-async, react-router-dom, @supabase/supabase-js, devDependencies, @types/react (+22 more)
 
-### Community 7 - "ImageUploadField.tsx"
-Cohesion: 0.29
-Nodes (7): ImageUploadField(), onPick(), ImageUploadFieldProps, CompressedImage, compressImage(), RESIZABLE_TYPES, uploadPostImage()
+### Community 7 - "TrackLinkClickDto"
+Cohesion: 0.18
+Nodes (10): DEVICE_TYPES, LINK_KINDS, TARGET_TYPES, TrackLinkClickDto, IsBoolean, IsIn, IsOptional, IsString (+2 more)
 
 ### Community 8 - "events.service.ts"
 Cohesion: 0.09
@@ -243,9 +242,9 @@ Nodes (24): EventsController, CacheTTL, Controller, Get, Header, Param, Query, U
 Cohesion: 0.29
 Nodes (3): BarsAdminService, bishkekDayKeys(), Injectable
 
-### Community 10 - "traffic.service.ts"
-Cohesion: 0.06
-Nodes (40): DEVICE_TYPES, HeartbeatDto, IsBoolean, IsIn, IsUUID, DEVICE_TYPES, TARGET_TYPES, TrackCardViewDto (+32 more)
+### Community 10 - "traffic.module.ts"
+Cohesion: 0.16
+Nodes (11): DEVICE_TYPES, HeartbeatDto, IsBoolean, IsIn, IsUUID, DEVICE_TYPES, TARGET_TYPES, DEVICE_TYPES (+3 more)
 
 ### Community 11 - "truncate_to_last_complete_line"
 Cohesion: 0.13
@@ -267,9 +266,9 @@ Nodes (20): compilerOptions, isolatedModules, jsx, lib, module, moduleResolution
 Cohesion: 0.22
 Nodes (8): name, private, scripts, build, start, start:dev, start:prod, version
 
-### Community 16 - "FavoritesService"
-Cohesion: 0.14
-Nodes (8): FavoritesController, Controller, Get, Param, Post, UseGuards, FavoritesService, Injectable
+### Community 16 - "FavoritesController"
+Cohesion: 0.20
+Nodes (6): FavoritesController, Controller, Get, Param, Post, UseGuards
 
 ### Community 17 - "retrieval.py"
 Cohesion: 0.16
@@ -289,7 +288,7 @@ Nodes (6): BarsAdminController, Body, Controller, Param, UseGuards, Put
 
 ### Community 21 - "main.tsx"
 Cohesion: 0.08
-Nodes (25): App(), onLogout(), PolicyGate(), onAccept(), AuthProvider(), checkBanStatus(), hasPerm(), refreshProfile() (+17 more)
+Nodes (25): App(), BannedGate(), onLogout(), periodText(), PolicyGate(), onAccept(), AuthProvider(), checkBanStatus() (+17 more)
 
 ### Community 22 - "UsersAdminService"
 Cohesion: 0.14
@@ -344,12 +343,12 @@ Cohesion: 0.50
 Nodes (3): headers, redirects, rewrites
 
 ### Community 39 - "TrafficAdminService"
-Cohesion: 0.11
-Nodes (13): TrafficQueryDto, IsInt, IsOptional, Max, Min, Type, TrafficAdminController, Controller (+5 more)
+Cohesion: 0.18
+Nodes (7): TrafficAdminController, Controller, Get, Query, UseGuards, TrafficAdminService, Injectable
 
 ### Community 40 - "AnalyticsPage.tsx"
-Cohesion: 0.11
-Nodes (26): AnalyticsPage, BarChart(), BarChartProps, setBarsCredit(), useBarsAnalytics(), useCapacity(), useTrafficOnline(), useTrafficSummary() (+18 more)
+Cohesion: 0.13
+Nodes (20): AnalyticsPage, BarChart(), BarChartProps, setBarsCredit(), useCapacity(), AnalyticsPage(), BarsCreditCard(), BarsTab() (+12 more)
 
 ### Community 42 - "CreateEventDto"
 Cohesion: 0.17
@@ -368,16 +367,16 @@ Cohesion: 0.18
 Nodes (17): event_keyboard(), plan_keyboard(), Any, Turning the model's answer into a Telegram message. The model never emits URLs…, Telegram rejects an entire message over one malformed button URL, which would…, render_plan(), site_url(), _usable_url() (+9 more)
 
 ### Community 46 - "EventDetails.tsx"
-Cohesion: 0.11
-Nodes (27): EventDetails(), EventDetailsProps, instagramUrl(), telegramUrl(), EventPhoto(), EventPhotoProps, NewsCard(), NewsCardProps (+19 more)
+Cohesion: 0.06
+Nodes (54): AppLayout(), CardMenu(), EventCard(), EventCardAdminActions, EventCardProps, instagramUrl(), EventDetails(), EventDetailsProps (+46 more)
 
 ### Community 47 - "DateField.tsx"
 Cohesion: 0.36
 Nodes (6): DateField(), handleTextChange(), DateFieldProps, displayToIso(), isoToDisplay(), maskDigitsAsDate()
 
-### Community 48 - "GridPage.tsx"
+### Community 48 - "useAuth"
 Cohesion: 0.09
-Nodes (27): CardSizeSlider(), NetTroubleToast(), NewsModal(), Toast(), Theme, UIContext, UIContextValue, useUI() (+19 more)
+Nodes (33): CardSizeSlider(), EventModal(), NetTroubleToast(), Sidebar(), Toast(), hasPerm(), useAuth(), Theme (+25 more)
 
 ### Community 49 - "BarsCreditDto"
 Cohesion: 0.20
@@ -439,13 +438,13 @@ Nodes (14): CreateNewsDto, IsOptional, IsString, ExtraLinkDto, IsOptional, IsStr
 Cohesion: 0.20
 Nodes (9): 1. Query Performance (query), 2. Connection Management (conn), 3. Security & RLS (security), 4. Schema Design (schema), 5. Concurrency & Locking (lock), 6. Data Access Patterns (data), 7. Monitoring & Diagnostics (monitor), 8. Advanced Features (advanced) (+1 more)
 
-### Community 66 - "tracking.ts"
-Cohesion: 0.18
-Nodes (17): EventPage, NewsPage, EventModal(), useEvent(), useFavorites(), useHeartbeat(), useNewsItem(), base() (+9 more)
+### Community 66 - "TrafficService"
+Cohesion: 0.29
+Nodes (3): describeError(), TrafficService, Injectable
 
 ### Community 67 - "TelegramLinkService"
-Cohesion: 0.06
-Nodes (27): BotAuthGuard, secretsMatch(), Injectable, BotController, Body, Controller, Delete, Get (+19 more)
+Cohesion: 0.07
+Nodes (26): BotAuthGuard, secretsMatch(), Injectable, BotController, Body, Controller, Delete, Get (+18 more)
 
 ### Community 68 - "deploy"
 Cohesion: 0.25
@@ -471,17 +470,17 @@ Nodes (11): The LangGraph agent behind Барс., _clean_due_date(), _plan_horiz
 Cohesion: 0.10
 Nodes (18): SetRoleDto, IsIn, AdminGuard, Injectable, PermissionGuard, Injectable, PERM_KEY, AuthedRequest (+10 more)
 
-### Community 75 - "useAuth"
-Cohesion: 0.15
-Nodes (14): UsersPage, BannedGate(), periodText(), ROLE_BADGE, UsersManager(), UsersManagerProps, useAuth(), useAdmins() (+6 more)
+### Community 75 - "TrafficController"
+Cohesion: 0.47
+Nodes (6): TrafficController, Body, Controller, HttpCode, Post, Throttle
 
 ### Community 108 - "BarsQueryDto"
 Cohesion: 0.20
 Nodes (8): Get, Query, BarsQueryDto, IsInt, IsOptional, Max, Min, Type
 
-### Community 109 - "auth.controller.ts"
-Cohesion: 0.15
-Nodes (8): AuthController, Controller, Get, Query, Throttle, UseGuards, BanStatusGuard, Injectable
+### Community 109 - "AuthController"
+Cohesion: 0.25
+Nodes (6): AuthController, Controller, Get, Query, Throttle, UseGuards
 
 ### Community 110 - "public.get_user_capacity_stats"
 Cohesion: 0.33
@@ -499,29 +498,29 @@ Nodes (11): age_fits(), matches(), Whether a participant of this age is inside t
 Cohesion: 0.17
 Nodes (10): availability(), availability_line(), Catalog, Any, How many open events sit in each catalogue category, zeros included. The zeros…, The one-line catalogue census handed to the model on every turn., fixture, Canned answers: what gets intercepted, and — more importantly — what must not.… (+2 more)
 
-### Community 133 - "HealthController"
-Cohesion: 0.14
-Nodes (9): HealthController, Controller, Get, SkipThrottle, HealthModule, Module, KeepaliveService, Injectable (+1 more)
+### Community 133 - "SupabaseService"
+Cohesion: 0.08
+Nodes (16): BanStatusGuard, Injectable, Inject, TelegramLinkRow, ProfileRow, FavoritesService, Injectable, HealthController (+8 more)
 
 ### Community 134 - "AdminPage.tsx"
-Cohesion: 0.05
-Nodes (43): Chip(), ChipProps, EditEventModal(), save(), emptyPostForm(), eventToPostForm(), FORMATS, LEVELS (+35 more)
+Cohesion: 0.06
+Nodes (43): Chip(), ChipProps, EditEventModal(), save(), EditEventModalProps, ImageUploadField(), onPick(), ImageUploadFieldProps (+35 more)
 
 ### Community 135 - "App.tsx"
-Cohesion: 0.08
-Nodes (20): AdminPage, AppLayout(), AuthPage, EditAccountPage, EducationPage, HomeGate(), PrivacyPage, ProfilePage (+12 more)
+Cohesion: 0.05
+Nodes (38): AdminPage, ArticlePage, AuthPage, EditAccountPage, EducationPage, HomeGate(), NotFoundPage, PrivacyPage (+30 more)
 
-### Community 136 - "getOrFetch"
-Cohesion: 0.16
-Nodes (19): EducationIndex(), EDUCATION_INDEX_DESCRIPTION, EDUCATION_INDEX_TITLE, EDUCATION_TRACK_SEO, educationBreadcrumbJsonLd(), educationCollectionJsonLd(), EducationTrackSeo, useEducation() (+11 more)
+### Community 136 - "useEducation.ts"
+Cohesion: 0.09
+Nodes (33): EducationIndex(), EventPage, NewsPage, NewsDetails(), NewsModal(), educationBreadcrumbJsonLd(), educationCollectionJsonLd(), EducationData (+25 more)
 
 ### Community 137 - "bishkek_today"
 Cohesion: 0.29
 Nodes (9): bishkek_today(), deadline_in_days(), is_open(), parse_date(), date, Still worth recommending: not archived, not in the voting stage, not past its…, _age_from(), date (+1 more)
 
-### Community 138 - "AuthContext.tsx"
-Cohesion: 0.15
-Nodes (18): EditEventModalProps, AuthContext, AuthContextValue, EventFilters, api, authHeader(), reportNetworkTrouble(), request() (+10 more)
+### Community 138 - "types.ts"
+Cohesion: 0.09
+Nodes (33): AuthContext, AuthContextValue, api, authHeader(), reportNetworkTrouble(), request(), CompressedImage, compressImage() (+25 more)
 
 ### Community 139 - "SubmissionsService"
 Cohesion: 0.15
@@ -531,37 +530,37 @@ Nodes (9): mapSubmission(), SubmissionsController, Body, Controller, Get, Post, 
 Cohesion: 0.29
 Nodes (5): CreateMaterialDto, IsArray, IsInt, IsOptional, IsString
 
-### Community 141 - "HomePage.tsx"
-Cohesion: 0.12
-Nodes (18): NotFoundPage, Seo(), SeoProps, SITE_URL, HOME_DESCRIPTION, HOME_JSON_LD, HOME_TITLE, Floater (+10 more)
+### Community 141 - "TrafficQueryDto"
+Cohesion: 0.29
+Nodes (6): TrafficQueryDto, IsInt, IsOptional, Max, Min, Type
 
 ### Community 142 - "users-admin.service.ts"
 Cohesion: 0.16
 Nodes (12): BAN_DURATIONS, BanDuration, BanUserDto, IsIn, IsOptional, IsString, MaxLength, ADMIN_PERM_KEYS (+4 more)
 
 ### Community 143 - "UserAccountPage.tsx"
-Cohesion: 0.10
-Nodes (17): BanModal(), BanModalProps, OPTIONS, ConfirmDialog(), ConfirmDialogProps, FULL_DOT_COLORS, INLINE_DOT_COLORS, Loader() (+9 more)
+Cohesion: 0.08
+Nodes (22): UserAccountPage, UsersPage, BanModal(), BanModalProps, OPTIONS, ConfirmDialog(), ConfirmDialogProps, ROLE_BADGE (+14 more)
 
 ### Community 144 - "AdminService"
 Cohesion: 0.17
 Nodes (6): AdminService, deriveAgeLabel(), deriveShortDesc(), Inject, Injectable, mapEvent()
 
-### Community 145 - "usePublishInfo.ts"
-Cohesion: 0.36
-Nodes (7): fmtWhen(), PublishInfo(), who(), PATH, PublisherInfo, PublishInfo, usePublishInfo()
+### Community 145 - "TrackCardViewDto"
+Cohesion: 0.33
+Nodes (6): TrackCardViewDto, IsBoolean, IsIn, IsString, IsUUID, MaxLength
 
 ### Community 146 - "find_by_title"
 Cohesion: 0.36
 Nodes (4): find_by_title(), _normalise_title(), Resolve a query that names an event, tolerating typos and ignoring the age…, TestFindByTitle
 
-### Community 147 - "SupabaseService"
-Cohesion: 0.09
-Nodes (26): CreateEducationTrackDto, IsOptional, IsString, IsOptional, IsString, UpdateEducationTrackDto, Inject, TelegramLinkRow (+18 more)
+### Community 147 - "admin.service.ts"
+Cohesion: 0.12
+Nodes (20): CreateEducationTrackDto, IsOptional, IsString, IsOptional, IsString, UpdateEducationTrackDto, EducationTrackRow, EventRow (+12 more)
 
-### Community 148 - "EventCard.tsx"
-Cohesion: 0.24
-Nodes (10): CardMenu(), EventCard(), EventCardAdminActions, EventCardProps, instagramUrl(), plural(), dateToUTCDay(), deadlineBadge (+2 more)
+### Community 148 - "TrackViewDto"
+Cohesion: 0.33
+Nodes (6): TrackViewDto, IsBoolean, IsIn, IsString, IsUUID, MaxLength
 
 ### Community 149 - "ErrorBoundary"
 Cohesion: 0.22
@@ -595,10 +594,6 @@ Nodes (7): CardUniqueViewsRow, DailyTrendRow, DeviceRow, HourlyRow, LoginSplitRo
 Cohesion: 0.33
 Nodes (4): TrafficCleanupService, Cron, Injectable, yesterdayInBishkek()
 
-### Community 163 - "Sidebar.tsx"
-Cohesion: 0.60
-Nodes (3): Sidebar(), NAV_CATS, carryCatalogSearch()
-
 ## Knowledge Gaps
 - **339 isolated node(s):** `$schema`, `collection`, `sourceRoot`, `deleteOutDir`, `name` (+334 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 832 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
@@ -607,17 +602,17 @@ Nodes (3): Sidebar(), NAV_CATS, carryCatalogSearch()
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SupabaseService` connect `SupabaseService` to `HealthController`, `ProfileController`, `events.service.ts`, `BarsAdminService`, `traffic.service.ts`, `SubmissionsService`, `RatingsService`, `users-admin.service.ts`, `AdminService`, `FavoritesService`, `UsersAdminService`, `EducationController`, `CapacityService`, `bars-admin.service.ts`, `traffic-admin.service.ts`, `TrafficCleanupService`, `TrafficAdminService`, `NewsController`, `TelegramLinkService`, `admin.controller.ts`, `auth.controller.ts`, `sitemap.controller.ts`?**
+- **Why does `SupabaseService` connect `SupabaseService` to `ProfileController`, `events.service.ts`, `BarsAdminService`, `traffic.module.ts`, `SubmissionsService`, `RatingsService`, `users-admin.service.ts`, `AdminService`, `admin.service.ts`, `UsersAdminService`, `EducationController`, `CapacityService`, `bars-admin.service.ts`, `traffic-admin.service.ts`, `TrafficCleanupService`, `TrafficAdminService`, `NewsController`, `TrafficService`, `TelegramLinkService`, `admin.controller.ts`, `AuthController`, `sitemap.controller.ts`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
-- **Why does `AdminService` connect `AdminService` to `admin.controller.ts`, `CreateEventDto`, `CreateMaterialDto`, `app.module.ts`, `SupabaseService`, `AdminController`, `HttpCode`, `UpdateMaterialDto`, `UpdateSubmissionDto`?**
+- **Why does `AdminService` connect `AdminService` to `admin.controller.ts`, `CreateEventDto`, `CreateMaterialDto`, `app.module.ts`, `admin.service.ts`, `AdminController`, `HttpCode`, `UpdateMaterialDto`, `UpdateSubmissionDto`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `CurrentUser` connect `admin.controller.ts` to `TelegramLinkService`, `ProfileController`, `CreateEventDto`, `SubmissionsService`, `RatingsService`, `auth.controller.ts`, `FavoritesService`, `AdminController`, `UsersAdminService`?**
+- **Why does `CurrentUser` connect `admin.controller.ts` to `SupabaseService`, `ProfileController`, `CreateEventDto`, `SubmissionsService`, `RatingsService`, `AuthController`, `FavoritesController`, `AdminController`, `UsersAdminService`?**
   _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **What connects `$schema`, `collection`, `sourceRoot` to the rest of the system?**
   _339 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `types.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.1103448275862069 - nodes in this community are weakly interconnected._
 - **Should `20260828103623_traffic_analytics.sql` be split into smaller, more focused modules?**
   _Cohesion score 0.0797979797979798 - nodes in this community are weakly interconnected._
 - **Should `Platform Description (Privacy Policy Section 1)` be split into smaller, more focused modules?**
   _Cohesion score 0.08143939393939394 - nodes in this community are weakly interconnected._
+- **Should `ProfileController` be split into smaller, more focused modules?**
+  _Cohesion score 0.10153846153846154 - nodes in this community are weakly interconnected._
