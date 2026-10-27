@@ -26,7 +26,6 @@ export class TrafficService {
   async recordPageView(dto: TrackViewDto, userId: string | null) {
     await this.insertEvent({
       session_id: dto.sessionId,
-      user_id: userId,
       event_type: 'page_view',
       path: dto.path,
       device_type: dto.deviceType,
@@ -37,7 +36,6 @@ export class TrafficService {
   async recordCardView(dto: TrackCardViewDto, userId: string | null) {
     await this.insertEvent({
       session_id: dto.sessionId,
-      user_id: userId,
       event_type: 'card_view',
       target_type: dto.targetType,
       target_id: dto.targetId,
@@ -69,7 +67,6 @@ export class TrafficService {
   async recordLinkClick(dto: TrackLinkClickDto, userId: string | null) {
     await this.insertEvent({
       session_id: dto.sessionId,
-      user_id: userId,
       event_type: 'link_click',
       link_kind: dto.linkKind,
       target_type: dto.targetType,
@@ -82,7 +79,6 @@ export class TrafficService {
   async recordFeature(dto: TrackFeatureDto, userId: string | null) {
     await this.insertEvent({
       session_id: dto.sessionId,
-      user_id: userId,
       event_type: 'feature',
       feature: dto.feature,
       detail: dto.detail ?? null,
@@ -91,17 +87,13 @@ export class TrafficService {
     });
   }
 
-  // Goes through an RPC rather than an upsert: the row carries running counters
-  // for the current visit (visit_active_ms, visit_heartbeats, visit_started_at),
-  // and a plain upsert would reset them to their defaults on every beat — engaged
-  // time would silently stay zero. The RPC also credits the elapsed interval to
-  // the right Bishkek day, so a visit spanning midnight splits correctly.
   async recordHeartbeat(dto: HeartbeatDto, userId: string | null) {
     try {
-      const { error } = await this.supabase.client.rpc('record_heartbeat', {
-        p_session_id: dto.sessionId,
-        p_device_type: dto.deviceType,
-        p_user_id: userId
+      const { error } = await this.supabase.client.from('traffic_sessions').upsert({
+        session_id: dto.sessionId,
+        device_type: dto.deviceType,
+        is_logged_in: userId !== null,
+        last_seen_at: new Date().toISOString()
       });
       if (error) throw error;
     } catch (err) {
