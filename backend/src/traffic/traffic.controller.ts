@@ -6,9 +6,15 @@ import { TrafficService } from './traffic.service';
 import { TrackViewDto } from './dto/track-view.dto';
 import { TrackCardViewDto } from './dto/track-card-view.dto';
 import { TrackLinkClickDto } from './dto/track-link-click.dto';
+import { TrackFeatureDto } from './dto/track-feature.dto';
 import { HeartbeatDto } from './dto/heartbeat.dto';
 
 const TRACK_THROTTLE = { default: { limit: 30, ttl: 60000 } };
+// Feature events get a wider bucket than the others, because the throttler keys
+// by IP: a school or a cafe behind one NAT is thirty teenagers in a single
+// bucket, and ingestion swallows errors, so anything dropped here would vanish
+// without a trace.
+const FEATURE_THROTTLE = { default: { limit: 120, ttl: 60000 } };
 
 /** Public, unauthenticated tracking ingestion. The frontend's api client attaches
  *  the Supabase bearer token to every call it makes (see frontend/src/lib/api.ts),
@@ -41,6 +47,13 @@ export class TrafficController {
   @Throttle(TRACK_THROTTLE)
   async linkClick(@Body() dto: TrackLinkClickDto, @Req() req: Request) {
     await this.traffic.recordLinkClick(dto, await this.authToken.resolveOptionalUserId(req));
+  }
+
+  @Post('feature')
+  @HttpCode(204)
+  @Throttle(FEATURE_THROTTLE)
+  async feature(@Body() dto: TrackFeatureDto, @Req() req: Request) {
+    await this.traffic.recordFeature(dto, await this.authToken.resolveOptionalUserId(req));
   }
 
   @Post('heartbeat')

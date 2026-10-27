@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
+import { trackFeature } from '../lib/tracking';
 
 export function useFavorites() {
   const { session } = useAuth();
@@ -36,6 +37,7 @@ export function useFavorites() {
       });
       try {
         await api.post(`/favorites/${eventId}`);
+        trackFeature(wasOn ? 'favorite_remove' : 'favorite_add');
       } catch {
         setFavorites((prev) => {
           const next = new Set(prev);

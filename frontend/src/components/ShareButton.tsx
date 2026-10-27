@@ -1,4 +1,5 @@
 import { useUI } from '../contexts/UIContext';
+import { trackFeature } from '../lib/tracking';
 import { ShareIcon } from './ShareIcon';
 
 interface ShareButtonProps {
@@ -13,6 +14,7 @@ export function ShareButton({ url, title, className = '' }: ShareButtonProps) {
   const { flash } = useUI();
 
   const onShare = async () => {
+    trackFeature('share_click');
     if (navigator.share) {
       try {
         await navigator.share({ title, url });

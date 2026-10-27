@@ -5,6 +5,7 @@ import { useUI } from '../contexts/UIContext';
 import { api } from '../lib/api';
 import { compressImage } from '../lib/compressImage';
 import { supabase } from '../lib/supabase';
+import { trackFeature } from '../lib/tracking';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { DateField } from '../components/DateField';
 import { Loader } from '../components/Loader';
@@ -62,6 +63,7 @@ export function EditAccountPage() {
       const { data } = supabase.storage.from('avatars').getPublicUrl(path);
       await api.patch<Profile>('/profile', { avatarUrl: data.publicUrl });
       await refreshProfile();
+      trackFeature('avatar_upload');
       flash('Аватар обновлён');
     } catch (err) {
       flash(err instanceof Error ? err.message : 'Не удалось загрузить фото');
@@ -75,6 +77,7 @@ export function EditAccountPage() {
     try {
       await api.patch<Profile>('/profile', { lastName, name, birthDate, username });
       await refreshProfile();
+      trackFeature('profile_edit');
       flash('Изменения сохранены');
       navigate('/profile');
     } catch (err) {
@@ -87,6 +90,9 @@ export function EditAccountPage() {
   async function onDelete() {
     setConfirmDelete(false);
     try {
+      // Before the delete lands: afterwards the row this would attribute to is
+      // gone, and the FK would null the event's user_id anyway.
+      trackFeature('account_delete');
       await api.del('/profile');
       await signOut();
       navigate('/');

@@ -3,6 +3,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 import { TrackViewDto } from './dto/track-view.dto';
 import { TrackCardViewDto } from './dto/track-card-view.dto';
 import { TrackLinkClickDto } from './dto/track-link-click.dto';
+import { TrackFeatureDto } from './dto/track-feature.dto';
 import { HeartbeatDto } from './dto/heartbeat.dto';
 
 function describeError(err: unknown): string {
@@ -73,6 +74,18 @@ export class TrafficService {
       link_kind: dto.linkKind,
       target_type: dto.targetType,
       target_id: dto.targetId,
+      device_type: dto.deviceType,
+      is_logged_in: userId !== null
+    });
+  }
+
+  async recordFeature(dto: TrackFeatureDto, userId: string | null) {
+    await this.insertEvent({
+      session_id: dto.sessionId,
+      user_id: userId,
+      event_type: 'feature',
+      feature: dto.feature,
+      detail: dto.detail ?? null,
       device_type: dto.deviceType,
       is_logged_in: userId !== null
     });

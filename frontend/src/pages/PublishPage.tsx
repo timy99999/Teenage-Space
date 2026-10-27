@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PostSiteInfo, PostCardInfo, emptyPostForm } from '../components/PostForm';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { useSubmissions } from '../hooks/useSubmissions';
 import { api } from '../lib/api';
+import { trackFeature } from '../lib/tracking';
 import type { PostFormValue, Submission } from '../types';
 
 export function PublishPage() {
@@ -12,6 +13,12 @@ export function PublishPage() {
   const { flash } = useUI();
   const navigate = useNavigate();
   const { reload } = useSubmissions();
+
+  // Paired with event_submit_success below, this is the drop-off rate on the
+  // submission form — how many people start filling it in and never finish.
+  useEffect(() => {
+    trackFeature('event_submit_open');
+  }, []);
 
   const [form, setForm] = useState<PostFormValue>(emptyPostForm);
   const [whatsapp, setWhatsapp] = useState('');
@@ -60,6 +67,7 @@ export function PublishPage() {
         whatsapp: whatsapp || null
       });
       setPublished(true);
+      trackFeature('event_submit_success');
       reload();
     } catch (e) {
       flash(e instanceof Error ? e.message : 'Не удалось отправить заявку');

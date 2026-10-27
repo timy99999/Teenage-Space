@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
+import { trackFeature } from '../lib/tracking';
 
 export function useRatings() {
   const { session } = useAuth();
@@ -34,6 +35,7 @@ export function useRatings() {
       setRatings((prev) => ({ ...prev, [eventId]: value }));
       try {
         await api.post(`/ratings/${eventId}`, { value });
+        trackFeature('rating_submit', String(value));
       } catch {
         setRatings((prev) => {
           const next = { ...prev };

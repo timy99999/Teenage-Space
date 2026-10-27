@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { useSubmissions } from '../hooks/useSubmissions';
 import { api } from '../lib/api';
+import { trackFeature } from '../lib/tracking';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { Loader } from '../components/Loader';
 import type { Profile } from '../types';
@@ -61,16 +62,19 @@ export function ProfilePage() {
   if (!session) return <Navigate to="/auth" replace />;
 
   async function setThemeAndPersist(next: 'light' | 'dark') {
+    trackFeature('theme_toggle', next);
     setTheme(next);
     await api.patch<Profile>('/profile', { theme: next }).then(refreshProfile).catch(() => {});
   }
 
   async function toggleNotif() {
     if (!profile) return;
+    trackFeature('notifications_toggle', profile.notifOptIn ? 'off' : 'on');
     await api.patch<Profile>('/profile', { notifOptIn: !profile.notifOptIn }).then(refreshProfile).catch(() => {});
   }
 
   async function linkTelegram() {
+    trackFeature('telegram_link_open');
     setTelegramBusy(true);
     setTelegramError('');
     try {
@@ -90,6 +94,9 @@ export function ProfilePage() {
 
   async function onLogout() {
     setConfirmLogout(false);
+    // Before signOut, so the event still carries the bearer token and lands
+    // attributed to this person rather than as anonymous.
+    trackFeature('logout');
     await signOut();
     navigate('/auth');
   }

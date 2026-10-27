@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEducation, useEducationTracks } from '../hooks/useEducation';
+import { trackFeature } from '../lib/tracking';
 import { Seo } from '../components/Seo';
 import { EDUCATION_TRACK_SEO, educationBreadcrumbJsonLd, educationCollectionJsonLd } from '../data/educationSeo';
 
@@ -8,6 +10,10 @@ export function EducationPage() {
   const { trackId } = useParams<{ trackId: string }>();
   const { title, intro, items } = useEducation(trackId ?? '');
   const { tracks } = useEducationTracks();
+
+  useEffect(() => {
+    if (trackId) trackFeature('track_open', trackId);
+  }, [trackId]);
   const seo = trackId ? EDUCATION_TRACK_SEO[trackId] : undefined;
   const path = `/education/${trackId ?? ''}`;
 

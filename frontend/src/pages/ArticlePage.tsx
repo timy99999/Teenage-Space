@@ -1,10 +1,16 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useArticle } from '../hooks/useEducation';
+import { trackFeature } from '../lib/tracking';
 import { Seo } from '../components/Seo';
 
 export function ArticlePage() {
   const { id } = useParams();
   const article = useArticle(id);
+
+  useEffect(() => {
+    if (id) trackFeature('article_open', id);
+  }, [id]);
 
   if (!article) return null;
 

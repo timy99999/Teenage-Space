@@ -18,6 +18,7 @@ import { CardSizeSlider } from '../components/CardSizeSlider';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EditEventModal } from '../components/EditEventModal';
 import { carryCatalogSearch } from '../lib/catalogNav';
+import { trackFeature } from '../lib/tracking';
 import { Seo } from '../components/Seo';
 import { Loader } from '../components/Loader';
 import type { EventItem } from '../types';
@@ -151,11 +152,26 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
       else p.delete(key);
     });
 
-  const toggleTheme = (k: string) => toggleInList('themes', THEME_KEYS, k);
-  const toggleCat = (k: string) => toggleInList('cats', CAT_KEYS, k);
-  const togglePrice = (k: 'free' | 'paid') => setSingle('price', fPrice === k ? null : k);
-  const toggleLevel = (k: 'local' | 'intl') => setSingle('level', fLevel === k ? null : k);
-  const applyAge = () => setSingle('age', ageInput.trim() || null);
+  const toggleTheme = (k: string) => {
+    trackFeature('filter_apply', 'theme');
+    toggleInList('themes', THEME_KEYS, k);
+  };
+  const toggleCat = (k: string) => {
+    trackFeature('filter_apply', 'category');
+    toggleInList('cats', CAT_KEYS, k);
+  };
+  const togglePrice = (k: 'free' | 'paid') => {
+    trackFeature('filter_apply', 'price');
+    setSingle('price', fPrice === k ? null : k);
+  };
+  const toggleLevel = (k: 'local' | 'intl') => {
+    trackFeature('filter_apply', 'level');
+    setSingle('level', fLevel === k ? null : k);
+  };
+  const applyAge = () => {
+    trackFeature('filter_apply', 'age');
+    setSingle('age', ageInput.trim() || null);
+  };
 
   // Push the debounced search term into the URL (catalog only).
   useEffect(() => {
@@ -296,6 +312,19 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
   // site's own loading animation instead of a blank strip.
   const showInitialLoader = !isNews && loading && favEvents.length === 0;
 
+  // Record a search once it has settled AND its results have landed, so an empty
+  // outcome can be told apart from one still in flight. The zero-result case is
+  // the interesting one: the UI has always rendered it, but nothing recorded
+  // which queries come back with nothing.
+  const trackedQuery = useRef<string | null>(null);
+  useEffect(() => {
+    if (!isOpps || loading) return;
+    const q = qApplied.slice(0, 120);
+    if (q.length < 3 || trackedQuery.current === q) return;
+    trackedQuery.current = q;
+    trackFeature(count === 0 ? 'search_zero_result' : 'search_query', q);
+  }, [isOpps, loading, qApplied, count]);
+
   const subLabel = isOpps && category ? CATS.find((c) => c.key === category)?.label ?? '' : '';
   const pageTitle = isOpps ? TITLES.opps : TITLES[mode];
   const catSeo = isOpps && category ? CATEGORY_SEO[category] : undefined;
@@ -306,15 +335,18 @@ export function GridPage({ mode, seo }: { mode: GridMode; seo?: GridSeoOverride 
   const anyActive = activeFilterCount > 0 || sort !== 'new';
 
   const resetAll = () => {
+    trackFeature('filter_reset', 'all');
     setAgeInput('');
     setSearchInput('');
     patchParams((p) => URL_FILTER_KEYS.forEach((k) => p.delete(k)));
   };
   const clearSearchOnly = () => {
+    trackFeature('filter_reset', 'search');
     setSearchInput('');
     setSingle('q', null);
   };
   const resetFiltersKeepSearch = () => {
+    trackFeature('filter_reset', 'filters');
     setAgeInput('');
     patchParams((p) => REMEMBERED_KEYS.forEach((k) => p.delete(k)));
   };

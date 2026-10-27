@@ -1,6 +1,7 @@
 import { useUI } from '../contexts/UIContext';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../lib/api';
+import { trackFeature } from '../lib/tracking';
 import type { Profile } from '../types';
 
 export function SettingsPage() {
@@ -8,12 +9,14 @@ export function SettingsPage() {
   const { session, profile, refreshProfile } = useAuth();
 
   async function setThemeAndPersist(next: 'light' | 'dark') {
+    trackFeature('theme_toggle', next);
     setTheme(next);
     if (session) await api.patch<Profile>('/profile', { theme: next }).then(refreshProfile).catch(() => {});
   }
 
   async function toggleNotif() {
     if (!session || !profile) return;
+    trackFeature('notifications_toggle', profile.notifOptIn ? 'off' : 'on');
     await api.patch<Profile>('/profile', { notifOptIn: !profile.notifOptIn }).then(refreshProfile).catch(() => {});
   }
 

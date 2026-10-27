@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { api } from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
+import { trackFeature } from '../lib/tracking';
 import { DateField } from '../components/DateField';
 import type { Profile } from '../types';
 
@@ -37,6 +38,13 @@ export function AuthPage() {
 
   useEffect(() => () => window.clearInterval(resendTimer.current), []);
 
+  // This page renders outside AppLayout, so useTrackPageView never fires for it —
+  // the whole signup funnel was invisible. These events are the funnel; they work
+  // for anonymous visitors too, since the session id alone carries them.
+  useEffect(() => {
+    trackFeature('auth_open');
+  }, []);
+
   function startResend() {
     setResendLeft(30);
     window.clearInterval(resendTimer.current);
@@ -63,12 +71,14 @@ export function AuthPage() {
     }
     setError('');
     setBusy(true);
+    trackFeature('auth_login_submit');
     try {
       const { email: resolvedEmail } = await api.get<{ email: string }>(
         `/auth/lookup-email?username=${encodeURIComponent(loginUser)}`
       );
       const { error: signInError } = await supabase.auth.signInWithPassword({ email: resolvedEmail, password: loginPass });
       if (signInError) throw signInError;
+      trackFeature('auth_login_success');
       await finishSignIn();
     } catch {
       setError('Неверный username или пароль');
@@ -87,6 +97,7 @@ export function AuthPage() {
     try {
       const { error: otpError } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: true } });
       if (otpError) throw otpError;
+      trackFeature('auth_reg_step1');
       setView('reg2');
       startResend();
     } catch (e) {
@@ -106,6 +117,7 @@ export function AuthPage() {
     try {
       const { error: verifyError } = await supabase.auth.verifyOtp({ email, token: code, type: 'email' });
       if (verifyError) throw verifyError;
+      trackFeature('auth_reg_step2');
       setView('reg3');
     } catch {
       setError('Неверный код подтверждения');
@@ -137,10 +149,12 @@ export function AuthPage() {
     }
     setError('');
     setBusy(true);
+    trackFeature('auth_reg_step3');
     try {
       const { error: pwError } = await supabase.auth.updateUser({ password: pw });
       if (pwError) throw pwError;
       await api.patch<Profile>('/profile', { username, name, lastName, birthDate: birth, policyAccepted: true });
+      trackFeature('auth_reg_success');
       flash('Аккаунт создан');
       await finishSignIn();
     } catch (e) {
@@ -151,6 +165,7 @@ export function AuthPage() {
   }
 
   async function onGoogle() {
+    trackFeature('auth_google_click');
     await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
   }
 
@@ -171,6 +186,7 @@ export function AuthPage() {
     try {
       const { error: otpError } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
       if (otpError) throw otpError;
+      trackFeature('auth_forgot_start');
       setView('forgot2');
       startResend();
     } catch (e) {
@@ -212,6 +228,7 @@ export function AuthPage() {
     try {
       const { error: pwError } = await supabase.auth.updateUser({ password: pw });
       if (pwError) throw pwError;
+      trackFeature('auth_forgot_success');
       flash('Пароль изменён');
       await finishSignIn();
     } catch (e) {
