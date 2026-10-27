@@ -14,17 +14,20 @@ const EVENTS_RETENTION_DAYS = 90;
 const SESSIONS_RETENTION_DAYS = 90;
 const VISITS_RETENTION_DAYS = 90;
 
-function yesterdayInBishkek(): string {
+function bishkekDayOffsetFromToday(daysAgo: number): string {
   const bishkekNow = new Date(Date.now() + BISHKEK_UTC_OFFSET_MS);
-  bishkekNow.setUTCDate(bishkekNow.getUTCDate() - 1);
+  bishkekNow.setUTCDate(bishkekNow.getUTCDate() - daysAgo);
   return bishkekNow.toISOString().slice(0, 10);
 }
 
 /**
  * Keeps traffic_events/traffic_sessions bounded so raw visitor tracking never threatens
- * the DB size budget (see the capacity page this feature sits next to). Rolls yesterday's
- * raw events into traffic_daily_rollup (so long-term trend data survives), then prunes
- * old raw rows.
+ * the DB size budget (see the capacity page this feature sits next to), and rolls each
+ * finished day into the aggregate tables that outlive the raw rows.
+ *
+ * The aggregation itself lives in rollup_traffic_day() rather than here. It used to be a
+ * JS loop over rows fetched through PostgREST, which caps responses at 1000 rows by
+ * default — so any day busier than that was silently under-counted.
  */
 @Injectable()
 export class TrafficCleanupService implements OnModuleInit {
@@ -41,58 +44,16 @@ export class TrafficCleanupService implements OnModuleInit {
   async rollupAndPruneTraffic() {
     // A visit is normally closed by the next heartbeat arriving late; someone who
     // closes the tab for good never sends one, so their last visit would sit open
-    // and stay out of the duration stats. Close those first.
+    // and stay out of the duration stats. Close those first, then aggregate.
     const { error: flushError } = await this.supabase.client.rpc('flush_stale_visits');
     if (flushError) throw flushError;
 
-    const day = yesterdayInBishkek();
-    const start = `${day}T00:00:00+06:00`;
-    const end = `${day}T23:59:59.999+06:00`;
-
-    const { data: rows, error: fetchError } = await this.supabase.client
-      .from('traffic_events')
-      .select('event_type, session_id, device_type, is_logged_in')
-      .gte('created_at', start)
-      .lte('created_at', end);
-    if (fetchError) throw fetchError;
-
-    if (rows && rows.length > 0) {
-      const uniqueSessions = new Set<string>();
-      const loggedInSessions = new Set<string>();
-      const guestSessions = new Set<string>();
-      let pageViews = 0;
-      let cardViews = 0;
-      let linkClicks = 0;
-      let deviceMobile = 0;
-      let deviceTablet = 0;
-      let deviceDesktop = 0;
-
-      for (const r of rows as { event_type: string; session_id: string; device_type: string; is_logged_in: boolean }[]) {
-        uniqueSessions.add(r.session_id);
-        if (r.is_logged_in) loggedInSessions.add(r.session_id);
-        else guestSessions.add(r.session_id);
-        if (r.event_type === 'page_view') pageViews += 1;
-        else if (r.event_type === 'card_view') cardViews += 1;
-        else if (r.event_type === 'link_click') linkClicks += 1;
-        if (r.device_type === 'mobile') deviceMobile += 1;
-        else if (r.device_type === 'tablet') deviceTablet += 1;
-        else if (r.device_type === 'desktop') deviceDesktop += 1;
-      }
-
-      const { error: upsertError } = await this.supabase.client.from('traffic_daily_rollup').upsert({
-        day,
-        page_views: pageViews,
-        card_views: cardViews,
-        link_clicks: linkClicks,
-        unique_sessions: uniqueSessions.size,
-        logged_in_sessions: loggedInSessions.size,
-        guest_sessions: guestSessions.size,
-        device_mobile: deviceMobile,
-        device_tablet: deviceTablet,
-        device_desktop: deviceDesktop
-      });
-      if (upsertError) throw upsertError;
-    }
+    // Yesterday is the day that just finished. Today is still being written to and
+    // is computed live on read (see get_traffic_daily_trend).
+    const { error: rollupError } = await this.supabase.client.rpc('rollup_traffic_day', {
+      p_day: bishkekDayOffsetFromToday(1)
+    });
+    if (rollupError) throw rollupError;
 
     const eventsCutoff = new Date(Date.now() - EVENTS_RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
     const { error: pruneEventsError } = await this.supabase.client
