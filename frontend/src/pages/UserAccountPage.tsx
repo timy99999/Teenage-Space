@@ -3,9 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUI } from '../contexts/UIContext';
 import { useAdminUser } from '../hooks/useAdminUser';
+import { useUserActivity } from '../hooks/useTraffic';
 import { api } from '../lib/api';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { BanModal } from '../components/BanModal';
+import { LineChart } from '../components/LineChart';
+import { RankBars } from '../components/RankBars';
 import { ADMIN_PERMS, type AdminPermKey, type BanDuration } from '../types';
 
 const STATUS_LABEL: Record<string, string> = {
@@ -13,6 +16,81 @@ const STATUS_LABEL: Record<string, string> = {
   approved: 'Опубликовано',
   rejected: 'Отклонено'
 };
+
+function formatDuration(ms: number): string {
+  const totalMinutes = Math.round(ms / 60000);
+  if (totalMinutes < 1) return `${Math.round(ms / 1000)} с`;
+  if (totalMinutes < 60) return `${totalMinutes} мин`;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return minutes === 0 ? `${hours} ч` : `${hours} ч ${minutes} мин`;
+}
+
+function shortDate(isoDate: string): string {
+  const [, month, day] = isoDate.split('-');
+  return `${day}.${month}`;
+}
+
+function ActivitySection({ userId }: { userId: string }) {
+  const activity = useUserActivity(userId, true);
+
+  if (!activity) return null;
+
+  const { totals, daily, features } = activity;
+  const everActive = totals.daysActive > 0;
+
+  return (
+    <section className="ts-account-section">
+      <h2 className="ts-account-section-title">Активность</h2>
+      {!everActive ? (
+        <div className="desc">Этот пользователь ещё не заходил на сайт после начала учёта активности.</div>
+      ) : (
+        <>
+          <div className="ts-admin-stats" style={{ marginTop: 14 }}>
+            <div className="ts-admin-stat">
+              <div className="ts-admin-stat-value">{formatDuration(totals.activeMs)}</div>
+              <div className="desc">всего на сайте</div>
+            </div>
+            <div className="ts-admin-stat">
+              <div className="ts-admin-stat-value">{totals.daysActive}</div>
+              <div className="desc">дней активности</div>
+            </div>
+            <div className="ts-admin-stat">
+              <div className="ts-admin-stat-value">{totals.visits}</div>
+              <div className="desc">визитов</div>
+            </div>
+            <div className="ts-admin-stat">
+              <div className="ts-admin-stat-value">{totals.lastSeen ? shortDate(totals.lastSeen) : '—'}</div>
+              <div className="desc">последний визит</div>
+            </div>
+          </div>
+
+          <div className="desc" style={{ marginTop: 16 }}>
+            Время за 30 дней. Считается по «пульсу» раз в 25 секунд и только пока вкладка открыта.
+          </div>
+          <LineChart
+            labels={daily.map((d) => shortDate(d.day))}
+            series={[{ label: 'Время на сайте', color: 'var(--ts-blue)', values: daily.map((d) => d.activeMs) }]}
+            formatValue={formatDuration}
+          />
+
+          <div className="desc" style={{ marginTop: 18 }}>
+            Чем пользуется (за 30 дней)
+          </div>
+          <RankBars
+            items={features.map((f) => ({
+              label: f.label,
+              value: f.uses,
+              hint: `последний раз ${shortDate(f.lastUsed)}`
+            }))}
+            formatValue={(n) => `${n} раз`}
+            emptyNote="За этот период не пользовался отдельными функциями."
+          />
+        </>
+      )}
+    </section>
+  );
+}
 
 function banPeriodText(expiresAt: string | null): string {
   if (!expiresAt) return 'навсегда';
@@ -187,6 +265,8 @@ export function UserAccountPage() {
           })}
         </section>
       )}
+
+      <ActivitySection userId={user.id} />
 
       <section className="ts-account-section">
         <h2 className="ts-account-section-title">Публикации</h2>

@@ -2685,6 +2685,153 @@ a.ts-card-organizer:hover {
 }
 
 /* ---------------------------------------------------------------------------
+   Growth charts (super_admin analytics): line chart, ranked bars, cohort grid.
+   All colours come from theme tokens, so dark mode needs no overrides.
+   --------------------------------------------------------------------------- */
+.ts-line-chart {
+  margin-top: 14px;
+}
+.ts-line-chart-svg {
+  display: block;
+  width: 100%;
+  height: 170px;
+}
+.ts-line-chart-grid {
+  stroke: var(--ts-line);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ts-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  color: var(--ts-muted);
+}
+.ts-chart-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ts-chart-legend-item i {
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+}
+.ts-chart-max {
+  margin-left: auto;
+}
+.ts-line-chart-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 10px;
+  color: var(--ts-muted);
+}
+.ts-chart-empty {
+  margin-top: 14px;
+}
+
+.ts-rank-bars {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ts-rank-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+}
+.ts-rank-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ts-rank-value {
+  margin-left: auto;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ts-rank-delta {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 400;
+}
+.ts-rank-delta.up {
+  color: #2f9e5f;
+}
+.ts-rank-delta.down {
+  color: #e0554f;
+}
+.ts-rank-track {
+  margin-top: 5px;
+  height: 8px;
+  border-radius: 5px;
+  background: var(--ts-surface2);
+  overflow: hidden;
+}
+.ts-rank-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: var(--ts-blue);
+}
+.ts-rank-hint {
+  margin-top: 4px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 11px;
+  color: var(--ts-muted);
+}
+
+.ts-cohort-wrap {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+.ts-cohort-grid {
+  border-collapse: separate;
+  border-spacing: 3px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+}
+.ts-cohort-grid th {
+  font-weight: 600;
+  color: var(--ts-muted);
+  font-size: 11px;
+  text-align: center;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.ts-cohort-grid td {
+  text-align: center;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: var(--ts-surface2);
+  white-space: nowrap;
+}
+.ts-cohort-week {
+  text-align: left !important;
+  color: var(--ts-muted);
+}
+/* The tint is a fixed blue with a computed alpha, so on a dark surface the
+   deeper cells need light text to stay legible. */
+.ts-cohort-cell[data-filled='strong'] {
+  color: #ffffff;
+}
+
+.ts-digest-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+/* ---------------------------------------------------------------------------
    Users management (super_admin) + granular admin perms + ban gate
    --------------------------------------------------------------------------- */
 .ts-admin-tabs .ts-theme-btn.locked {

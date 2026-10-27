@@ -1,10 +1,26 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useUI } from '../contexts/UIContext';
 import { useCapacity } from '../hooks/useCapacity';
-import { useTrafficSummary, useTrafficOnline } from '../hooks/useTraffic';
+import {
+  fetchAnalyticsDigest,
+  useFeatureAdoption,
+  useGrowth,
+  useRetention,
+  useSearchInsights,
+  useSignupFunnel,
+  useTopPages,
+  useTopUsers,
+  useTrafficSummary,
+  useTrafficOnline
+} from '../hooks/useTraffic';
 import { useBarsAnalytics, setBarsCredit } from '../hooks/useBars';
-import type { BarsCredit } from '../types';
+import type { BarsCredit, FeatureAdoption } from '../types';
 import { BarChart } from '../components/BarChart';
+import { LineChart } from '../components/LineChart';
+import { RankBars } from '../components/RankBars';
+import { CohortGrid } from '../components/CohortGrid';
 
 const BUCKET_LABELS: Record<string, string> = {
   avatars: 'Аватары',
@@ -28,11 +44,25 @@ const DEVICE_LABELS: Record<string, string> = {
 const TABS = [
   { key: 'capacity', label: 'Хранилище' },
   { key: 'users', label: 'Пользователи' },
+  { key: 'growth', label: 'Рост' },
   { key: 'traffic', label: 'Посещаемость' },
   { key: 'bars', label: 'Барс' }
 ] as const;
 
 const BARS_WINDOW_DAYS = 14;
+const GROWTH_PERIODS = [14, 30, 90] as const;
+const RETENTION_COLUMNS = ['День 1', 'Неделя', 'Месяц'];
+
+const FEATURE_GROUP_LABELS: Record<string, string> = {
+  engagement: 'Вовлечённость',
+  discovery: 'Поиск и фильтры',
+  education: 'Образование',
+  contribution: 'Заявки',
+  account: 'Аккаунт'
+};
+// Shown as a funnel below instead of in the adoption ranking, so the steps
+// aren't counted twice.
+const FUNNEL_GROUP = 'signup';
 
 const LIMITED_BY_LABELS: Record<string, string> = {
   database: 'место в базе данных',
@@ -61,6 +91,22 @@ function dayLabel(isoDate: string): string {
 
 function formatCompact(n: number): string {
   return new Intl.NumberFormat('ru-RU', { notation: 'compact', maximumFractionDigits: 1 }).format(n);
+}
+
+/** Engaged time, in the units a person would say it in. */
+function formatDuration(ms: number | null): string {
+  if (ms === null) return '—';
+  const totalMinutes = Math.round(ms / 60000);
+  if (totalMinutes < 1) return `${Math.round(ms / 1000)} с`;
+  if (totalMinutes < 60) return `${totalMinutes} мин`;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return minutes === 0 ? `${hours} ч` : `${hours} ч ${minutes} мин`;
+}
+
+function weekLabel(isoDate: string): string {
+  const [, month, day] = isoDate.split('-');
+  return `${day}.${month}`;
 }
 
 function UsageBar({ label, usedBytes, limitBytes }: { label: string; usedBytes: number; limitBytes: number }) {
@@ -227,9 +273,272 @@ function UsersTab() {
   );
 }
 
+function DigestCard({ days }: { days: number }) {
+  const { flash } = useUI();
+  const [busy, setBusy] = useState(false);
+
+  async function copyReport() {
+    setBusy(true);
+    try {
+      const digest = await fetchAnalyticsDigest(days);
+      await navigator.clipboard.writeText(JSON.stringify(digest));
+      flash('Отчёт скопирован — вставь его в чат с Claude');
+    } catch {
+      flash('Не удалось получить отчёт');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function downloadReport() {
+    setBusy(true);
+    try {
+      const digest = await fetchAnalyticsDigest(days);
+      const url = URL.createObjectURL(new Blob([JSON.stringify(digest, null, 2)], { type: 'application/json' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `teenage-space-analytics-${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      flash('Не удалось получить отчёт');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="ts-card-panel">
+      <h2>Отчёт для Claude</h2>
+      <div className="desc">
+        Сводка за {days} дней одним JSON: рост, время на сайте, функции, удержание, воронка, топ
+        пользователей. Скопируй и вставь в чат — этого хватит для анализа, выгружать базу не нужно.
+      </div>
+      <div className="ts-digest-row">
+        <button className="ts-btn-outline small" onClick={copyReport} disabled={busy}>
+          Скопировать
+        </button>
+        <button className="ts-btn-outline small" onClick={downloadReport} disabled={busy}>
+          Скачать файлом
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function FeatureAdoptionCard({ features }: { features: FeatureAdoption[] }) {
+  const groups = Object.keys(FEATURE_GROUP_LABELS).filter((g) =>
+    features.some((f) => f.group === g)
+  );
+
+  return (
+    <div className="ts-card-panel">
+      <h2>Какими функциями пользуются</h2>
+      <div className="desc">
+        Доля активных пользователей, которые хоть раз воспользовались функцией за период. Ноль — это
+        тоже результат: функцией не пользуются.
+      </div>
+      {groups.map((group) => (
+        <div key={group} style={{ marginTop: 18 }}>
+          <div className="ts-rank-hint" style={{ marginBottom: 2 }}>
+            {FEATURE_GROUP_LABELS[group]}
+          </div>
+          <RankBars
+            items={features
+              .filter((f) => f.group === group)
+              .sort((a, b) => b.users - a.users)
+              .map((f) => ({
+                label: f.label,
+                value: f.users,
+                hint: f.adoptionPct === null ? undefined : `${f.adoptionPct}% активных · ${f.events} раз`,
+                delta: f.prevUsers === 0 ? null : f.users - f.prevUsers
+              }))}
+            formatValue={(n) => `${n} чел.`}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function GrowthTab() {
+  const [days, setDays] = useState<number>(30);
+  const growth = useGrowth(days, true);
+  const features = useFeatureAdoption(days, true);
+  const retention = useRetention(true);
+  const funnel = useSignupFunnel(days, true);
+  const topUsers = useTopUsers(days, true);
+
+  if (!growth || growth.length === 0) return <p className="ts-center-note">Загрузка...</p>;
+
+  const last = growth[growth.length - 1];
+  const labels = growth.map((g) => dayLabel(g.day));
+  const identityStart = growth.find((g) => g.dau !== null)?.day ?? null;
+  const funnelTop = funnel?.[0]?.sessions ?? 0;
+
+  return (
+    <div className="ts-publish-col" style={{ marginTop: 20 }}>
+      <div className="ts-card-panel">
+        <div className="ts-admin-stats">
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{last.dau ?? '—'}</div>
+            <div className="desc">активных пользователей сегодня</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{last.wau ?? '—'}</div>
+            <div className="desc">за неделю</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{last.mau ?? '—'}</div>
+            <div className="desc">за месяц</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">
+              {last.stickiness === null ? '—' : `${Math.round(last.stickiness * 100)}%`}
+            </div>
+            <div className="desc">залипание (DAU / MAU)</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{formatDuration(last.msP50)}</div>
+            <div className="desc">медиана визита сегодня</div>
+          </div>
+          <div className="ts-admin-stat">
+            <div className="ts-admin-stat-value">{last.visitors}</div>
+            <div className="desc">всего посетителей сегодня</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="ts-theme-btns" style={{ marginTop: 2 }}>
+        {GROWTH_PERIODS.map((p) => (
+          <button key={p} className={`ts-theme-btn${days === p ? ' on' : ''}`} onClick={() => setDays(p)}>
+            {p} дней
+          </button>
+        ))}
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Активные пользователи</h2>
+        <div className="desc">
+          Уникальные люди, а не браузеры: один человек с телефона и ноутбука считается один раз.
+          {identityStart
+            ? ` Учёт по пользователям ведётся с ${dayLabel(identityStart)}, раньше этой даты данных нет.`
+            : ''}
+        </div>
+        <LineChart
+          labels={labels}
+          series={[
+            { label: 'За день', color: 'var(--ts-blue)', values: growth.map((g) => g.dau) },
+            { label: 'За неделю', color: 'var(--ts-violet)', values: growth.map((g) => g.wau) },
+            { label: 'За месяц', color: 'var(--ts-cyan)', values: growth.map((g) => g.mau) }
+          ]}
+        />
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Гости и зарегистрированные</h2>
+        <div className="desc">
+          Разрыв между линиями — это те, кто ходит по сайту, но не заводит аккаунт.
+        </div>
+        <LineChart
+          labels={labels}
+          series={[
+            { label: 'Всего посетителей', color: 'var(--ts-violet)', values: growth.map((g) => g.visitors) },
+            { label: 'Из них с аккаунтом', color: 'var(--ts-blue)', values: growth.map((g) => g.dau) }
+          ]}
+        />
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Сколько времени проводят на сайте</h2>
+        <div className="desc">
+          Активное время одного визита: считается по «пульсу» раз в 25 секунд и только пока вкладка
+          открыта и видима, так что открытая в фоне страница время не накручивает. Медиана честнее
+          среднего — её не задирают единичные долгие визиты.
+        </div>
+        <LineChart
+          labels={labels}
+          series={[
+            { label: 'Медиана', color: 'var(--ts-blue)', values: growth.map((g) => g.msP50) },
+            { label: 'Среднее', color: 'var(--ts-violet)', values: growth.map((g) => g.msAvg) }
+          ]}
+          formatValue={(ms) => formatDuration(ms)}
+        />
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Возвращаются ли люди</h2>
+        <div className="desc">
+          Доля зарегистрировавшихся на той неделе, кто заходил снова в течение дня, недели и месяца
+          после регистрации. Прочерк — срок ещё не прошёл.
+        </div>
+        {retention ? (
+          <CohortGrid
+            columns={RETENTION_COLUMNS}
+            rows={retention.map((r) => ({
+              label: weekLabel(r.cohortWeek),
+              size: r.cohortSize,
+              cells: [r.d1, r.d7, r.d30]
+            }))}
+          />
+        ) : (
+          <div className="desc">Загрузка...</div>
+        )}
+      </div>
+
+      {features && <FeatureAdoptionCard features={features.filter((f) => f.group !== FUNNEL_GROUP)} />}
+
+      <div className="ts-card-panel">
+        <h2>Воронка регистрации</h2>
+        <div className="desc">
+          Считается по сессиям, а не по людям: на входе в воронку аккаунта ещё нет. Проценты — от
+          первого шага.
+        </div>
+        <RankBars
+          items={(funnel ?? []).map((step) => ({
+            label: step.label,
+            value: step.sessions,
+            hint: funnelTop > 0 ? `${Math.round((step.sessions / funnelTop) * 100)}% от открывших вход` : undefined
+          }))}
+          formatValue={(n) => `${n}`}
+          emptyNote="Пока никто не заходил на страницу входа за этот период."
+        />
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Самые активные пользователи</h2>
+        {topUsers && topUsers.length > 0 ? (
+          <div className="ts-rank-bars">
+            {topUsers.map((u) => (
+              <div className="ts-rank-row" key={u.userId}>
+                <div className="ts-rank-head">
+                  <Link className="ts-rank-label" to={`/users/${u.userId}`}>
+                    @{u.username}
+                  </Link>
+                  <span className="ts-rank-value">{formatDuration(u.activeMs)}</span>
+                </div>
+                <div className="ts-rank-hint">
+                  {u.daysActive} дн. активности · {u.visits} визитов · {u.featuresUsed} функций · был(а){' '}
+                  {dayLabel(u.lastSeen)}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="desc">Пока нет активности зарегистрированных пользователей за этот период.</div>
+        )}
+      </div>
+
+      <DigestCard days={90} />
+    </div>
+  );
+}
+
 function TrafficTab() {
   const { onlineNow } = useTrafficOnline(true);
   const { summary } = useTrafficSummary(14, true);
+  const pages = useTopPages(14, true);
+  const searches = useSearchInsights(14, true);
 
   if (!summary) return <p className="ts-center-note">Загрузка...</p>;
 
@@ -327,6 +636,36 @@ function TrafficTab() {
             ))}
           </div>
         )}
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Популярные разделы</h2>
+        <RankBars
+          items={(pages ?? []).map((p) => ({
+            label: p.path,
+            value: p.views,
+            hint: `${p.visitors} посетителей`
+          }))}
+          formatValue={(n) => `${n} просм.`}
+          emptyNote="Пока нет просмотров страниц за этот период."
+        />
+      </div>
+
+      <div className="ts-card-panel">
+        <h2>Что ищут</h2>
+        <div className="desc">
+          Запросы, по которым ничего не нашлось, помечены отдельно — это прямая подсказка, каких
+          мероприятий на сайте не хватает.
+        </div>
+        <RankBars
+          items={(searches ?? []).map((s) => ({
+            label: s.query,
+            value: s.searches,
+            hint: s.zeroResults > 0 ? `без результата: ${s.zeroResults}` : undefined
+          }))}
+          formatValue={(n) => `${n}`}
+          emptyNote="Пока никто не искал за этот период."
+        />
       </div>
     </div>
   );
@@ -597,6 +936,7 @@ export function AnalyticsPage() {
       </div>
       {tab === 'capacity' && <CapacityTab />}
       {tab === 'users' && <UsersTab />}
+      {tab === 'growth' && <GrowthTab />}
       {tab === 'traffic' && <TrafficTab />}
       {tab === 'bars' && <BarsTab />}
     </div>
