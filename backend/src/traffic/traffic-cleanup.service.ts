@@ -7,8 +7,12 @@ import { SupabaseService } from '../supabase/supabase.service';
 // (same trick as events.service.ts's archive sweep).
 const BISHKEK_UTC_OFFSET_MS = 6 * 60 * 60 * 1000;
 
-const EVENTS_RETENTION_DAYS = 30;
-const SESSIONS_RETENTION_DAYS = 1;
+const EVENTS_RETENTION_DAYS = 90;
+// Visitor rows are no longer disposable: they carry first_seen_at (new vs
+// returning) and the running counters for the visit in progress, so pruning them
+// daily would reset a returning visitor's history and lose their open visit.
+const SESSIONS_RETENTION_DAYS = 90;
+const VISITS_RETENTION_DAYS = 90;
 
 function yesterdayInBishkek(): string {
   const bishkekNow = new Date(Date.now() + BISHKEK_UTC_OFFSET_MS);
@@ -35,6 +39,12 @@ export class TrafficCleanupService implements OnModuleInit {
 
   @Cron('0 18 * * *') // 00:00 in Asia/Bishkek (UTC+6), expressed in UTC to sidestep IANA timezone lookups
   async rollupAndPruneTraffic() {
+    // A visit is normally closed by the next heartbeat arriving late; someone who
+    // closes the tab for good never sends one, so their last visit would sit open
+    // and stay out of the duration stats. Close those first.
+    const { error: flushError } = await this.supabase.client.rpc('flush_stale_visits');
+    if (flushError) throw flushError;
+
     const day = yesterdayInBishkek();
     const start = `${day}T00:00:00+06:00`;
     const end = `${day}T23:59:59.999+06:00`;
@@ -97,5 +107,12 @@ export class TrafficCleanupService implements OnModuleInit {
       .delete()
       .lt('last_seen_at', sessionsCutoff);
     if (pruneSessionsError) throw pruneSessionsError;
+
+    const visitsCutoff = new Date(Date.now() - VISITS_RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
+    const { error: pruneVisitsError } = await this.supabase.client
+      .from('traffic_visits')
+      .delete()
+      .lt('started_at', visitsCutoff);
+    if (pruneVisitsError) throw pruneVisitsError;
   }
 }

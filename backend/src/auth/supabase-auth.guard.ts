@@ -8,10 +8,10 @@ import {
 } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
-import { createHash } from 'node:crypto';
 import type { Request } from 'express';
 import type { User } from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase/supabase.service';
+import { AuthTokenService, bearerToken } from './auth-token.service';
 import type { AdminPerms } from '../common/mappers';
 
 export interface RequestProfile {
@@ -25,12 +25,12 @@ export interface AuthedRequest extends Request {
   profile: RequestProfile;
 }
 
-// A validated token and the caller's profile row are cached for this long so that
-// one actively-clicking user stops hitting GoTrue (auth.getUser) + Postgres
-// (profiles select) on every single request — that pair of round trips per
-// request is the free-tier throughput ceiling. Kept short so a role change or a
-// ban still takes effect within seconds; admin mutations also call
-// cache.clear() (see users-admin.service.ts), so those land on the next request.
+// The caller's profile row is cached for this long so that one actively-clicking
+// user stops hitting Postgres (profiles select) on every single request — that
+// round trip per request is the free-tier throughput ceiling. Kept short so a
+// role change or a ban still takes effect within seconds; admin mutations also
+// call cache.clear() (see users-admin.service.ts), so those land on the next
+// request. Token validation is cached separately, in AuthTokenService.
 const AUTH_CACHE_TTL_MS = 30_000;
 
 interface CachedProfile {
@@ -40,33 +40,20 @@ interface CachedProfile {
   admin_perms: AdminPerms;
 }
 
-/** Reads the `exp` claim without verifying the signature — used only to make sure
- *  a cached token never outlives the token itself. */
-function jwtExpiryMs(token: string): number | null {
-  const parts = token.split('.');
-  if (parts.length !== 3) return null;
-  try {
-    const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8')) as { exp?: unknown };
-    return typeof payload.exp === 'number' ? payload.exp * 1000 : null;
-  } catch {
-    return null;
-  }
-}
-
 @Injectable()
 export class SupabaseAuthGuard implements CanActivate {
   constructor(
     private readonly supabase: SupabaseService,
+    private readonly authToken: AuthTokenService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<AuthedRequest>();
-    const header = req.headers.authorization;
-    const token = header?.startsWith('Bearer ') ? header.slice(7) : null;
+    const token = bearerToken(req);
     if (!token) throw new UnauthorizedException('Missing bearer token');
 
-    const user = await this.resolveUser(token);
+    const user = await this.authToken.resolveUser(token);
     const profile = await this.resolveProfile(user.id);
 
     let banned = profile.is_banned;
@@ -90,27 +77,8 @@ export class SupabaseAuthGuard implements CanActivate {
     return true;
   }
 
-  private tokenKey(token: string): string {
-    return `auth:user:${createHash('sha256').update(token).digest('hex')}`;
-  }
-
   private profileKey(userId: string): string {
     return `auth:profile:${userId}`;
-  }
-
-  private async resolveUser(token: string): Promise<User> {
-    const key = this.tokenKey(token);
-    const cached = await this.cache.get<User>(key);
-    if (cached) return cached;
-
-    const { data, error } = await this.supabase.client.auth.getUser(token);
-    if (error || !data.user) throw new UnauthorizedException('Invalid or expired session');
-
-    // Never let the cache entry outlive the token; cap it at AUTH_CACHE_TTL_MS.
-    const expiryMs = jwtExpiryMs(token);
-    const ttl = Math.min(AUTH_CACHE_TTL_MS, expiryMs ? expiryMs - Date.now() : AUTH_CACHE_TTL_MS);
-    if (ttl > 0) await this.cache.set(key, data.user, ttl);
-    return data.user;
   }
 
   private async resolveProfile(userId: string): Promise<CachedProfile> {
