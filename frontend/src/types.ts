@@ -260,6 +260,84 @@ export interface TrafficSummary {
   topLinks: { linkKind: string; clicks: number }[];
 }
 
+/** A null in dau/wau/mau/stickiness means that day predates per-user tracking —
+ *  not that nobody was active. Charts must render it as a gap. */
+export interface GrowthPoint {
+  day: string;
+  dau: number | null;
+  wau: number | null;
+  mau: number | null;
+  stickiness: number | null;
+  visitors: number;
+  visits: number;
+  msAvg: number | null;
+  msP50: number | null;
+  msP90: number | null;
+}
+
+export interface FeatureAdoption {
+  feature: string;
+  group: string;
+  label: string;
+  events: number;
+  users: number;
+  adoptionPct: number | null;
+  prevUsers: number;
+}
+
+export interface RetentionCohort {
+  cohortWeek: string;
+  cohortSize: number;
+  /** Percent, or null while that cohort's window hasn't elapsed yet. */
+  d1: number | null;
+  d7: number | null;
+  d30: number | null;
+}
+
+export interface TopUser {
+  userId: string;
+  username: string;
+  name: string;
+  activeMs: number;
+  visits: number;
+  daysActive: number;
+  featuresUsed: number;
+  lastSeen: string;
+}
+
+export interface SearchInsight {
+  query: string;
+  searches: number;
+  zeroResults: number;
+}
+
+export interface TopPage {
+  path: string;
+  views: number;
+  visitors: number;
+}
+
+export interface FunnelStep {
+  feature: string;
+  label: string;
+  sessions: number;
+}
+
+export interface UserActivity {
+  totals: {
+    activeMs: number;
+    visits: number;
+    daysActive: number;
+    pageViews: number;
+    cardViews: number;
+    linkClicks: number;
+    firstSeen: string | null;
+    lastSeen: string | null;
+  };
+  daily: { day: string; activeMs: number; events: number }[];
+  features: { feature: string; label: string; group: string; uses: number; lastUsed: string }[];
+}
+
 export type BarsMessageStatus = 'ok' | 'off_topic' | 'error' | 'fallback' | 'truncated';
 
 export interface BarsChatRow {
